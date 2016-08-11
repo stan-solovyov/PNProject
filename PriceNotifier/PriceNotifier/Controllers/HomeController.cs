@@ -11,6 +11,9 @@ using Domain.EF;
 using Domain.Entities;
 using System.Security.Cryptography;
 using System.Text;
+using PriceNotifier.AuthFilter;
+using OAuth2.Models;
+using System.Net;
 
 namespace PriceNotifier.Controllers
 {
@@ -18,11 +21,11 @@ namespace PriceNotifier.Controllers
     {
         private readonly AuthorizationRoot _authorizationRoot;
 
-        private static string ProviderName = "";
+        //private static string ProviderName = "";
 
         private UserContext db = new UserContext();
 
-
+       
         public string GetHashString(string s)
         {
             //переводим строку в байт-массим  
@@ -43,11 +46,7 @@ namespace PriceNotifier.Controllers
 
             return hash;
         }
-        //private string ProviderName
-        //{
-        //    get { return ProviderNameKey; }
-        //    set { ProviderNameKey = value; }
-        //}
+       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -56,12 +55,13 @@ namespace PriceNotifier.Controllers
         public HomeController(AuthorizationRoot authorizationRoot)
         {
             _authorizationRoot = authorizationRoot;
+           
         }
 
         /// <summary>
         /// Renders home page with login link.
         /// </summary>
-        public ActionResult Index()
+        public ActionResult Start()
         {
             var model = _authorizationRoot.Clients.Select(client => new LoginInfoModel
             {
@@ -75,20 +75,19 @@ namespace PriceNotifier.Controllers
         /// </summary>        
         public RedirectResult Login(string providerName)
         {
-            ProviderName = providerName;
-            return new RedirectResult(GetClient().GetLoginLinkUri());
+            //ProviderName = providerName;
+            return new RedirectResult(GetClient(providerName).GetLoginLinkUri());
+           
         }
 
         /// <summary>
         /// Renders information received from authentication service.
         /// </summary>
+        
         public ActionResult Auth(string providerName)
         {
-
-            //return View(GetClient().GetUserInfo(Request.QueryString));
-
-            var a = GetClient().GetUserInfo(Request.QueryString);
-
+           
+            var a = GetClient(providerName).GetUserInfo(Request.QueryString);
 
             User user = new User
             {
@@ -99,31 +98,41 @@ namespace PriceNotifier.Controllers
             };
 
 
-            var userid = db.Users.Where(c => c.UserID == user.UserID).FirstOrDefault();
-
-            if (userid == null)
+            if (db.Users != null)
             {
-                db.Users.Add(user);
+                var userid = db.Users.FirstOrDefault(c => c.UserID == user.UserID);
+
+                if (userid == null)
+                {
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    userid.Token = user.Token;
+                    userid.SocialNetworkName = user.SocialNetworkName;
+                    userid.Username = user.Username;
+                    db.SaveChanges();
+                }
+            }
+
+            var userFound = db.Users.FirstOrDefault(c => c.UserID == user.UserID);
+            if (userFound != null)
+            {
+                userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.UserID);
                 db.SaveChanges();
+
+                return View(userFound);
             }
             else
             {
-                userid.Token = user.Token;
-                userid.SocialNetworkName = user.SocialNetworkName;
-                userid.Username = user.Username;
-                db.SaveChanges();
+                return View();
             }
-
-            var userFound = db.Users.Where(c => c.UserID == user.UserID).FirstOrDefault();
-            userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.UserID);
-            db.SaveChanges();
-
-            return View(userFound);
         }
 
-        private IClient GetClient()
+        private IClient GetClient(string providerName)
         {
-            return _authorizationRoot.Clients.First(c => c.Name == ProviderName);
+            return _authorizationRoot.Clients.First(c => c.Name == providerName);
         }
     }
 }

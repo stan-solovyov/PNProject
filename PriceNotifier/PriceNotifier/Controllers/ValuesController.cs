@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PriceNotifier.AuthFilter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,9 +8,11 @@ using System.Web.Http;
 
 namespace PriceNotifier.Controllers
 {
+    
     public class ValuesController : ApiController
     {
         // GET api/values
+        [MyAuthorize]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
