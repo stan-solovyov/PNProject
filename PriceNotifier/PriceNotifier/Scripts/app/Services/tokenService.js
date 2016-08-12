@@ -1,27 +1,22 @@
-﻿app.factory("tokenService",
-[
-    $scope, $http, function ($scope, $http) {
+﻿app.factory("tokenService", [
+    function () {
 
-        var getToken = function() {
-            var value = localStorage.getItem('X-Auth');
-            return $http({
-                method: 'GET',
-                url: "/api/Values",
-                headers: { 'X-Auth': value }
-            });
+        var setToken = function (token) {
+            localStorage.setItem('token', token);
+        }
+
+        var logOut = function () {
+            localStorage.removeItem('token');
+            window.location = "/";
         };
-    
-        var getRepos = function(user){
-            return $http.get(user.repos_url)
-                    .then(function(response){
-                        return response.data;
-                    });
-        };
-    
+
+        var getToken = function () {
+            return localStorage.getItem('token');
+        }
+
         return {
-            getToken: getToken,
-            getRepos:getRepos
-      
+            logout: logOut,
+            setToken: setToken,
+            getToken: getToken
         };
-    }
-]);
+    }]);

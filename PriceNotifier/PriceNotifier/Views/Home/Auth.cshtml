@@ -7,8 +7,7 @@
         $(function(){
             if (Modernizr.localstorage) {
                 var localToken = window.localStorage;
-                var token = "@Model.Token";
-                localToken.setItem("X-Auth", token);
+                localToken.setItem("token", "@Model.Token");
 
                 function redirect()
                 {

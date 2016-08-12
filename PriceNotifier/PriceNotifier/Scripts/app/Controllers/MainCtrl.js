@@ -1,31 +1,21 @@
 ﻿
-(function() {
-    app.controller('MainCtrl',['$scope', '$http', function($scope, $http) {
+app.controller('MainCtrl', ['$scope', 'tokenService', 'valueService', function ($scope, tokenService, valueService) {
 
-            var onError = function() {
-                $scope.error = "Couldn't get response from the server:(";
-            };
+    var onError = function () {
+        $scope.error = "Couldn't get response from the server:(";
+    };
 
-            var onUserComplete = function(response) {
-                $scope.values = response;
-                $scope.message = "You'are authorized!";
-            };
+    var onUserComplete = function (data) {
+        $scope.values = data;
+        $scope.message = "You'are authorized!";
+    };
 
-            $scope.Logout = function() {
-                localStorage.removeItem('X-Auth');
-                window.location = "/";
-            };
+    $scope.Logout = function () {
+        tokenService.logout();
+    };
 
-            var value = localStorage.getItem('X-Auth');
-            $scope.Authorize = function() {
-                $http({
-                        method: 'GET',
-                        url: "/api/Values",
-                        headers: { 'X-Auth': value }
-                    })
-                    .success(onUserComplete)
-                    .error(onError);
-            };
-        }
-    ]);
-}());
+    $scope.Authorize = function () {
+        valueService.getValues().then(onUserComplete, onError);
+    };
+}
+]);

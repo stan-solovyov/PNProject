@@ -230,7 +230,9 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\Controllers\MainCtrl.js" />
+    <Content Include="Scripts\app\Services\tokenInterceptor.js" />
     <Content Include="Scripts\app\Services\tokenService.js" />
+    <Content Include="Scripts\app\Services\valueService.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
