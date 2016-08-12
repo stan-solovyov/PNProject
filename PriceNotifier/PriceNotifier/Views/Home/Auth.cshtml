@@ -1,0 +1,35 @@
+﻿@model Domain.Entities.User
+<html>
+<head>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script>
+        $(function(){
+            if (Modernizr.localstorage) {
+                var localToken = window.localStorage;
+                var token = "@Model.Token";
+                localToken.setItem("X-Auth", token);
+
+                function redirect()
+                {
+                    window.location = "http://localhost:59476/Index.html";
+                }
+
+                setTimeout(redirect, [2000]);
+            } else
+            {
+                 alert("Localstorage doesn't work!");
+            }
+        });
+    </script>
+</head>
+<body>
+
+        <h3>Hi @Model.Username!</h3>
+        Social Network: @Model.SocialNetworkName<br />
+        UserID in DB: @Model.Id<br />
+        Social Network UserID: @Model.UserID<br />
+        Token: @Model.Token
+
+</body>
+</html>
