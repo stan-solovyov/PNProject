@@ -15,6 +15,16 @@ namespace PriceNotifier
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "Login", // Route name
+                "login/{providerName}", // URL with parameters
+                new
+                {
+                    controller = "Home",
+                    action = "Login",
+                    providerName = UrlParameter.Optional
+                });
+
+            routes.MapRoute(
                 name: "AuthRoute",
                 url: "Home/Auth/{providerName}",
                 defaults: new { controller = "Home", action = "Auth", providerName = UrlParameter.Optional }

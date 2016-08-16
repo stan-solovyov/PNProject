@@ -1,7 +1,7 @@
 ﻿app.factory("valueService", ['$http',
     function ($http) {
 
-        var url = 'https://catalog.api.onliner.by/search/products?query=iphon';
+        var url = '/api/Values';
 
         var getValues = function () {
             return $http.get(url)

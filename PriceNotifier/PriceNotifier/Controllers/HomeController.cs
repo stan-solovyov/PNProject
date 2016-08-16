@@ -93,14 +93,14 @@ namespace PriceNotifier.Controllers
             {
                 SocialNetworkName = a.ProviderName,
                 Username = a.FirstName,
-                UserID = a.Id,
+                UserId = a.Id,
                 Token = ""
             };
 
 
             if (db.Users != null)
             {
-                var userid = db.Users.FirstOrDefault(c => c.UserID == user.UserID);
+                var userid = db.Users.FirstOrDefault(c => c.UserId == user.UserId);
 
                 if (userid == null)
                 {
@@ -116,10 +116,10 @@ namespace PriceNotifier.Controllers
                 }
             }
 
-            var userFound = db.Users.FirstOrDefault(c => c.UserID == user.UserID);
+            var userFound = db.Users.FirstOrDefault(c => c.UserId == user.UserId);
             if (userFound != null)
             {
-                userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.UserID);
+                userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.UserId);
                 db.SaveChanges();
 
                 return View(userFound);

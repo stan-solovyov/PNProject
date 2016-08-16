@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Http;
-using OAuth2.Client;
 using Domain.EF;
 using System.Web.Http.Controllers;
-using Domain.Entities;
 
 namespace PriceNotifier.AuthFilter
 {
@@ -19,7 +16,7 @@ namespace PriceNotifier.AuthFilter
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             var req = actionContext.Request.Headers;
-
+           
             if (req.Contains("X-Auth"))
             {
                 var tokenTransferred = req.GetValues("X-Auth").First();
@@ -27,6 +24,13 @@ namespace PriceNotifier.AuthFilter
                 if (!string.IsNullOrEmpty(tokenTransferred))
                 {
                     var userFound = db.Users.Any(c => c.Token == tokenTransferred);
+
+                    var user = db.Users.FirstOrDefault(c => c.Token == tokenTransferred);
+                    if (user != null)
+                    {
+                        var owinContext = actionContext.Request.GetOwinContext();
+                        owinContext.Set("userId", user.Id);
+                    }
 
                     return userFound;
                 }

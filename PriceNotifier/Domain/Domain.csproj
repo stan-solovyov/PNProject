@@ -50,10 +50,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF\UserContext.cs" />
+    <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Migrations\201608091515097_InitialCreate.cs" />
     <Compile Include="Migrations\201608091515097_InitialCreate.Designer.cs">
       <DependentUpon>201608091515097_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608151454399_Product.cs" />
+    <Compile Include="Migrations\201608151454399_Product.Designer.cs">
+      <DependentUpon>201608151454399_Product.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608160831092_addProductsList.cs" />
+    <Compile Include="Migrations\201608160831092_addProductsList.Designer.cs">
+      <DependentUpon>201608160831092_addProductsList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608161227198_userId.cs" />
+    <Compile Include="Migrations\201608161227198_userId.Designer.cs">
+      <DependentUpon>201608161227198_userId.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,6 +78,15 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201608091515097_InitialCreate.resx">
       <DependentUpon>201608091515097_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608151454399_Product.resx">
+      <DependentUpon>201608151454399_Product.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608160831092_addProductsList.resx">
+      <DependentUpon>201608160831092_addProductsList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608161227198_userId.resx">
+      <DependentUpon>201608161227198_userId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

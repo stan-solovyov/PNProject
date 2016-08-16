@@ -3,43 +3,64 @@
 <html ng-app="MyApp">
 <head>
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <link href="Content/loading-bar.min.css" rel="stylesheet" />
+    <link href="Content/toaster.min.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 </head>
 <body ng-controller="MainCtrl">
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container">
-            <div class="col-md-offset-11">
-                <br/><button type="button" class="btn btn-default" ng-click="Logout()">Log out</button>
+            <div class="col-lg-6">
+                <ul class="nav navbar-nav">
+                    <li><a class="navbar-brand navbar-left" href="#">Price Notifier</a></li>
+                    <li><a href="#">Personal cabinet</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6"><button type="button" class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button></div>
+        </div>
+    </nav>
+    <toaster-container toaster-options="{'time-out': 6000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+    <toaster-container toaster-options="{'time-out': 6000, 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+    <div class="col-lg-offset-3">
+        <br />
+        <div class="container col-lg-8">
+            <form class="form-group" name="searchUser">
+                <label for="productInput"> Введите название товара:</label>
+                <input class="form-control" type="text" id="productInput" required="" placeholder="Название товара" ng-model="productname" ng-change="search(productname)" ng-model-options="{debounce: 750}" /><br />
+            </form>
+            <div class="container" ng-repeat="product in products" ng-show="products">
+                <div class="container">
+                    <div class="col-lg-4">
+                        <h4 class="ng-cloak">{{product.full_name}}</h4>
+                        <img class="ng-cloak" ng-src="{{product.images.icon}}" title="{{product.full_name}}" />
+                    </div>
+                    <div class="col-lg-offset-6">
+                        <br />
+                        <h5 class="ng-cloak">Ссылка в каталоге Onliner.by:</h5><a class="ng-cloak" href="{{product.html_url}}">{{product.full_name}}</a>
+                        <h5 class="ng-cloak">Minimal price: {{product.prices.price_min.amount}} {{product.prices.price_min.currency}}</h5>
+                        <h5 class="ng-cloak">Maximum price: {{product.prices.price_max.amount}} {{product.prices.price_max.currency}}</h5>
+                        <button type="button" class="btn btn-primary ng-cloak" ng-disabled="flag" ng-click="addToList(product)">Add to list</button>
+                    </div>
+                </div>
+                <hr class="ng-cloak" />
             </div>
         </div>
-     </div>
-<br/>
-    <br />
-<div class="col-md-offset-3">
-    <h2>{{error}}</h2>
-    <h2>{{message}}</h2>
-    <br/>
-    <div>
-        <button type="button" class="btn btn-primary" ng-click="Authorize()">Authorize</button>
     </div>
-    <div ng-show="values">
-        <br/>
-        Values:
-        <div ng-repeat="value in values">
-            {{value}}
-        </div>
-    </div>
-</div>
-<!-- Load app main script -->
-<script src="Scripts/angular.min.js"></script>
-<script src="Scripts/jquery-1.10.2.min.js"></script>
-<script src="Scripts/bootstrap.min.js"></script>
-<script src="Scripts/angular-local-storage.min.js"></script>
-<script src="Scripts/app/app.js"></script>
-<!-- Load services -->
-<script src="Scripts/app/Services/tokenService.js"></script>
-<script src="Scripts/app/Services/tokenInterceptor.js"></script>
-<script src="Scripts/app/Services/valueService.js"></script>
-<script src="Scripts/app/Controllers/MainCtrl.js"></script>
+    <!-- Load app main script -->
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/jquery-3.1.0.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/angular-local-storage.min.js"></script>
+    <script src="Scripts/loading-bar.min.js"></script>
+    <script src="Scripts/angular-animate.min.js"></script>
+    <script src="Scripts/toaster.min.js"></script>
+    <script src="Scripts/app/app.js"></script>
+    <!-- Load services -->
+    <script src="Scripts/app/Services/tokenService.js"></script>
+    <script src="Scripts/app/Services/tokenInterceptor.js"></script>
+    <script src="Scripts/app/Services/valueService.js"></script>
+    <script src="Scripts/app/Services/externalProductService.js"></script>
+    <script src="Scripts/app/Controllers/MainCtrl.js"></script>
 </body>
 </html>

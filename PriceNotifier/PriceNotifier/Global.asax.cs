@@ -33,42 +33,6 @@ namespace PriceNotifier
             filters.Add(new HandleErrorAttribute());
         }
 
-        private void RegisterRoutes(RouteCollection routes)
-        {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
-
-            routes.MapRoute(
-                "Login", // Route name
-                "login/{providerName}", // URL with parameters
-                new
-                {
-                    controller = "Home",
-                    action = "Login",
-                    id = UrlParameter.Optional
-                });
-
-
-            routes.MapRoute(
-                "Auth", // Route name
-                "Auth", // URL with parameters
-                new
-                {
-                    controller = "Home",
-                    action = "Auth",
-                    id = UrlParameter.Optional
-                });
-
-            routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new
-                {
-                    controller = "Home",
-                    action = "Index",
-                    id = UrlParameter.Optional
-                });
-        }
 
         private void SetDependencyResolver()
         {

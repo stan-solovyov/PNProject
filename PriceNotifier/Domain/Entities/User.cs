@@ -10,9 +10,11 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public string Username { get; set; }
-        public string UserID { get; set; }
+        public string UserId { get; set; }
         public string SocialNetworkName { get; set; }
         public  string Token { get; set; }
+
+        public List<Product> Products { get; set; }
 
     }
 }
