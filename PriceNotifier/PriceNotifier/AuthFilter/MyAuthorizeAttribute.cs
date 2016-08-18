@@ -4,15 +4,13 @@ using System.Web;
 using System.Web.Http;
 using Domain.EF;
 using System.Web.Http.Controllers;
+using Domain.Entities;
 
 namespace PriceNotifier.AuthFilter
 {
     public class MyAuthorizeAttribute: AuthorizeAttribute
     {
-        public MyAuthorizeAttribute() { }
-
-        private UserContext db = new UserContext();
-
+       
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             var req = actionContext.Request.Headers;
@@ -23,9 +21,12 @@ namespace PriceNotifier.AuthFilter
                 //check for null
                 if (!string.IsNullOrEmpty(tokenTransferred))
                 {
+                     UserContext db = new UserContext();
+
                     var userFound = db.Users.Any(c => c.Token == tokenTransferred);
 
                     var user = db.Users.FirstOrDefault(c => c.Token == tokenTransferred);
+
                     if (user != null)
                     {
                         var owinContext = actionContext.Request.GetOwinContext();

@@ -4,7 +4,8 @@
 
     var request = function (config) {
         var authData = tokenService.getToken();
-        if (authData && config.url === '/api/Products') {
+
+        if (authData && (!config.url.includes('onliner'))) {
             config.headers["X-Auth"] = authData;
         }
 

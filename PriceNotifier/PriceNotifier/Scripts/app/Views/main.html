@@ -1,0 +1,27 @@
+﻿<toaster-container toaster-options="{'time-out': '6000', 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+<div class="col-lg-offset-3">
+    <br />
+    <div class="container col-lg-8">
+        <form class="form-group" name="searchUser">
+            <label for="productInput"> Insert the name of the item for tracking:</label>
+            <input class="form-control" type="text" id="productInput" required="" placeholder="Item name" ng-model="productname" ng-change="search(productname)" ng-model-options="{debounce: 750}" /><br />
+        </form>
+        <div class="container" ng-repeat="product in products" ng-show="products">
+            <div class="container">
+                <div class="col-lg-4">
+                    <h4 class="ng-cloak">{{product.full_name}}</h4>
+                    <img class="ng-cloak" ng-src="{{product.images.icon}}" title="{{product.full_name}}" />
+                </div>
+                <div class="col-lg-offset-6">
+                    <br />
+                    <h5 class="ng-cloak">Ссылка в каталоге Onliner.by:</h5><a class="ng-cloak" href="{{product.html_url}}">{{product.full_name}}</a>
+                    <h5 class="ng-cloak">Minimal price: {{product.prices.price_min.amount}} {{product.prices.price_min.currency}}</h5>
+                    <h5 class="ng-cloak">Maximum price: {{product.prices.price_max.amount}} {{product.prices.price_max.currency}}</h5>
+                    <button type="button" class="btn btn-primary ng-cloak" ng-disabled="product.hiding" ng-click="addToList(product)">Add to list</button>
+                    <!--<div class="loader ng-cloak" ng-show="product.hiding"></div>-->
+                </div>
+            </div>
+            <hr class="ng-cloak" />
+        </div>
+    </div>
+</div>

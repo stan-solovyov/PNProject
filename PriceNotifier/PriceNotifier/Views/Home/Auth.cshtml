@@ -1,4 +1,7 @@
-﻿@model Domain.Entities.User
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Domain.Entities.User
 <html>
 <head>
     <script src="~/Scripts/jquery-3.1.0.min.js"></script>
@@ -10,7 +13,7 @@
 
                 function redirect()
                 {
-                    window.location = "http://localhost:59476/Index.html";
+                    window.location = "/home/index";
                 }
 
                 setTimeout(redirect, [2000]);

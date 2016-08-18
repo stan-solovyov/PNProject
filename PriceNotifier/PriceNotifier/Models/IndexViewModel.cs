@@ -9,6 +9,7 @@ namespace PriceNotifier.Models
     public class LoginInfoModel
     {
         public string ProviderName { get; set; }
+        public string LoginLinkUri { get; set; }
     }
 
 }

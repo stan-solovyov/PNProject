@@ -16,14 +16,18 @@ using PriceNotifier.AuthFilter;
 
 namespace PriceNotifier.Controllers
 {
+    [MyAuthorize]
     public class ProductsController : ApiController
     {
         private UserContext db = new UserContext();
 
         // GET: api/Products
+       
         public IQueryable<Product> GetProducts()
         {
-            return db.Products;
+            var owinContext = Request.GetOwinContext();
+            var userId = owinContext.Get<int>("userId");
+            return db.Products.Where(c=>c.UserId==userId);
         }
 
         // GET: api/Products/5
@@ -74,7 +78,7 @@ namespace PriceNotifier.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [MyAuthorize]
+        
         // POST: api/Products
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> PostProduct(Product product)
@@ -87,7 +91,7 @@ namespace PriceNotifier.Controllers
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
             product.UserId = userId;
-            var productFound = db.Products.FirstOrDefault(c => c.ProductId == product.ProductId);
+            var productFound = db.Products.Where(c=>c.UserId==product.UserId).FirstOrDefault(c => c.ProductId == product.ProductId);
 
             if (productFound == null) 
             {
@@ -98,11 +102,12 @@ namespace PriceNotifier.Controllers
             return Conflict();
         }
 
+        [HttpDelete]
         // DELETE: api/Products/5
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> DeleteProduct(int id)
         {
-            Product product = await db.Products.FindAsync(id);
+            Product product = await db.Products.FirstOrDefaultAsync(c=>c.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -111,7 +116,7 @@ namespace PriceNotifier.Controllers
             db.Products.Remove(product);
             await db.SaveChangesAsync();
 
-            return Ok(product);
+            return Ok() ;
         }
 
         protected override void Dispose(bool disposing)

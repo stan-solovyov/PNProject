@@ -7,7 +7,7 @@
 
         var logOut = function () {
             localStorage.removeItem('token');
-            window.location = "/";
+            window.location = "/home";
         };
 
         var getToken = function () {

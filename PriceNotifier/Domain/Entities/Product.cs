@@ -14,6 +14,7 @@ namespace Domain.Entities
         public string  ProductId { get; set; }
         public string Url { get; set; }
         public string ImageUrl { get; set; }
+        public bool Checked { get; set; }  
 
         public int UserId { get; set; }
     }

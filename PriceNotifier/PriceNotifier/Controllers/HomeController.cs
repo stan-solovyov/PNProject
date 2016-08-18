@@ -58,27 +58,26 @@ namespace PriceNotifier.Controllers
            
         }
 
+        public ActionResult Index()
+        {
+            
+            return View();
+        }
+
+
         /// <summary>
         /// Renders home page with login link.
         /// </summary>
-        public ActionResult Start()
+        public ActionResult Login()
         {
             var model = _authorizationRoot.Clients.Select(client => new LoginInfoModel
             {
-                ProviderName = client.Name
+                ProviderName = client.Name,
+                LoginLinkUri = client.GetLoginLinkUri()
             });
             return View(model);
         }
 
-        /// <summary>
-        /// Redirect to login url of selected provider.
-        /// </summary>        
-        public RedirectResult Login(string providerName)
-        {
-            //ProviderName = providerName;
-            return new RedirectResult(GetClient(providerName).GetLoginLinkUri());
-           
-        }
 
         /// <summary>
         /// Renders information received from authentication service.

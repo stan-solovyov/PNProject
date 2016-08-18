@@ -1,22 +1,19 @@
 ﻿
-app.controller('MainCtrl', ['$scope', 'tokenService', 'valueService', 'externalProductService', 'toaster', function ($scope, tokenService, valueService, externalProductService, toaster) {
+app.controller('MainCtrl', ['$scope', 'tokenService', 'externalProductService' ,function ($scope, tokenService, externalProductService) {
 
     var onError = function () {
         $scope.error = "Couldn't get response from the server:(";
         $scope.flag = false;
     };
 
-    var onUserCompleteValues = function (data) {
-        $scope.values = data;
-    };
-
+    
     var onUserCompleteProducts = function (data) {
         $scope.products = data.products;
     };
 
-    var onUserAddProducts = function () {
-        $scope.flag = false;
-        toaster.success({ title: "Congrats!", body: "The item was added to your list." });
+    var onUserAddProducts = function (product) {
+        product.hiding = false;
+        
     };
 
     $scope.Logout = function () {
@@ -24,8 +21,8 @@ app.controller('MainCtrl', ['$scope', 'tokenService', 'valueService', 'externalP
     };
 
     $scope.addToList = function (product) {
-        $scope.flag = true;
-        externalProductService.addProducts(product).then(onUserAddProducts, onError);
+       product.hiding = true;
+        externalProductService.addProducts(product).then(onUserAddProducts(product), onError);
     };
 
     $scope.search = function (productname) {
