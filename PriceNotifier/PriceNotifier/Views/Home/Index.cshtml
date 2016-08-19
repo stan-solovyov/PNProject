@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<title>Price Notifier</title>
+<html ng-app="MyApp">
+<head>
+    @Styles.Render("~/content/app")
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+</head>
+<body ng-controller="MainCtrl">
+    <toaster-container toaster-options="{'time-out': '6000', 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="col-lg-6">
+                <ul class="nav navbar-nav">
+                    <li><a class="navbar-brand navbar-left" href="/">Price Notifier</a></li>
+                    <li><a href="/myitems">Tracking products</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <button type="button" class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button>
+            </div>
+        </div>
+    </nav>
+    <div data-ng-view="">
+    </div>
+    <script>
+        (function () {
+            localStorage.setItem('token', "@ViewBag.token");
+        })();
+    </script>
+    @Scripts.Render("~/bundles/app")
+</body>
+</html>

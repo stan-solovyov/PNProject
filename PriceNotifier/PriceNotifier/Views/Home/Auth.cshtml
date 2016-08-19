@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Domain.Entities.User
+<html>
+<head>
+    <script src="~/Scripts/jquery-3.1.0.min.js"></script>
+    <script>
+        $(function(){
+            if (Modernizr.localstorage) {
+                var localToken = window.localStorage;
+                localToken.setItem("token", "@Model.Token");
+
+                function redirect()
+                {
+                    window.location = "/home/index";
+                }
+
+                setTimeout(redirect, [2000]);
+            } else
+            {
+                 alert("Localstorage doesn't work!");
+            }
+        });
+    </script>
+</head>
+<body>
+
+        <h3>Hi @Model.Username!</h3>
+        Social Network: @Model.SocialNetworkName<br />
+        UserID in DB: @Model.Id<br />
+        Social Network UserID: @Model.UserId<br />
+        Token: @Model.Token
+
+</body>
+</html>

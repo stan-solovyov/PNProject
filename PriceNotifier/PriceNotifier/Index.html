@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<title>Price Notifier</title>
+<html ng-app="MyApp">
+<head>
+    <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
+    <link href="Content/loading-bar.min.css" rel="stylesheet" />
+    <link href="Content/toaster.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+</head>
+<body ng-controller="MainCtrl">
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="col-lg-6">
+                <ul class="nav navbar-nav">
+                    <li><a class="navbar-brand navbar-left" href="/">Price Notifier</a></li>
+                    <li><a href="/myitems">Tracking products</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-6"><button type="button" class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button></div>
+        </div>
+    </nav>
+    <div data-ng-view="">
+</div>
+    <!-- Load app main script -->
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/angular-route.min.js"></script>
+    <script src="Scripts/jquery-3.1.0.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="Scripts/angular-local-storage.min.js"></script>
+    <script src="Scripts/loading-bar.min.js"></script>
+    <script src="Scripts/angular-animate.min.js"></script>
+    <script src="Scripts/toaster.min.js"></script>
+    <script src="Scripts/app/app.js"></script>
+    <!-- Load services -->
+    <script src="Scripts/app/Services/tokenService.js"></script>
+    <script src="Scripts/app/Services/tokenInterceptor.js"></script>
+    <script src="Scripts/app/Services/productService.js"></script>
+    <script src="Scripts/app/Services/externalProductService.js"></script>
+    <script src="Scripts/app/Controllers/MainCtrl.js"></script>
+    <script src="Scripts/app/Controllers/ProductCtrl.js"></script>
+</body>
+</html>
