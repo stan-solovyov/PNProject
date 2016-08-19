@@ -5,8 +5,8 @@
 
         var getProducts = function () {
             return $http.get(url)
-                .then(function (data) {
-                    return data;
+                .then(function (response) {
+                    return response;
                 });
         }
 
@@ -22,7 +22,6 @@
                     }
                 })
                 .success(function () {
-                    alert("1");
                     toaster.pop('success', "Congrats!", "The item was removed from your list.");
                 });
 

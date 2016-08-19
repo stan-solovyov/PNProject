@@ -1,52 +1,41 @@
 ﻿using OAuth2;
 using OAuth2.Client;
 using PriceNotifier.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Data.Entity;
 using Domain.EF;
 using Domain.Entities;
 using System.Security.Cryptography;
 using System.Text;
-using PriceNotifier.AuthFilter;
-using OAuth2.Models;
-using System.Net;
+using System.Web;
 
 namespace PriceNotifier.Controllers
 {
     public class HomeController : Controller
     {
         private readonly AuthorizationRoot _authorizationRoot;
-
-        //private static string ProviderName = "";
-
         private UserContext db = new UserContext();
 
-       
         public string GetHashString(string s)
         {
             //переводим строку в байт-массим  
             byte[] bytes = Encoding.Unicode.GetBytes(s);
 
             //создаем объект для получения средст шифрования  
-            MD5CryptoServiceProvider CSP =
-                new MD5CryptoServiceProvider();
+            MD5CryptoServiceProvider csp = new MD5CryptoServiceProvider();
 
             //вычисляем хеш-представление в байтах  
-            byte[] byteHash = CSP.ComputeHash(bytes);
-
+            byte[] byteHash = csp.ComputeHash(bytes);
             string hash = string.Empty;
 
             //формируем одну цельную строку из массива  
             foreach (byte b in byteHash)
-                hash += string.Format("{0:x2}", b);
+            {
+                hash += $"{b:x2}";
+            }
 
             return hash;
         }
-       
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HomeController"/> class.
@@ -55,15 +44,21 @@ namespace PriceNotifier.Controllers
         public HomeController(AuthorizationRoot authorizationRoot)
         {
             _authorizationRoot = authorizationRoot;
-           
         }
 
         public ActionResult Index()
         {
-            
-            return View();
+            if (Request.Cookies.AllKeys.Contains("Token"))
+            {
+                var token = Request.Cookies.Get("Token");
+                if (token != null)
+                {
+                    ViewData["token"] = token.Value;
+                }
+                return View();
+            }
+            return RedirectToAction("Login");
         }
-
 
         /// <summary>
         /// Renders home page with login link.
@@ -78,14 +73,11 @@ namespace PriceNotifier.Controllers
             return View(model);
         }
 
-
         /// <summary>
         /// Renders information received from authentication service.
         /// </summary>
-        
         public ActionResult Auth(string providerName)
         {
-           
             var a = GetClient(providerName).GetUserInfo(Request.QueryString);
 
             User user = new User
@@ -95,7 +87,6 @@ namespace PriceNotifier.Controllers
                 UserId = a.Id,
                 Token = ""
             };
-
 
             if (db.Users != null)
             {
@@ -120,15 +111,13 @@ namespace PriceNotifier.Controllers
             {
                 userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.UserId);
                 db.SaveChanges();
-
-                return View(userFound);
+                HttpCookie cookie = new HttpCookie("Token");
+                cookie.Value = userFound.Token;
+                ControllerContext.HttpContext.Response.Cookies.Add(cookie);
+                return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                return View();
-            }
+            return RedirectToAction("Login", "Home");
         }
-
         private IClient GetClient(string providerName)
         {
             return _authorizationRoot.Clients.First(c => c.Name == providerName);

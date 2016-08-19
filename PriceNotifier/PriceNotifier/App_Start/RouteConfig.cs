@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using System.Security.Cryptography;
 
 namespace PriceNotifier
 {
@@ -31,9 +26,15 @@ namespace PriceNotifier
             );
 
             routes.MapRoute(
+                    "404-PageNotFound",
+                    "{*url}",
+                new { controller = "Home", action = "Index"}
+    );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Login", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
         }
