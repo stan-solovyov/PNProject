@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.EF;
+using Domain.Entities;
 
 namespace Domain.Repository
 {
-    public class ProductRepository<Product> : IProductRepository<Product> where Product : class
+    public class ProductRepository: IRepository<Product>
     {
         private readonly UserContext _context;
         protected DbSet<Product> DbSet;
@@ -16,9 +17,14 @@ namespace Domain.Repository
             DbSet = _context.Set<Product>();
         }
 
-        public IQueryable<Product> GetProductsByUserId()
+        public IQueryable<Product> Query()
         {
-            return DbSet;
+            return _context.Products;
+        }
+
+        public async Task<Product> GetProduct(int id)
+        {
+            return await DbSet.FindAsync(id);
         }
 
         public async Task Update(Product product)
@@ -29,23 +35,13 @@ namespace Domain.Repository
 
         public async Task Create(Product product)
         {
-            DbSet.Add(product);
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Product product)
         {
             DbSet.Remove(product);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task<Product> FindAsync(int id)
-        {
-            return await DbSet.FindAsync(id);
-        }
-
-        public async Task SaveChangesAsync()
-        {
             await _context.SaveChangesAsync();
         }
 

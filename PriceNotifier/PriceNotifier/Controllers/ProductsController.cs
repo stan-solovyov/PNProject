@@ -1,9 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using BLL.ProductService;
 using Domain.EF;
 using Domain.Entities;
 using Domain.Repository;
@@ -14,56 +15,49 @@ namespace PriceNotifier.Controllers
     [MyAuthorize]
     public class ProductsController : ApiController
     {
-        private readonly IProductRepository<Product> _productRepository;
+        private readonly IService<Product> _productService;
 
         public ProductsController()
         {
-            _productRepository = new ProductRepository<Product>(new UserContext());
+            _productService = new ProductService(new ProductRepository(new UserContext()));
         }
 
-        public ProductsController(IProductRepository<Product> productRepository)
+        public ProductsController(IService<Product> productService)
         {
-            _productRepository = productRepository;
+            _productService = productService;
         }
 
         // GET: api/Products
 
-        public IQueryable<Product> GetProducts()
+        public IEnumerable<Product> GetProducts()
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            return _productRepository.GetProductsByUserId().Where(c => c.UserId == userId);
-
+            return _productService.GetByUserId(userId);
         }
 
-        //// GET: api/Products/5
-        //[ResponseType(typeof(Product))]
-        //public async Task<IHttpActionResult> GetProduct(int id)
-        //{
-        //    Product product = await db.Products.FindAsync(id);
-        //    if (product == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: api/Products/5
+        [ResponseType(typeof(Product))]
+        public async Task<IHttpActionResult> GetProduct(int id)
+        {
+            Product product = await _productService.GetById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
 
-        //    return Ok(product);
-        //}
-
-        // PUT: api/Products/5
+        // PUT: api/Products/
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutProduct(int id, Product product)
+        public async Task<IHttpActionResult> PutProduct(Product product)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != product.Id)
-            {
-                return BadRequest();
-            }
-
-            await _productRepository.Update(product);
+            await _productService.Update(product);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
@@ -80,11 +74,11 @@ namespace PriceNotifier.Controllers
             var userId = owinContext.Get<int>("userId");
             product.UserId = userId;
 
-            var productFound = _productRepository.GetProductsByUserId().Where(c=>c.UserId==product.UserId).FirstOrDefault(c => c.ProductId == product.ProductId);
+            var productFound = _productService.FindSpecificProduct(product, product.UserId);
 
             if (productFound == null) 
             {
-                await _productRepository.Create(product);
+                await _productService.Create(product);
                 return CreatedAtRoute("DefaultApi", new { id = product.Id }, product);
             }
             return Conflict();
@@ -95,14 +89,13 @@ namespace PriceNotifier.Controllers
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> DeleteProduct(int id)
         {
-            Product product = await _productRepository.FindAsync(id);
+            Product product = await _productService.GetById(id);
             if (product == null)
             {
                 return NotFound();
             }
 
-            await _productRepository.Delete(product);
-
+            await _productService.Delete(product);
             return Ok() ;
         }
 
@@ -110,14 +103,9 @@ namespace PriceNotifier.Controllers
         {
             if (disposing)
             {
-                _productRepository.Dispose();
+                _productService.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private bool ProductExists(int id)
-        {
-            return _productRepository.GetProductsByUserId().Count(e => e.Id == id) > 0;
         }
     }
 }
