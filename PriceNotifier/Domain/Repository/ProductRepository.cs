@@ -2,14 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.EF;
-using Domain.Entities;
 
 namespace Domain.Repository
 {
-    public class ProductRepository:IProductRepository
+    public class ProductRepository<Product> : IProductRepository<Product> where Product : class
     {
         private readonly UserContext _context;
         protected DbSet<Product> DbSet;
+
         public ProductRepository(UserContext context)
         {
             _context = context;
@@ -43,6 +43,7 @@ namespace Domain.Repository
         {
             return await DbSet.FindAsync(id);
         }
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

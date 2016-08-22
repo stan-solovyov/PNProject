@@ -14,14 +14,14 @@ namespace PriceNotifier.Controllers
     [MyAuthorize]
     public class ProductsController : ApiController
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository<Product> _productRepository;
 
         public ProductsController()
         {
-            _productRepository = new ProductRepository(new UserContext());
+            _productRepository = new ProductRepository<Product>(new UserContext());
         }
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductRepository<Product> productRepository)
         {
             _productRepository = productRepository;
         }

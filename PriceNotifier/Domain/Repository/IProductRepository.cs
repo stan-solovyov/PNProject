@@ -4,13 +4,13 @@ using Domain.Entities;
 
 namespace Domain.Repository
 {
-    public interface IProductRepository
+    public interface IProductRepository<T>
     {
-        IQueryable<Product> GetProductsByUserId();
-        Task Update(Product product);
-        Task Create(Product product);
-        Task Delete(Product product);
-        Task<Product> FindAsync(int id);
+        IQueryable<T> GetProductsByUserId();
+        Task Update(T entity);
+        Task Create(T entity);
+        Task Delete(T entity);
+        Task<T> FindAsync(int id);
         Task SaveChangesAsync();
         void Dispose();
     }
