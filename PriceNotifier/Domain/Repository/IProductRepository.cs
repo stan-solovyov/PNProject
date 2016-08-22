@@ -11,8 +11,11 @@ namespace Domain.Repository
     public interface IProductRepository
     {
         IQueryable<Product> GetProducts();
-        Task<IHttpActionResult> PutProduct(int id, Product product);
-        Task<IHttpActionResult> PostProduct(Product product);
-        Task<IHttpActionResult> DeleteProduct(int id);
+        Task PutProduct(Product product);
+        Task PostProduct(Product product);
+        Task DeleteProduct(Product product);
+        Task<Product> FindAsync(int id);
+        Task SaveChangesAsync();
+        void Dispose();
     }
 }

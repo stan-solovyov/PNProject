@@ -22,7 +22,7 @@
             return $http.put('/api/Products/' + id,
                 JSON.stringify(product)
             ).success(function () {
-                    toaster.pop('success', "Congrats!", "The item is no longer be tracked.");
+                    toaster.pop('success', "Congrats!", "The item will no longer be tracked.");
                 });
         };
 

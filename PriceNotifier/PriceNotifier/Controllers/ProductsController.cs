@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
@@ -8,6 +9,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using Domain.EF;
 using Domain.Entities;
+using Domain.Repository;
 using PriceNotifier.AuthFilter;
 
 namespace PriceNotifier.Controllers
@@ -15,29 +17,44 @@ namespace PriceNotifier.Controllers
     [MyAuthorize]
     public class ProductsController : ApiController
     {
-        private UserContext db = new UserContext();
+        //private UserContext db = new UserContext();
+
+        private readonly IProductRepository _productRepository;
+
+        public ProductsController()
+        {
+            _productRepository = new ProductRepository(new UserContext());
+        }
+
+        public ProductsController(IProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
 
         // GET: api/Products
-       
+
         public IQueryable<Product> GetProducts()
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            return db.Products.Where(c=>c.UserId==userId);
+            //return db.Products.Where(c=>c.UserId==userId);
+
+            return _productRepository.GetProducts().Where(c => c.UserId == userId);
+
         }
 
-        // GET: api/Products/5
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> GetProduct(int id)
-        {
-            Product product = await db.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+        //// GET: api/Products/5
+        //[ResponseType(typeof(Product))]
+        //public async Task<IHttpActionResult> GetProduct(int id)
+        //{
+        //    Product product = await db.Products.FindAsync(id);
+        //    if (product == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(product);
-        }
+        //    return Ok(product);
+        //}
 
         // PUT: api/Products/5
         [ResponseType(typeof(void))]
@@ -53,11 +70,11 @@ namespace PriceNotifier.Controllers
                 return BadRequest();
             }
 
-            db.Entry(product).State = EntityState.Modified;
+            await _productRepository.PutProduct(product);
 
             try
             {
-                await db.SaveChangesAsync();
+                await _productRepository.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,12 +100,12 @@ namespace PriceNotifier.Controllers
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
             product.UserId = userId;
-            var productFound = db.Products.Where(c=>c.UserId==product.UserId).FirstOrDefault(c => c.ProductId == product.ProductId);
+
+            var productFound = _productRepository.GetProducts().Where(c=>c.UserId==product.UserId).FirstOrDefault(c => c.ProductId == product.ProductId);
 
             if (productFound == null) 
             {
-                db.Products.Add(product);
-                await db.SaveChangesAsync();
+                await _productRepository.PostProduct(product);
                 return CreatedAtRoute("DefaultApi", new { id = product.Id }, product);
             }
             return Conflict();
@@ -99,14 +116,13 @@ namespace PriceNotifier.Controllers
         [ResponseType(typeof(Product))]
         public async Task<IHttpActionResult> DeleteProduct(int id)
         {
-            Product product = await db.Products.FirstOrDefaultAsync(c=>c.Id == id);
+            Product product = await _productRepository.FindAsync(id); ;
             if (product == null)
             {
                 return NotFound();
             }
 
-            db.Products.Remove(product);
-            await db.SaveChangesAsync();
+            await _productRepository.DeleteProduct(product);
 
             return Ok() ;
         }
@@ -115,14 +131,14 @@ namespace PriceNotifier.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _productRepository.Dispose();
             }
             base.Dispose(disposing);
         }
 
         private bool ProductExists(int id)
         {
-            return db.Products.Count(e => e.Id == id) > 0;
+            return _productRepository.GetProducts().Count(e => e.Id == id) > 0;
         }
     }
 }
