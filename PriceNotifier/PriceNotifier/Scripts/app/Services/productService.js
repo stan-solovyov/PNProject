@@ -16,13 +16,13 @@
                 return $http.put('/api/Products/' + id,
                 JSON.stringify(product)
             ).success(function () {
-                toaster.pop('success', "Congrats!", "You began tracking this item.");
+                toaster.pop('note', "", "You began tracking this item.");
             });
             };
             return $http.put('/api/Products/' + id,
                 JSON.stringify(product)
             ).success(function () {
-                    toaster.pop('success', "Congrats!", "The item will no longer be tracked.");
+                toaster.pop('note', "", "The item will no longer be tracked.");
                 });
         };
 

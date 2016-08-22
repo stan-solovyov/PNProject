@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Http;
 using Domain.EF;
 using Domain.Entities;
 
@@ -20,25 +16,24 @@ namespace Domain.Repository
             DbSet = _context.Set<Product>();
         }
 
-
-        public IQueryable<Product> GetProducts()
+        public IQueryable<Product> GetProductsByUserId()
         {
             return DbSet;
         }
 
-        public async Task PutProduct(Product product)
+        public async Task Update(Product product)
         {
             _context.Entry(product).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
 
-        public async Task PostProduct(Product product)
+        public async Task Create(Product product)
         {
             DbSet.Add(product);
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteProduct(Product product)
+        public async Task Delete(Product product)
         {
             DbSet.Remove(product);
             await _context.SaveChangesAsync();
