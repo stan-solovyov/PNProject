@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Owin;
 using Owin;
+using PriceNotifier.DTO;
 using WebGrease.Configuration;
 
 [assembly: OwinStartup(typeof(PriceNotifier.Startup))]
@@ -16,6 +17,7 @@ namespace PriceNotifier
             HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
             app.UseWebApi(config);
+            AutoMapperInitializer.Initialize();
         }
     }
 }

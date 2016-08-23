@@ -22,7 +22,7 @@ namespace Domain.Repository
             return _context.Products;
         }
 
-        public async Task<Product> GetProduct(int id)
+        public async Task<Product> Get(int id)
         {
             return await DbSet.FindAsync(id);
         }

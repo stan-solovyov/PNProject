@@ -22,9 +22,9 @@ namespace BLL.ProductService
         }
 
 
-        public IEnumerable<Product> GetByUserId(int id)
+        public IEnumerable<Product> GetByUserId(int userId)
         {
-            return _productRepository.Query().Where(c => c.UserId == id);
+            return _productRepository.Query().Where(c => c.UserId == userId);
         }
 
         public async Task Create(Product product)
@@ -37,9 +37,9 @@ namespace BLL.ProductService
             await _productRepository.Update(product);
         }
 
-        public async Task<Product> GetById(int id)
+        public async Task<Product> GetById(int productId)
         {
-            Product product = await _productRepository.GetProduct(id);
+            Product product = await _productRepository.Get(productId);
             return product;
         }
 
@@ -53,9 +53,9 @@ namespace BLL.ProductService
             _productRepository.Dispose();
         }
 
-        public  Product FindSpecificProduct(Product product, int id)
+        public  Product Get(int externalProductId, int userId)
         {
-            return _productRepository.Query().Where(c => c.UserId == id).FirstOrDefault(c => c.ProductId == product.ProductId);
+            return _productRepository.Query().Where(c => c.UserId == userId).FirstOrDefault(c => c.Id == externalProductId);
         }
     }
 }

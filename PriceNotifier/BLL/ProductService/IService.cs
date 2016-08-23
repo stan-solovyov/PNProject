@@ -6,11 +6,11 @@ namespace BLL.ProductService
 {
     public interface IService<T>:IDisposable where T : class
     {
-        IEnumerable<T> GetByUserId(int userid);
+        IEnumerable<T> GetByUserId(int userId);
         Task Create(T entity);
         Task Update(T entity);
         Task<T> GetById(int id);
-        T FindSpecificProduct(T entity,int id);
+        T Get(int externalProductId ,int userId);
         Task Delete(T entity);
     }
 }

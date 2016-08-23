@@ -4,11 +4,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AutoMapper;
 using BLL.ProductService;
 using Domain.EF;
 using Domain.Entities;
 using Domain.Repository;
 using PriceNotifier.AuthFilter;
+using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
@@ -29,41 +31,34 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public IEnumerable<Product> GetProducts()
+        public IEnumerable<ProductDto> GetProducts()
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            return _productService.GetByUserId(userId);
+
+            var userProducts = Mapper.Map<IEnumerable<ProductDto>>(_productService.GetByUserId(userId));
+
+            return userProducts;
         }
 
         // GET: api/Products/5
         [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> GetProduct(int id)
+        public async Task<IHttpActionResult> Get(int id)
         {
+
             Product product = await _productService.GetById(id);
             if (product == null)
             {
                 return NotFound();
             }
-            return Ok(product);
+
+            var productDto = Mapper.Map<Product, ProductDto>(product);
+            return Ok(productDto);
         }
 
         // PUT: api/Products/
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutProduct(Product product)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _productService.Update(product);
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        // POST: api/Products
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> PostProduct(Product product)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<IHttpActionResult> Put(ProductDto productDto)
         {
             if (!ModelState.IsValid)
             {
@@ -72,14 +67,37 @@ namespace PriceNotifier.Controllers
 
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
+
+            var productFound = _productService.Get(productDto.Id, userId);
+            if (productFound != null)
+            {
+                productFound = Mapper.Map(productDto, productFound);
+                await _productService.Update(productFound);
+                productDto = Mapper.Map(productFound,productDto);
+                return Ok(productDto);
+            }
+            return NotFound();
+        }
+
+        // POST: api/Products
+        [ResponseType(typeof(Product))]
+        public async Task<IHttpActionResult> Post(ProductDto productDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var product = Mapper.Map<ProductDto, Product>(productDto);
+            var owinContext = Request.GetOwinContext();
+            var userId = owinContext.Get<int>("userId");
             product.UserId = userId;
 
-            var productFound = _productService.FindSpecificProduct(product, product.UserId);
+            var productFound = _productService.Get(productDto.Id, product.UserId);
 
-            if (productFound == null) 
+            if (productFound == null)
             {
                 await _productService.Create(product);
-                return CreatedAtRoute("DefaultApi", new { id = product.Id }, product);
+                return CreatedAtRoute("DefaultApi", new { id = product.Id }, productDto);
             }
             return Conflict();
         }
@@ -87,7 +105,7 @@ namespace PriceNotifier.Controllers
         [HttpDelete]
         // DELETE: api/Products/5
         [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> DeleteProduct(int id)
+        public async Task<IHttpActionResult> Delete(int id)
         {
             Product product = await _productService.GetById(id);
             if (product == null)
@@ -96,7 +114,7 @@ namespace PriceNotifier.Controllers
             }
 
             await _productService.Delete(product);
-            return Ok() ;
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)
