@@ -21,7 +21,6 @@ namespace BLL.ProductService
             _productRepository = productRepository;
         }
 
-
         public IEnumerable<Product> GetByUserId(int userId)
         {
             return _productRepository.Query().Where(c => c.UserId == userId);
@@ -53,9 +52,14 @@ namespace BLL.ProductService
             _productRepository.Dispose();
         }
 
-        public  Product Get(int externalProductId, int userId)
+        public  Product GetByExtId(string externalProductId, int userId)
         {
-            return _productRepository.Query().Where(c => c.UserId == userId).FirstOrDefault(c => c.Id == externalProductId);
+            return _productRepository.Query().Where(c => c.UserId == userId).FirstOrDefault(c => c.ExternalProductId == externalProductId);
+        }
+
+        public Product Get(int productId, int userId)
+        {
+            return _productRepository.Query().Where(c => c.UserId == userId).FirstOrDefault(c => c.Id == productId);
         }
     }
 }

@@ -88,6 +88,14 @@
     <Compile Include="Migrations\201608231654105_externalProductId.Designer.cs">
       <DependentUpon>201608231654105_externalProductId.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608240842407_Index.cs" />
+    <Compile Include="Migrations\201608240842407_Index.Designer.cs">
+      <DependentUpon>201608240842407_Index.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608240947471_IndexMaxLength.cs" />
+    <Compile Include="Migrations\201608240947471_IndexMaxLength.Designer.cs">
+      <DependentUpon>201608240947471_IndexMaxLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
@@ -115,6 +123,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608231654105_externalProductId.resx">
       <DependentUpon>201608231654105_externalProductId.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608240842407_Index.resx">
+      <DependentUpon>201608240842407_Index.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608240947471_IndexMaxLength.resx">
+      <DependentUpon>201608240947471_IndexMaxLength.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

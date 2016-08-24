@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -92,7 +91,7 @@ namespace PriceNotifier.Controllers
             var userId = owinContext.Get<int>("userId");
             product.UserId = userId;
 
-            var productFound = _productService.Get(productDto.Id, product.UserId);
+            var productFound = _productService.GetByExtId(productDto.ExternalProductId, product.UserId);
 
             if (productFound == null)
             {

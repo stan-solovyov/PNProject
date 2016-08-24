@@ -23,7 +23,7 @@
             var productDto = {
                 Name: product.full_name,
                 Price: price,
-                ProductId: product.id,
+                ExternalProductId: product.id,
                 Url: product.html_url,
                 ImageUrl: product.images.icon,
                 Checked:true

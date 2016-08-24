@@ -10,7 +10,8 @@ namespace BLL.ProductService
         Task Create(T entity);
         Task Update(T entity);
         Task<T> GetById(int id);
-        T Get(int externalProductId ,int userId);
+        T GetByExtId(string externalProductId ,int userId);
+        T Get(int productId, int userId);
         Task Delete(T entity);
     }
 }
