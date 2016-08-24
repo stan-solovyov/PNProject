@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
@@ -41,18 +43,16 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Products/5
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> Get(int id)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<ProductDto> Get(int id)
         {
-
             Product product = await _productService.GetById(id);
             if (product == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
             var productDto = Mapper.Map<Product, ProductDto>(product);
-            return Ok(productDto);
+            return productDto;
         }
 
         // PUT: api/Products/
@@ -103,17 +103,17 @@ namespace PriceNotifier.Controllers
 
         [HttpDelete]
         // DELETE: api/Products/5
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> Delete(int id)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<ProductDto> Delete(int id)
         {
             Product product = await _productService.GetById(id);
             if (product == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
+            var productDto = Mapper.Map<Product, ProductDto>(product);
             await _productService.Delete(product);
-            return Ok();
+            return productDto;
         }
 
         protected override void Dispose(bool disposing)
