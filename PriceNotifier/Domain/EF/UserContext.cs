@@ -12,7 +12,7 @@ namespace Domain.EF
     {
         public UserContext()
         {
-            Database.SetInitializer<UserContext>(new DropCreateDatabaseIfModelChanges<UserContext>());
+            Database.SetInitializer<UserContext>(new   DropCreateDatabaseIfModelChanges<UserContext>());
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }

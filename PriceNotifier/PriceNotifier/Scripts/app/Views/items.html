@@ -1,5 +1,5 @@
 ﻿<div ng-controller="ProductCtrl">
-    <cen style="text-align:center"><h2>{{Message}}</h2></cen>
+    <cen style="text-align:center" ng-show ="demonstrate"><h2>{{Message}}</h2></cen>
     <div class="container" ng-repeat="product in dbproducts" ng-show="dbproducts">
         <div class="container">
             <div class="col-lg-4">
@@ -13,7 +13,7 @@
                 <button type="button" class="btn btn-danger ng-cloak" ng-click="remove(product)">Remove item</button>
                 <label class="ng-cloak">
                     Keep tracking:
-                    <input type="checkbox" ng-model="product.Checked">
+                    <input type="checkbox" ng-model="product.Checked" ng-change="update(product)">
                 </label><br/>
             </div>
         </div>
