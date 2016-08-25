@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -35,33 +36,29 @@ namespace PriceNotifier.Controllers
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
 
-            var userProducts = Mapper.Map<IEnumerable<ProductDto>>(_productService.GetByUserId(userId));
-
-            return userProducts;
+            return Mapper.Map<IEnumerable<ProductDto>>(_productService.GetByUserId(userId));
         }
 
         // GET: api/Products/5
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> Get(int id)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<ProductDto> Get(int id)
         {
-
             Product product = await _productService.GetById(id);
             if (product == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            var productDto = Mapper.Map<Product, ProductDto>(product);
-            return Ok(productDto);
+            return Mapper.Map<Product, ProductDto>(product);
         }
 
         // PUT: api/Products/
         [ResponseType(typeof(ProductDto))]
-        public async Task<IHttpActionResult> Put(ProductDto productDto)
+        public async Task<ProductDto> Put(ProductDto productDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             var owinContext = Request.GetOwinContext();
@@ -73,43 +70,44 @@ namespace PriceNotifier.Controllers
                 productFound = Mapper.Map(productDto, productFound);
                 await _productService.Update(productFound);
                 productDto = Mapper.Map(productFound,productDto);
-                return Ok(productDto);
+                return productDto;
             }
-            return NotFound();
+
+            throw new HttpResponseException(HttpStatusCode.NotFound);
         }
 
         // POST: api/Products
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> Post(ProductDto productDto)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<ProductDto> Post(ProductDto productDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            var product = Mapper.Map<ProductDto, Product>(productDto);
+
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            product.UserId = userId;
 
-            var productFound = _productService.GetByExtId(productDto.ExternalProductId, product.UserId);
-
+            var productFound = _productService.GetByExtId(productDto.ExternalProductId, userId);
             if (productFound == null)
             {
+                var product = Mapper.Map<ProductDto, Product>(productDto);
+                product.UserId = userId;
                 await _productService.Create(product);
-                return CreatedAtRoute("DefaultApi", new { id = product.Id }, productDto);
+                return productDto;
             }
-            return Conflict();
+
+            throw new HttpResponseException(HttpStatusCode.Conflict);
         }
 
-        [HttpDelete]
         // DELETE: api/Products/5
-        [ResponseType(typeof(Product))]
+        [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> Delete(int id)
         {
             Product product = await _productService.GetById(id);
             if (product == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             await _productService.Delete(product);
@@ -122,6 +120,7 @@ namespace PriceNotifier.Controllers
             {
                 _productService.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }
