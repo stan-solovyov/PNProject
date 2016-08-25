@@ -36,9 +36,7 @@ namespace PriceNotifier.Controllers
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
 
-            var userProducts = Mapper.Map<IEnumerable<ProductDto>>(_productService.GetByUserId(userId));
-
-            return userProducts;
+            return Mapper.Map<IEnumerable<ProductDto>>(_productService.GetByUserId(userId));
         }
 
         // GET: api/Products/5
@@ -50,8 +48,8 @@ namespace PriceNotifier.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            var productDto = Mapper.Map<Product, ProductDto>(product);
-            return productDto;
+
+            return Mapper.Map<Product, ProductDto>(product);
         }
 
         // PUT: api/Products/
@@ -74,6 +72,7 @@ namespace PriceNotifier.Controllers
                 productDto = Mapper.Map(productFound,productDto);
                 return productDto;
             }
+
             throw new HttpResponseException(HttpStatusCode.NotFound);
         }
 
@@ -85,34 +84,34 @@ namespace PriceNotifier.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
-            var product = Mapper.Map<ProductDto, Product>(productDto);
+
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            product.UserId = userId;
 
-            var productFound = _productService.GetByExtId(productDto.ExternalProductId, product.UserId);
-
+            var productFound = _productService.GetByExtId(productDto.ExternalProductId, userId);
             if (productFound == null)
             {
+                var product = Mapper.Map<ProductDto, Product>(productDto);
+                product.UserId = userId;
                 await _productService.Create(product);
                 return productDto;
             }
+
             throw new HttpResponseException(HttpStatusCode.Conflict);
         }
 
-        [HttpDelete]
         // DELETE: api/Products/5
-        [ResponseType(typeof(ProductDto))]
-        public async Task<ProductDto> Delete(int id)
+        [ResponseType(typeof(void))]
+        public async Task<IHttpActionResult> Delete(int id)
         {
             Product product = await _productService.GetById(id);
             if (product == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            var productDto = Mapper.Map<Product, ProductDto>(product);
+
             await _productService.Delete(product);
-            return productDto;
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)
@@ -121,6 +120,7 @@ namespace PriceNotifier.Controllers
             {
                 _productService.Dispose();
             }
+
             base.Dispose(disposing);
         }
     }
