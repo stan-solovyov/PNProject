@@ -57,11 +57,11 @@ namespace PriceNotifier.Controllers
 
         // PUT: api/Products/
         [ResponseType(typeof(ProductDto))]
-        public async Task<IHttpActionResult> Put(ProductDto productDto)
+        public async Task<ProductDto> Put(ProductDto productDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             var owinContext = Request.GetOwinContext();
@@ -73,18 +73,18 @@ namespace PriceNotifier.Controllers
                 productFound = Mapper.Map(productDto, productFound);
                 await _productService.Update(productFound);
                 productDto = Mapper.Map(productFound,productDto);
-                return Ok(productDto);
+                return productDto;
             }
-            return NotFound();
+            throw new HttpResponseException(HttpStatusCode.NotFound);
         }
 
         // POST: api/Products
-        [ResponseType(typeof(Product))]
-        public async Task<IHttpActionResult> Post(ProductDto productDto)
+        [ResponseType(typeof(ProductDto))]
+        public async Task<ProductDto> Post(ProductDto productDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
             var product = Mapper.Map<ProductDto, Product>(productDto);
             var owinContext = Request.GetOwinContext();
@@ -96,9 +96,9 @@ namespace PriceNotifier.Controllers
             if (productFound == null)
             {
                 await _productService.Create(product);
-                return CreatedAtRoute("DefaultApi", new { id = product.Id }, productDto);
+                return productDto;
             }
-            return Conflict();
+            throw new HttpResponseException(HttpStatusCode.Conflict);
         }
 
         [HttpDelete]
