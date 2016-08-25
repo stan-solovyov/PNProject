@@ -27,21 +27,20 @@ namespace PNTests
         {
             //Arrange
             var userId = 1;
+            Product product = new Product
+            {
+                Id = 297,
+                Checked = true,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserId = userId
+            };
             var mockService = new Mock<IService<Product>>();
             mockService.Setup(x => x.GetByUserId(userId))
-                .Returns(new List<Product>
-                { new Product
-                {
-                    Id = 297,
-                    Checked = true,
-                    ExternalProductId = "12345",
-                    Name = "asdasasf",
-                    Price = "3214",
-                    Url = "aasdsad",
-                    ImageUrl = "asdasd",
-                    UserId = userId
-                }
-                });
+                .Returns(new List<Product>{ product });
             var controller = new ProductsController(mockService.Object);
 
             //Set up OwinContext
@@ -63,18 +62,19 @@ namespace PNTests
         {
             //Arrange
             var mockService = new Mock<IService<Product>>();
+            Product product = new Product
+            {
+                Id = 297,
+                Checked = true,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserId = 1
+            };
             mockService.Setup(x => x.GetById(It.IsAny<int>()))
-                .ReturnsAsync(new Product
-                {
-                    Id = 297,
-                    Checked = true,
-                    ExternalProductId = "12345",
-                    Name = "asdasasf",
-                    Price = "3214",
-                    Url = "aasdsad",
-                    ImageUrl = "asdasd",
-                    UserId = 1
-                });
+                .ReturnsAsync(product);
             var controller = new ProductsController(mockService.Object);
             //Act
             ProductDto result = await controller.Get(297);
@@ -101,6 +101,17 @@ namespace PNTests
         {
             //Arrange
             var productId = 297;
+            var product = new Product
+            {
+                Id = productId,
+                Checked = true,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserId = 1
+            };
             var mockService = new Mock<IService<Product>>();
             mockService.Setup(x => x.GetById(productId))
                 .ReturnsAsync(new Product
@@ -113,25 +124,16 @@ namespace PNTests
                     Url = "aasdsad",
                     ImageUrl = "asdasd",
                     UserId = 1
-                });
+                }).Verifiable();
 
-            mockService.Setup(x => x.Delete(new Product
-            {
-                Id = productId,
-                Checked = true,
-                ExternalProductId = "12345",
-                Name = "asdasasf",
-                Price = "3214",
-                Url = "aasdsad",
-                ImageUrl = "asdasd",
-                UserId = 1
-            })).Callback<Product>(c=>Assert.AreEqual(c.Id,productId));
+            mockService.Setup(x => x.Delete(product));
             var controller = new ProductsController(mockService.Object);
             //Act
-            ProductDto result = await controller.Delete(productId);
+            IHttpActionResult result = await controller.Delete(productId);
+
             //Assert
-            Assert.IsNotNull(result);
-            //mockService.Verify();
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            mockService.Verify();
         }
 
         [TestMethod]
@@ -140,21 +142,19 @@ namespace PNTests
 
             //Arrange
             var userId = 1;
-            var mockService = new Mock<IService<Product>>();
-            mockService.Setup(x => x.GetByExtId("12345", userId))
-                .Returns(new Product
-                {
-                    Id = 297,
-                    Checked = true,
-                    ExternalProductId = "12345",
-                    Name = "asdasasf",
-                    Price = "3214",
-                    Url = "aasdsad",
-                    ImageUrl = "asdasd",
-                    UserId = userId
-                });
+            Product product = new Product
+            {
+                Id = 297,
+                Checked = true,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserId = userId
+            };
 
-            mockService.Setup(x => x.Create(new Product
+            Product newProduct = new Product
             {
                 Id = 298,
                 Checked = true,
@@ -164,7 +164,24 @@ namespace PNTests
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = userId
-            })).Callback<Product>(c => Assert.AreEqual(c.UserId, userId));
+            };
+
+            ProductDto newProductDto = new ProductDto()
+            {
+                Id = 298,
+                Checked = true,
+                ExternalProductId = "432",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd"
+            };
+
+            var mockService = new Mock<IService<Product>>();
+            mockService.Setup(x => x.GetByExtId(product.ExternalProductId, userId))
+                .Returns(product);
+
+            mockService.Setup(x => x.Create(newProduct)).Callback<Product>(c => Assert.AreEqual(c.UserId, userId));
             var controller = new ProductsController(mockService.Object);
 
             //Set up OwinContext
@@ -174,16 +191,7 @@ namespace PNTests
             owinContext.Set("userId", userId);
 
             //Act
-            ProductDto result = await controller.Post(new ProductDto()
-            {
-                Id = 298,
-                Checked = true,
-                ExternalProductId = "432",
-                Name = "asdasasf",
-                Price = "3214",
-                Url = "aasdsad",
-                ImageUrl = "asdasd"
-            });
+            ProductDto result = await controller.Post(newProductDto);
             //Assert
             Assert.IsNotNull(result);
         }
@@ -195,21 +203,7 @@ namespace PNTests
             //Arrange
             var userId = 1;
             var productId = 297;
-            var mockService = new Mock<IService<Product>>();
-            mockService.Setup(x => x.Get(297, userId))
-                .Returns(new Product
-                {
-                    Id = productId,
-                    Checked = true,
-                    ExternalProductId = "12345",
-                    Name = "asdasasf",
-                    Price = "3214",
-                    Url = "aasdsad",
-                    ImageUrl = "asdasd",
-                    UserId = userId
-                });
-
-            mockService.Setup(x => x.Update(new Product
+            var product = new Product
             {
                 Id = productId,
                 Checked = true,
@@ -219,7 +213,36 @@ namespace PNTests
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = userId
-            })).Callback<Product>(c => Assert.AreEqual(c.UserId, userId));
+            };
+
+            var productNew = new Product
+            {
+                Id = productId,
+                Checked = false,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserId = userId
+            };
+
+            var productDto = new ProductDto
+            {
+                Id = productId,
+                Checked = true,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = "3214",
+                Url = "aasdsad",
+                ImageUrl = "asdasd"
+            };
+
+            var mockService = new Mock<IService<Product>>();
+            mockService.Setup(x => x.Get(productId, userId))
+                .Returns(product);
+
+            mockService.Setup(x => x.Update(productNew)).Callback<Product>(c => Assert.AreEqual(c.UserId, userId));
             var controller = new ProductsController(mockService.Object);
 
             //Set up OwinContext
@@ -229,16 +252,7 @@ namespace PNTests
             owinContext.Set("userId", userId);
 
             //Act
-            ProductDto result = await controller.Put(new ProductDto
-            {
-                Id = productId,
-                Checked = false,
-                ExternalProductId = "12345",
-                Name = "asdasasf",
-                Price = "3214",
-                Url = "aasdsad",
-                ImageUrl = "asdasd"
-            });
+            ProductDto result = await controller.Put(productDto);
             //Assert
             Assert.IsNotNull(result);
         }
