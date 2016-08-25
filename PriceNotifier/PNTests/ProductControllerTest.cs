@@ -219,7 +219,7 @@ namespace PNTests
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = userId
-            })).Callback<Product>(c => Assert.AreEqual(c.UserId, userId)); ;
+            })).Callback<Product>(c => Assert.AreEqual(c.UserId, userId));
             var controller = new ProductsController(mockService.Object);
 
             //Set up OwinContext
