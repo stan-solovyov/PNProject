@@ -23,7 +23,7 @@ namespace PNTests
         }
 
         [TestMethod]
-        public void GetProductsTest()
+        public async void GetProductsTest()
         {
             //Arrange
             var userId = 1;
@@ -50,7 +50,7 @@ namespace PNTests
             owinContext.Set("userId", userId);
             
             //Act
-            IEnumerable<ProductDto> result =  controller.GetProducts().Result;
+            IEnumerable<ProductDto> result =  await controller.GetProducts();
             
             //Assert
             Assert.IsNotNull(result);
