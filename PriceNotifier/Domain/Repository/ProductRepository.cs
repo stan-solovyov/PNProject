@@ -44,10 +44,5 @@ namespace Domain.Repository
             DbSet.Remove(product);
             await _context.SaveChangesAsync();
         }
-
-        public void Dispose()
-        {
-            _context?.Dispose();
-        }
     }
 }

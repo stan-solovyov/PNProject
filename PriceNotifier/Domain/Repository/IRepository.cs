@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Repository
 {
-    public interface IRepository<T> : IDisposable where T : class
+    public interface IRepository<T> where T : class
     {
         IQueryable<T> Query();
         Task<T> Get(int i);
