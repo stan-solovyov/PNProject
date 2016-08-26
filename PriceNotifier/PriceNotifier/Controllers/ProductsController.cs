@@ -86,7 +86,8 @@ namespace PriceNotifier.Controllers
             {
                 var product = Mapper.Map<ProductDto, Product>(productDto);
                 product.UserId = userId;
-                await _productService.Create(product);
+                var productFromDb = await _productService.Create(product);
+                productDto = Mapper.Map(productFromDb, productDto);
                 return productDto;
             }
 
