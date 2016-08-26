@@ -6,9 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
 using BLL.ProductService;
-using Domain.EF;
 using Domain.Entities;
-using Domain.Repository;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
 
@@ -19,11 +17,6 @@ namespace PriceNotifier.Controllers
     {
         private readonly IService<Product> _productService;
 
-        public ProductsController()
-        {
-            _productService = new ProductService(new ProductRepository(new UserContext()));
-        }
-
         public ProductsController(IService<Product> productService)
         {
             _productService = productService;
@@ -31,12 +24,12 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public IEnumerable<ProductDto> GetProducts()
+        public async Task<IEnumerable<ProductDto>> GetProducts()
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-
-            return Mapper.Map<IEnumerable<ProductDto>>(_productService.GetByUserId(userId));
+            var users = await _productService.GetByUserId(userId);
+            return Mapper.Map<IEnumerable<ProductDto>>(users);
         }
 
         // GET: api/Products/5
@@ -69,7 +62,7 @@ namespace PriceNotifier.Controllers
             {
                 productFound = Mapper.Map(productDto, productFound);
                 await _productService.Update(productFound);
-                productDto = Mapper.Map(productFound,productDto);
+                productDto = Mapper.Map(productFound, productDto);
                 return productDto;
             }
 
@@ -112,16 +105,6 @@ namespace PriceNotifier.Controllers
 
             await _productService.Delete(product);
             return Ok();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _productService.Dispose();
-            }
-
-            base.Dispose(disposing);
         }
     }
 }
