@@ -22,9 +22,10 @@ namespace BLL.ProductService
             return await _productRepository.Query().Where(c => c.UserId == userId).ToListAsync();
         }
 
-        public async Task Create(Product product)
+        public async Task<Product> Create(Product product)
         {
             await _productRepository.Create(product);
+            return product;
         }
 
         public async Task Update(Product product)
