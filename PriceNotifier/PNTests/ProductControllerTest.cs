@@ -40,7 +40,7 @@ namespace PNTests
             };
             var mockService = new Mock<IService<Product>>();
             mockService.Setup(x => x.GetByUserId(userId))
-                .Returns(new List<Product>{ product });
+                .ReturnsAsync(new List<Product>{ product });
             var controller = new ProductsController(mockService.Object);
 
             //Set up OwinContext
@@ -50,7 +50,7 @@ namespace PNTests
             owinContext.Set("userId", userId);
             
             //Act
-            IEnumerable<ProductDto> result =  controller.GetProducts();
+            IEnumerable<ProductDto> result =  controller.GetProducts().Result;
             
             //Assert
             Assert.IsNotNull(result);
