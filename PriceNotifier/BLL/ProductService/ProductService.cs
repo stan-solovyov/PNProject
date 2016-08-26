@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.EF;
@@ -18,7 +19,7 @@ namespace BLL.ProductService
 
         public async Task<IEnumerable<Product>> GetByUserId(int userId)
         {
-            return await Task.FromResult(_productRepository.Query().Where(c => c.UserId == userId).ToList());
+            return await _productRepository.Query().Where(c => c.UserId == userId).ToListAsync();
         }
 
         public async Task Create(Product product)
