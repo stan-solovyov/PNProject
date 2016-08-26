@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 
 namespace BLL.ProductService
 {
-    public interface IService<T>:IDisposable where T : class
+    public interface IService<T> where T : class
     {
-        IEnumerable<T> GetByUserId(int userId);
+        Task<IEnumerable<T>> GetByUserId(int userId);
         Task Create(T entity);
         Task Update(T entity);
         Task<T> GetById(int id);

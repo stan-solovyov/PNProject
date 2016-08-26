@@ -11,19 +11,14 @@ namespace BLL.ProductService
     {
         private readonly IRepository<Product> _productRepository;
 
-        public ProductService()
-        {
-            _productRepository = new ProductRepository(new UserContext());
-        }
-
         public ProductService(IRepository<Product> productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public IEnumerable<Product> GetByUserId(int userId)
+        public async Task<IEnumerable<Product>> GetByUserId(int userId)
         {
-            return _productRepository.Query().Where(c => c.UserId == userId);
+            return await Task.FromResult(_productRepository.Query().Where(c => c.UserId == userId).ToList());
         }
 
         public async Task Create(Product product)
@@ -45,11 +40,6 @@ namespace BLL.ProductService
         public async Task Delete(Product product)
         {
             await _productRepository.Delete(product);
-        }
-
-        public void Dispose()
-        {
-            _productRepository.Dispose();
         }
 
         public  Product GetByExtId(string externalProductId, int userId)
