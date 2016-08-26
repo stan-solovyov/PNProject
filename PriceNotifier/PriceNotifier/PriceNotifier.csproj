@@ -216,6 +216,7 @@
     <Compile Include="AuthFilter\MyAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DTO\AutoMapperInitializer.cs" />
     <Compile Include="DTO\MyMappingProfile.cs" />
     <Compile Include="DTO\ProductDTO.cs" />
