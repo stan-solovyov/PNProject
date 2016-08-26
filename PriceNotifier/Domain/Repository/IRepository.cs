@@ -9,7 +9,7 @@ namespace Domain.Repository
         IQueryable<T> Query();
         Task<T> Get(int i);
         Task Update(T entity);
-        Task Create(T entity);
+        Task<T> Create(T entity);
         Task Delete(T entity);
     }
 }

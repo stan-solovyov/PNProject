@@ -32,7 +32,7 @@ namespace Domain.Repository
             throw new NotImplementedException();
         }
 
-        public Task Create(User entity)
+        public Task<User> Create(User entity)
         {
             throw new NotImplementedException();
         }

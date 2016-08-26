@@ -33,10 +33,11 @@ namespace Domain.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task Create(Product product)
+        public async Task<Product> Create(Product product)
         {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
+            return product;
         }
 
         public async Task Delete(Product product)
