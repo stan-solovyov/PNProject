@@ -14,6 +14,11 @@ app.config(['$httpProvider', '$routeProvider', '$locationProvider', function ($h
         templateUrl: "/scripts/app/Views/items.html"
     });
 
+    $routeProvider.when("/users", {
+        controller: "UserCtrl",
+        templateUrl: "/scripts/app/Views/users.html"
+    });
+
     $routeProvider.otherwise({ redirectTo: "/" });
 
     $locationProvider.html5Mode({

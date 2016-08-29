@@ -275,6 +275,7 @@
     <Content Include="Scripts\app\app.js" />
     <Content Include="Scripts\app\Controllers\MainCtrl.js" />
     <Content Include="Scripts\app\Controllers\ProductCtrl.js" />
+    <Content Include="Scripts\app\Controllers\UserCtrl.js" />
     <Content Include="Scripts\app\Services\externalProductService.js" />
     <Content Include="Scripts\app\Services\tokenInterceptor.js" />
     <Content Include="Scripts\app\Services\tokenService.js" />
@@ -298,8 +299,10 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="Scripts\app\Services\UserService.js" />
     <Content Include="Scripts\app\Views\items.html" />
     <Content Include="Scripts\app\Views\main.html" />
+    <Content Include="Scripts\app\Views\users.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\errors.json" />

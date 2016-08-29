@@ -11,7 +11,6 @@
         }
 
         var updateItem = function(product) {
-            var id = product.Id;
             if (product.Checked === true) {
                 return $http.put('/api/Products/',
                 JSON.stringify(product)
@@ -19,7 +18,7 @@
                 toaster.pop('note', "", "You began tracking this item.");
             });
             };
-            return $http.put('/api/Products/' + id,
+            return $http.put('/api/Products/',
                 JSON.stringify(product)
             ).success(function () {
                 toaster.pop('note', "", "The item will no longer be tracked.");

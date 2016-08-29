@@ -37,7 +37,9 @@ namespace PriceNotifier
                       "~/Scripts/app/Services/tokenInterceptor.js",
                       "~/Scripts/app/Services/productService.js",
                       "~/Scripts/app/Services/externalProductService.js",
+                      "~/Scripts/app/Services/userService.js",
                       "~/Scripts/app/Controllers/MainCtrl.js",
+                      "~/Scripts/app/Controllers/UserCtrl.js",
                       "~/Scripts/app/Controllers/ProductCtrl.js"));
 
             bundles.Add(new StyleBundle("~/Content/app").Include(
