@@ -1,120 +1,99 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Domain.EF;
+using AutoMapper;
+using BLL.Services.UserService;
 using Domain.Entities;
+using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
     public class UsersController : ApiController
     {
-        private UserContext db = new UserContext();
+        private readonly IUserService<User> _userService;
+
+        public UsersController(IUserService<User> userService)
+        {
+            _userService = userService;
+        }
 
         // GET: api/Users
-        public IQueryable<User> GetUsers()
+        public async Task<IEnumerable<UserDto>> GetUsers()
         {
-            return db.Users;
+            var users = await _userService.Get();
+            return Mapper.Map<IEnumerable<UserDto>>(users);
         }
 
         // GET: api/Users/5
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> GetUser(int id)
+        [ResponseType(typeof(UserDto))]
+        public async Task<UserDto> GetUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
+            User user = await _userService.GetById(id);
             if (user == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            return Ok(user);
+            return Mapper.Map<User, UserDto>(user);
         }
 
         // PUT: api/Users/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutUser(int id, User user)
+        [ResponseType(typeof(UserDto))]
+        public async Task<UserDto> PutUser(UserDto userDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            if (id != user.Id)
+            User user = await _userService.GetById(userDto.Id);
+
+            if (user != null)
             {
-                return BadRequest();
+                var userUpdated = Mapper.Map(userDto, user);
+                await _userService.Update(userUpdated);
+                userDto = Mapper.Map(userUpdated, userDto);
+                return userDto;
             }
 
-            db.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            throw new HttpResponseException(HttpStatusCode.NotFound);
         }
 
         // POST: api/Users
-        [ResponseType(typeof(User))]
-        public async Task<IHttpActionResult> PostUser(User user)
+        [ResponseType(typeof(UserDto))]
+        public async Task<UserDto> PostUser(UserDto userDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
+            var userFound = _userService.GetById(userDto.Id);
+            if (userFound == null)
+            {
+                var user = Mapper.Map<UserDto, User>(userDto);
+                var userUpdated = await _userService.Create(user);
+                userDto = Mapper.Map(userUpdated, userDto);
+                return userDto;
+            }
 
-            return CreatedAtRoute("DefaultApi", new { id = user.Id }, user);
+            throw new HttpResponseException(HttpStatusCode.Conflict);
         }
 
         // DELETE: api/Users/5
-        [ResponseType(typeof(User))]
+        [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> DeleteUser(int id)
         {
-            User user = await db.Users.FindAsync(id);
+            User user = await _userService.GetById(id);
             if (user == null)
             {
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            db.Users.Remove(user);
-            await db.SaveChangesAsync();
-
-            return Ok(user);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool UserExists(int id)
-        {
-            return db.Users.Count(e => e.Id == id) > 0;
+            await _userService.Delete(user);
+            return Ok();
         }
     }
 }

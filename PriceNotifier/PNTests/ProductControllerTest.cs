@@ -87,7 +87,7 @@ namespace PNTests
         public async Task GetNotExistingProductByIdTest()
         {
             //Arrange
-            var productId = 1;
+            var productId = 0;
             var mockService = new Mock<IService<Product>>();
             var controller = new ProductsController(mockService.Object);
             //Act

@@ -14,6 +14,8 @@ namespace PriceNotifier.DTO
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
             CreateMap<Product, Product>();
+            CreateMap<User, UserDto>();
+            CreateMap<UserDto, User>();
         }
     }
 }

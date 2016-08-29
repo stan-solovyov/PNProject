@@ -220,6 +220,7 @@
     <Compile Include="DTO\AutoMapperInitializer.cs" />
     <Compile Include="DTO\MyMappingProfile.cs" />
     <Compile Include="DTO\ProductDTO.cs" />
+    <Compile Include="DTO\UserDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

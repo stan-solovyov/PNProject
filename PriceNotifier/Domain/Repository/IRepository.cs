@@ -7,7 +7,7 @@ namespace Domain.Repository
     public interface IRepository<T> where T : class
     {
         IQueryable<T> Query();
-        Task<T> Get(int i);
+        Task<T> Get(int id);
         Task Update(T entity);
         Task<T> Create(T entity);
         Task Delete(T entity);

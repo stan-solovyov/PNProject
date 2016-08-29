@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,27 +20,31 @@ namespace Domain.Repository
 
         public IQueryable<User> Query()
         {
-            throw new NotImplementedException();
+            return _context.Users;
         }
 
-        public Task<User> Get(int i)
+        public async Task<User> Get(int userId)
         {
-            throw new NotImplementedException();
+            return await _context.Users.FindAsync(userId);
         }
 
-        public Task Update(User entity)
+        public async Task Update(User user)
         {
-            throw new NotImplementedException();
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
-        public Task<User> Create(User entity)
+        public async Task<User> Create(User user)
         {
-            throw new NotImplementedException();
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
-        public Task Delete(User entity)
+        public async Task Delete(User user)
         {
-            throw new NotImplementedException();
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
         }
     }
 }
