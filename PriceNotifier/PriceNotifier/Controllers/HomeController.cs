@@ -84,13 +84,13 @@ namespace PriceNotifier.Controllers
             {
                 SocialNetworkName = a.ProviderName,
                 Username = a.FirstName,
-                UserId = a.Id,
+                SocialNetworkUserId = a.Id,
                 Token = ""
             };
 
             if (db.Users != null)
             {
-                var userid = db.Users.FirstOrDefault(c => c.UserId == user.UserId);
+                var userid = db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
 
                 if (userid == null)
                 {
@@ -106,10 +106,10 @@ namespace PriceNotifier.Controllers
                 }
             }
 
-            var userFound = db.Users.FirstOrDefault(c => c.UserId == user.UserId);
+            var userFound = db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
             if (userFound != null)
             {
-                userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.UserId);
+                userFound.Token = GetHashString(user.Id.ToString() + user.SocialNetworkName + user.SocialNetworkUserId);
                 db.SaveChanges();
                 HttpCookie cookie = new HttpCookie("Token");
                 cookie.Value = userFound.Token;
