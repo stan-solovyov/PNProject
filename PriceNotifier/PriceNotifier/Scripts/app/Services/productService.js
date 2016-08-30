@@ -1,7 +1,7 @@
 ﻿app.factory("productService", ['$http','toaster',
     function ($http,toaster) {
 
-        var url = '/api/Products';
+        var url = '/api/Products/';
 
         var getProducts = function () {
             return $http.get(url)
@@ -10,15 +10,49 @@
                 });
         }
 
+        var addProducts = function (product) {
+            product.hiding = true;
+
+            var price;
+            if (product.prices === null) {
+                price = null;
+            } else {
+                price = product.prices.price_min.amount;
+            }
+
+            var productDto = {
+                Name: product.full_name,
+                Price: price,
+                ExternalProductId: product.id,
+                Url: product.html_url,
+                ImageUrl: product.images.icon,
+                Checked: true
+
+            };
+
+            return $http.post(url,
+                    JSON.stringify(productDto),
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                )
+                .success(function () {
+                    toaster.success({ title: "Congrats!", body: "The item was added to your list." });
+                });
+
+        };
+
         var updateItem = function(product) {
             if (product.Checked === true) {
-                return $http.put('/api/Products/',
+                return $http.put(url,
                 JSON.stringify(product)
             ).success(function () {
                 toaster.pop('note', "", "You began tracking this item.");
             });
             };
-            return $http.put('/api/Products/',
+            return $http.put(url,
                 JSON.stringify(product)
             ).success(function () {
                 toaster.pop('note', "", "The item will no longer be tracked.");
@@ -31,7 +65,7 @@
 
             return $http({
                     method: 'DELETE',
-                    url: '/api/Products/' + id,
+                    url: url + id,
                     headers: {
                         'Content-type': 'application/json'
                     }
@@ -43,6 +77,7 @@
 
         return {
             getProducts: getProducts,
+            addProducts:addProducts,
             updateItem:updateItem,
             removeItem:removeItem
         };

@@ -19,8 +19,8 @@
         userService.getUsers().then(onGetUsers, onError);
     };
 
-    $scope.update = function (product) {
-        productService.updateItem(product).then(onUserDelete, onError);
+    $scope.update = function (user) {
+        userService.updateItem(user).then(onUserDelete, onError);
     };
 
     $scope.remove = function (id) {

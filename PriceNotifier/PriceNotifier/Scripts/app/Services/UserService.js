@@ -1,7 +1,7 @@
 ﻿app.factory("userService", ['$http', 'toaster',
     function ($http, toaster) {
 
-        var url = '/api/Users';
+        var url = '/api/Users/';
 
         var getUsers = function () {
             return $http.get(url)
@@ -11,7 +11,7 @@
         }
 
         var updateUser = function (user) {
-            return $http.put('/api/Users/',
+            return $http.put(url,
                 JSON.stringify(user)
             ).success(function () {
                 toaster.pop('success', "", "The user profile was successfully updated.");
@@ -21,7 +21,7 @@
         var removeUser = function (id) {
             return $http({
                 method: 'DELETE',
-                url: '/api/Users/' + id,
+                url: url + id,
                 headers: {
                     'Content-type': 'application/json'
                 }
