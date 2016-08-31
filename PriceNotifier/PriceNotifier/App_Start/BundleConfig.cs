@@ -32,6 +32,7 @@ namespace PriceNotifier
                       "~/Scripts/loading-bar.min.js",
                       "~/Scripts/angular-animate.min.js",
                       "~/Scripts/toaster.min.js",
+                      "~/Scripts/ui-grid.min.js",
                       "~/Scripts/underscore.min.js",
                       "~/Scripts/app/app.js",
                       "~/Scripts/app/Services/tokenService.js",
@@ -48,6 +49,7 @@ namespace PriceNotifier
                      "~/Content/bootstrap.min.css",
                      "~/Content/Site.css",
                      "~/Content/loading-bar.min.css",
+                     "~/Content/ui-grid.min.css",
                      "~/Content/toaster.min.css"
                      ));
         }
