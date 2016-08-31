@@ -9,35 +9,36 @@
             <div class="container">
                 <div class="col-lg-4">
                     <h4 class="ng-cloak">{{product.full_name}}</h4>
-                    <img class="ng-cloak" ng-src="{{product.images.icon}}" title="{{product.full_name}}"/>
+                    <img class="ng-cloak" ng-src="{{product.images.icon}}" title="{{product.full_name}}" />
                 </div>
                 <div class="col-lg-offset-6">
-                    <br/>
+                    <br />
                     <h5 class="ng-cloak">Ссылка в каталоге Onliner.by:</h5><a class="ng-cloak" href="{{product.html_url}}">{{product.full_name}}</a>
                     <h5 class="ng-cloak">Minimal price: {{product.prices.price_min.amount}} {{product.prices.price_min.currency}}</h5>
                     <h5 class="ng-cloak">Maximum price: {{product.prices.price_max.amount}} {{product.prices.price_max.currency}}</h5>
-                    <button type="button" class="btn btn-primary ng-cloak" ng-disabled="product.hiding" ng-click="addToList(product)">Add to list</button>
-                    <img ng-if="product.hiding" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="/>
+                    <button type="button" class="btn btn-primary ng-cloak" ng-disabled="product.hiding" ng-click="addToList(product)">Add to list <img ng-if="product.hiding" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" /></button>
                 </div>
             </div>
-            <hr class="ng-cloak"/>
+            <hr class="ng-cloak" />
         </div>
-        <ul ng-if="pager.pages.length" class="pagination">
-            <li ng-class="{disabled:vm.pager.currentPage === 1}">
-                <a ng-click="setPage(1)">First</a>
-            </li>
-            <li ng-class="{disabled:vm.pager.currentPage === 1}">
-                <a ng-click="setPage(pager.currentPage - 1)">Previous</a>
-            </li>
-            <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
-                <a ng-click="setPage(page)">{{page}}</a>
-            </li>
-            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
-                <a ng-click="setPage(pager.currentPage + 1)">Next</a>
-            </li>
-            <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
-                <a ng-click="setPage(pager.totalPages)">Last</a>
-            </li>
-        </ul>
+        <nav aria-label="Page navigation">
+            <ul ng-if="pager.pages.length" class="pagination">
+                <li ng-class="{disabled:pager.currentPage === 1}">
+                    <a ng-click="setPage(1)">First</a>
+                </li>
+                <li ng-class="{disabled:pager.currentPage === 1}">
+                    <a ng-click="setPage(pager.currentPage - 1)">Previous</a>
+                </li>
+                <li ng-repeat="page in pager.pages" ng-class="{active:pager.currentPage === page}">
+                    <a ng-click="setPage(page)">{{page}}</a>
+                </li>
+                <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                    <a ng-click="setPage(pager.currentPage + 1)">Next</a>
+                </li>
+                <li ng-class="{disabled:pager.currentPage === pager.totalPages}">
+                    <a ng-click="setPage(pager.totalPages)">Last</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>

@@ -4,7 +4,7 @@
         var url = 'https://catalog.api.onliner.by/search/products?query=';
 
         var getExternalProducts = function (productname, page) {
-            if (page === undefined) {
+            if (page === undefined || page<1) {
                 page = 1;
             }
 

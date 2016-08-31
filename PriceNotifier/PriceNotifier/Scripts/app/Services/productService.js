@@ -38,9 +38,10 @@
                         }
                     }
                 )
-                .success(function () {
+                .success(function() {
                     toaster.success({ title: "Congrats!", body: "The item was added to your list." });
-                });
+                    product.hiding = false;
+                }).error(function () { product.hiding = false; });
 
         };
 
