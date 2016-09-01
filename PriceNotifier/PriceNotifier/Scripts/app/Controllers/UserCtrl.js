@@ -2,6 +2,8 @@
 
     $scope.gridOptions = {
         enableFiltering: true,
+        enablePaginationControls: false,
+        paginationPageSize: 25,
         columnDefs: [
             // default
             {
@@ -24,13 +26,15 @@
       },
       {
           name: ' ',
-          cellTemplate: '<button type="button" class="btn btn-danger" ng-click="grid.appScope.remove({row.entity.id})"> Remove user </button>',
+          cellTemplate: '<button type="button" class="btn btn-danger" ng-click="grid.appScope.remove(row.entity.Id)"> Remove user </button>',
           enableFiltering: false,
           enableSorting: false
       }
         ]
     };
-
+    $scope.gridOptions.onRegisterApi = function (gridApi) {
+        $scope.gridApi = gridApi;
+    }
     var onError = function () {
         $scope.error = "Couldn't get response from the server:(";
     };

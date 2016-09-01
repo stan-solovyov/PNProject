@@ -2,21 +2,17 @@
     <cen style="text-align:center" ng-show="demonstrate"><h2>{{Message}}</h2></cen>
         <div class="container">
             <div class="col-lg-12">
-                <!--<table class="table table-striped">
-                    <tr>
-                        <th>Username</th>
-                        <th>Social network</th>
-                        <th>Social network ID</th>
-                        <th></th>
-                    </tr>
-                    <tr ng-repeat="user in users" ng-show="users">
-                        <td class="ng-cloak">{{user.Username}}</td>
-                        <td class="ng-cloak">{{user.SocialNetworkName}}</td>
-                        <td class="ng-cloak">{{user.SocialNetworkUserId}}</td>
-                        <td><button type="button" class="btn btn-danger ng-cloak" ng-click="remove(user.Id)">Remove user</button>
-                    </tr>
-                </table>-->
-                <div ui-grid="gridOptions" class="myGrid"></div>
+                <div ui-grid="gridOptions" ui-grid-pagination class="myGrid"></div>
+                <p>Current page: {{ gridApi.pagination.getPage() }} of {{ gridApi.pagination.getTotalPages() }}</p>
+                <button type="button" class="btn btn-default" ng-click="gridApi.pagination.previousPage()">
+                    previous page
+                </button>
+                <button type="button" class="btn btn-default" ng-click="gridApi.pagination.nextPage()">
+                    next page
+                </button>
+                <button type="button" class="btn btn-default" ng-click="gridApi.pagination.seek(3)">
+                    go to page 3
+                </button>
             </div>
         </div>
 </div>
