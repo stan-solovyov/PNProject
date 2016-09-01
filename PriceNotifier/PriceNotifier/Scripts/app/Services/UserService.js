@@ -3,8 +3,8 @@
 
         var url = '/api/Users/';
 
-        var getUsers = function () {
-            return $http.get(url)
+        var getUsers = function (name,order) {
+            return $http.get(url + "?sortDataField=" + name + "&sortOrder=" +order)
                 .then(function (response) {
                     return response;
                 });

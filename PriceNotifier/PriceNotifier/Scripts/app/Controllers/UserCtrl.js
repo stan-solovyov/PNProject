@@ -1,6 +1,7 @@
 ﻿app.controller('UserCtrl',
 [
     '$scope', 'userService', 'uiGridConstants', function($scope, userService, uiGridConstants) {
+        var columnName;
 
         var paginationOptions = {
             pageNumber: 1,
@@ -13,12 +14,11 @@
         };
 
         var onGetUsers = function (response) {
-            $scope.users = response.data;
             $scope.gridOptions.totalItems = response.data.length;
             var firstRow = (paginationOptions.pageNumber - 1) * paginationOptions.pageSize;
             $scope.gridOptions.data = response.data.slice(firstRow, firstRow + paginationOptions.pageSize);
-            if ($scope.users.length === 0 && response.status !== 204) {
-                $scope.Message = "You don't have any items in the list yet.";
+            if (response.data.length === 0 && response.status !== 204) {
+                $scope.Message = "You don't have any active users.";
                 $scope.demonstrate = true;
             } else {
                 $scope.Message = null;
@@ -38,13 +38,8 @@
             userService.removeUser(id).then(onUserDelete, onError);
         };
 
-        var getPage = function() {
-            userService.getUsers().then(onGetUsers, onError);
-        }
-
-
         $scope.gridOptions = {
-            enableFiltering: true,
+            enableFiltering: false,
             paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
             useExternalPagination: true,
@@ -60,6 +55,7 @@
                 {
                     displayName: 'Social Network',
                     name: 'SocialNetworkName',
+                    enableSorting: false,
                     filter: {
                         type: uiGridConstants.filter.SELECT,
                         selectOptions: [
@@ -72,7 +68,8 @@
                 {
                     displayName: 'Social network UserId',
                     name: 'SocialNetworkUserId',
-                    enableFiltering: false
+                    enableFiltering: false,
+                    enableSorting: false
                 },
                 {
                     name: ' ',
@@ -90,21 +87,21 @@
                             paginationOptions.sort = null;
                         } else {
                             paginationOptions.sort = sortColumns[0].sort.direction;
+                            columnName = sortColumns[0].name;
                         }
-
-                        getPage();
+                        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
                     });
                 gridApi.pagination.on.paginationChanged($scope,
                     function(newPage, pageSize) {
                         paginationOptions.pageNumber = newPage;
                         paginationOptions.pageSize = pageSize;
-                        getPage();
+                        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
                     });
             }
         };
 
         $scope.gridOptions.appScopeProvider = $scope;
 
-        userService.getUsers().then(onGetUsers, onError);
+        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
     }
 ]);

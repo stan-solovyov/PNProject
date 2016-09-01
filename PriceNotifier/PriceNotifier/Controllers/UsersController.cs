@@ -20,9 +20,9 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Users
-        public async Task<IEnumerable<UserDto>> GetUsers()
+        public async Task<IEnumerable<UserDto>> GetUsers([FromUri] string sortDataField, [FromUri] string sortOrder)
         {
-            var users = await _userService.Get();
+            var users = await _userService.Get(sortDataField, sortOrder);
             return Mapper.Map<IEnumerable<UserDto>>(users);
         }
 

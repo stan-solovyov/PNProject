@@ -3,12 +3,12 @@ using System.Threading.Tasks;
 
 namespace BLL.Services.UserService
 {
-    public interface IUserService<User> 
+    public interface IUserService<TUser> 
     {
-        Task<IEnumerable<User>> Get();
-        Task<User> Create(User user);
-        Task Update(User user);
-        Task<User> GetById(int id);
-        Task Delete(User user);
+        Task<IEnumerable<TUser>> Get(string sortDataField, string sortOrder);
+        Task<TUser> Create(TUser user);
+        Task Update(TUser user);
+        Task<TUser> GetById(int id);
+        Task Delete(TUser user);
     }
 }
