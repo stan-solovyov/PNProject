@@ -1,7 +1,7 @@
 ﻿app.controller('UserCtrl',
 [
     '$scope', 'userService', 'uiGridConstants', function($scope, userService, uiGridConstants) {
-        var columnName;
+        var columnName="",filterColumn, filter = '';
 
         var paginationOptions = {
             pageNumber: 1,
@@ -39,11 +39,12 @@
         };
 
         $scope.gridOptions = {
-            enableFiltering: false,
             paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
+            enableFiltering: true,
             useExternalPagination: true,
             useExternalSorting: true,
+            useExternalFiltering: true,
             columnDefs: [
                 // default
                 {
@@ -56,13 +57,7 @@
                     displayName: 'Social Network',
                     name: 'SocialNetworkName',
                     enableSorting: false,
-                    filter: {
-                        type: uiGridConstants.filter.SELECT,
-                        selectOptions: [
-                            { value: 'Facebook', label: 'Facebook' }, { value: 'Twitter', label: 'Twitter' },
-                            { value: 'Vkontakte', label: 'Vkontakte' }
-                        ]
-                    }
+                    enableFiltering: false
                 },
                 // no filter input
                 {
@@ -89,19 +84,31 @@
                             paginationOptions.sort = sortColumns[0].sort.direction;
                             columnName = sortColumns[0].name;
                         }
-                        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
+                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn).then(onGetUsers, onError);
                     });
+                $scope.gridApi.core.on.filterChanged( $scope, function() {
+                    var grid = this.grid;
+                    filter = '';
+                    filterColumn = null;
+                    angular.forEach(grid.columns, function (value) {
+                        if (value.filters[0].term) {
+                            filterColumn = value.colDef.name;
+                            filter = value.filters[0].term;
+                        }
+                    });
+                    userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn).then(onGetUsers, onError);
+                        });
                 gridApi.pagination.on.paginationChanged($scope,
                     function(newPage, pageSize) {
                         paginationOptions.pageNumber = newPage;
                         paginationOptions.pageSize = pageSize;
-                        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
+                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn).then(onGetUsers, onError);
                     });
             }
         };
 
         $scope.gridOptions.appScopeProvider = $scope;
 
-        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
+        userService.getUsers(columnName, paginationOptions.sort,null,null).then(onGetUsers, onError);
     }
 ]);

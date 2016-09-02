@@ -5,7 +5,7 @@ namespace BLL.Services.UserService
 {
     public interface IUserService<TUser> 
     {
-        Task<IEnumerable<TUser>> Get(string sortDataField, string sortOrder);
+        Task<IEnumerable<TUser>> Get(string sortDataField, string sortOrder,string filter,string filterField);
         Task<TUser> Create(TUser user);
         Task Update(TUser user);
         Task<TUser> GetById(int id);
