@@ -3,8 +3,8 @@
 
         var url = '/api/Users/';
 
-        var getUsers = function (name, order, filter, filterColumn) {
-            return $http.get(url + "?sortDataField=" + name + "&sortOrder=" + order + "&filter=" + filter + "&filterColumn=" + filterColumn)
+        var getUsers = function (name, order, filter, filterColumn,currentPage,recordsPerPage) {
+            return $http.get(url + "?sortDataField=" + name + "&sortOrder=" + order + "&filter=" + filter + "&filterColumn=" + filterColumn + "&currentPage=" + currentPage + "&recordsPerPage=" + recordsPerPage)
                 .then(function (response) {
                     return response;
                 });

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Repository;
@@ -16,9 +18,11 @@ namespace BLL.Services.UserService
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<User>> Get(string sortDataField, string sortOrder, string filter, string filterField)
+        public async Task<IEnumerable<User>> Get(string sortDataField, string sortOrder, string filter, string filterField, int currentPage, int recordsPerPage)
         {
-            var query = _userRepository.Query();
+            var totalPages = _userRepository.Query().Count()/recordsPerPage;
+            var begin = (currentPage - 1) * recordsPerPage;
+            var query = _userRepository.Query().OrderBy(x => x.Id).Skip(begin).Take(recordsPerPage);
 
             switch (filterField)
             {
@@ -58,6 +62,7 @@ namespace BLL.Services.UserService
 
                     break;
             }
+          
             return await query.ToListAsync();
         }
 

@@ -8,15 +8,14 @@
             pageSize: 25,
             sort: null
         };
-
+        paginationOptions.sort = "";
         var onError = function () {
             $scope.error = "Couldn't get response from the server:(";
         };
 
         var onGetUsers = function (response) {
-            $scope.gridOptions.totalItems = response.data.length;
-            var firstRow = (paginationOptions.pageNumber - 1) * paginationOptions.pageSize;
-            $scope.gridOptions.data = response.data.slice(firstRow, firstRow + paginationOptions.pageSize);
+            $scope.gridOptions.totalItems = 100;
+            $scope.gridOptions.data = response.data;
             if (response.data.length === 0 && response.status !== 204) {
                 $scope.Message = "You don't have any active users.";
                 $scope.demonstrate = true;
@@ -102,13 +101,13 @@
                     function(newPage, pageSize) {
                         paginationOptions.pageNumber = newPage;
                         paginationOptions.pageSize = pageSize;
-                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn).then(onGetUsers, onError);
+                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetUsers, onError);
                     });
             }
         };
 
         $scope.gridOptions.appScopeProvider = $scope;
 
-        userService.getUsers(columnName, paginationOptions.sort,null,null).then(onGetUsers, onError);
+        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
     }
 ]);
