@@ -39,10 +39,10 @@
         uiGridValidateService.setValidator('startWith',
         function (argument) {
             return function (newValue) {
-                if (!newValue) {
+                if (newValue==="") {
                     return true; // We should not test for existence here
                 } else {
-                    return newValue.startsWith(!argument);
+                    return newValue.startsWith(argument);
                 }
             };
         },
@@ -67,7 +67,7 @@
                     displayName: 'Id',
                     enableCellEdit: false
                 },
-                { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: {  startWith: '' }, cellTemplate: 'ui-grid/cellTitleValidator' },
+                { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: {  startWith: null }, cellTemplate: 'ui-grid/cellTitleValidator' },
                 // pre-populated search field
                 {
                     displayName: 'Social Network',
