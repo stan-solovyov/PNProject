@@ -1,5 +1,5 @@
 ﻿/// <reference path="../angular.min.js" />
-var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ngRoute', 'ui.grid', 'ui.grid.pagination']);
+var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ngRoute', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate']);
 
 app.config(['$httpProvider', '$routeProvider', '$locationProvider', function ($httpProvider, $routeProvider, $locationProvider) {
     $httpProvider.interceptors.push('tokenInterceptorService');
