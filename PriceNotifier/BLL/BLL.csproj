@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PageResult.cs" />
     <Compile Include="Services\ProductService\IService.cs" />
     <Compile Include="Services\ProductService\ProductService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

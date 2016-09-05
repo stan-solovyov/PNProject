@@ -1,12 +1,12 @@
 ﻿app.controller('UserCtrl',
 [
     '$scope', 'userService', 'uiGridConstants', function($scope, userService, uiGridConstants) {
-        var columnName="",filterColumn, filter = '';
+        var columnName="",filterColumn="", filter = '';
 
         var paginationOptions = {
             pageNumber: 1,
             pageSize: 25,
-            sort: null
+            sort: ""
         };
         paginationOptions.sort = "";
         var onError = function () {
@@ -14,9 +14,9 @@
         };
 
         var onGetUsers = function (response) {
-            $scope.gridOptions.totalItems = 100;
-            $scope.gridOptions.data = response.data;
-            if (response.data.length === 0 && response.status !== 204) {
+            $scope.gridOptions.totalItems = response.data.TotalItems;
+            $scope.gridOptions.data = response.data.Data;
+            if (response.data.Data.length === 0 && response.status !== 204) {
                 $scope.Message = "You don't have any active users.";
                 $scope.demonstrate = true;
             } else {
@@ -76,29 +76,31 @@
             onRegisterApi: function(gridApi) {
                 $scope.gridApi = gridApi;
                 $scope.gridApi.core.on.sortChanged($scope,
-                    function(grid, sortColumns) {
+                    function (grid, sortColumns) {
+                        columnName = "";
                         if (sortColumns.length === 0) {
-                            paginationOptions.sort = null;
+                            paginationOptions.sort = "";
                         } else {
                             paginationOptions.sort = sortColumns[0].sort.direction;
                             columnName = sortColumns[0].name;
                         }
-                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn).then(onGetUsers, onError);
+                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn,"","").then(onGetUsers, onError);
                     });
                 $scope.gridApi.core.on.filterChanged( $scope, function() {
                     var grid = this.grid;
                     filter = '';
-                    filterColumn = null;
+                    filterColumn = "";
                     angular.forEach(grid.columns, function (value) {
                         if (value.filters[0].term) {
                             filterColumn = value.colDef.name;
                             filter = value.filters[0].term;
                         }
                     });
-                    userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn).then(onGetUsers, onError);
+                    userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn,"","").then(onGetUsers, onError);
                         });
                 gridApi.pagination.on.paginationChanged($scope,
-                    function(newPage, pageSize) {
+                    function (newPage, pageSize) {
+                        columnName = "";
                         paginationOptions.pageNumber = newPage;
                         paginationOptions.pageSize = pageSize;
                         userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetUsers, onError);
@@ -108,6 +110,6 @@
 
         $scope.gridOptions.appScopeProvider = $scope;
 
-        userService.getUsers(columnName, paginationOptions.sort).then(onGetUsers, onError);
+        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn,null,null).then(onGetUsers, onError);
     }
 ]);

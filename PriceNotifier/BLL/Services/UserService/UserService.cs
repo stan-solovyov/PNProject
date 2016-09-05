@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Repository;
@@ -18,19 +16,21 @@ namespace BLL.Services.UserService
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<User>> Get(string sortDataField, string sortOrder, string filter, string filterField, int currentPage, int recordsPerPage)
+        public async Task<PageResult<User>> Get(string sortDataField, string sortOrder, string filter, string filterField, int currentPage, int recordsPerPage)
         {
-            var totalPages = _userRepository.Query().Count()/recordsPerPage;
+            var totalItems = _userRepository.Query().Count();
             var begin = (currentPage - 1) * recordsPerPage;
-            var query = _userRepository.Query().OrderBy(x => x.Id).Skip(begin).Take(recordsPerPage);
+            var query = _userRepository.Query();
 
             switch (filterField)
             {
                 case "Id":
-                    query = query.Where(x => x.Id.ToString().Contains(filter));
+                    query = query.OrderBy(x => x.Id).Where(x => x.Id.ToString().Contains(filter));
+                    totalItems = query.Count();
                     break;
                 case "Username":
-                    query = query.Where(x => x.Username.Contains(filter));
+                    query = query.OrderBy(x => x.Id).Where(x => x.Username.Contains(filter));
+                    totalItems = query.Count();
                     break;
             }
 
@@ -62,8 +62,21 @@ namespace BLL.Services.UserService
 
                     break;
             }
-          
-            return await query.ToListAsync();
+
+            if (filterField == "Id" || filterField == "Username")
+            {
+                return new PageResult<User> {Data = await query.Skip(begin).Take(recordsPerPage).ToListAsync(), TotalItems = totalItems};
+            }
+
+            if (sortOrder == "asc" || sortOrder == "desc")
+            {
+                return new PageResult<User> { Data = await query.Skip(begin).Take(recordsPerPage).ToListAsync(), TotalItems = totalItems };
+            }
+            return new PageResult<User>
+            {
+                Data = await query.OrderBy(x => x.Id).Skip(begin).Take(recordsPerPage).ToListAsync(),
+                TotalItems = totalItems
+            };
         }
 
         public async Task<User> Create(User user)

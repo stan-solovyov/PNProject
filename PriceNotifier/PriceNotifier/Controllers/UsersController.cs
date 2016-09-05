@@ -1,15 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
+using BLL;
 using BLL.Services.UserService;
 using Domain.Entities;
 using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
+    [RoutePrefix("api/books")]
     public class UsersController : ApiController
     {
         private readonly IUserService<User> _userService;
@@ -20,11 +23,25 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Users
-        public async Task<IEnumerable<UserDto>> GetUsers(string sortDataField,  string sortOrder, string filter,  string filterColumn, int currentPage=1, int recordsPerPage=25)
-
+       
+        public async Task<PageResult<UserDto>> GetUsers(string sortDataField,  string sortOrder, string filter,  string filterColumn, int? currentPage, int? recordsPerPage)
         {
-            var users = await _userService.Get(sortDataField, sortOrder,filter, filterColumn,currentPage,recordsPerPage);
-            return Mapper.Map<IEnumerable<UserDto>>(users);
+            if (!currentPage.HasValue)
+            {
+                currentPage = 1;
+            }
+
+            if (!recordsPerPage.HasValue)
+            {
+                recordsPerPage = 25;
+            }
+
+            var users = await _userService.Get(sortDataField, sortOrder,filter, filterColumn,currentPage.Value,recordsPerPage.Value);
+            return new PageResult<UserDto>
+            {
+                Data = Mapper.Map<IEnumerable<UserDto>>(users.Data),
+                TotalItems = users.TotalItems
+            };
         }
 
         // GET: api/Users/5
