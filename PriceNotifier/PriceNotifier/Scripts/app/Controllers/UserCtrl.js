@@ -17,7 +17,7 @@
             $scope.gridOptions.totalItems = response.data.TotalItems;
             $scope.gridOptions.data = response.data.Data;
             if (response.data.Data.length === 0 && response.status !== 204) {
-                $scope.Message = "You don't have any active users.";
+                $scope.Message = "You don't have any users.";
                 $scope.demonstrate = true;
             } else {
                 $scope.Message = null;
@@ -36,18 +36,18 @@
             userService.removeUser(id).then(onUserDelete, onError);
         };
 
-        uiGridValidateService.setValidator('startWith',
+        uiGridValidateService.setValidator('usernameValidator',
         function (argument) {
-            return function (newValue) {
-                if (newValue==="") {
+            return function (oldValue, newValue) {
+                if (newValue !== "" && (!/[^a-zA-Z]/.test(newValue)) && newValue.length < 25) {
                     return true; // We should not test for existence here
                 } else {
                     return newValue.startsWith(argument);
                 }
             };
         },
-        function (argument) {
-            return 'You must insert username';
+        function () {
+            return 'Username should contain only alphabetical characters and be less than 25 characters long.';
         }
   );
 
@@ -67,7 +67,7 @@
                     displayName: 'Id',
                     enableCellEdit: false
                 },
-                { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: {  startWith: null }, cellTemplate: 'ui-grid/cellTitleValidator' },
+                { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: { required: true, usernameValidator: null }, cellTemplate: 'ui-grid/cellTitleValidator' },
                 // pre-populated search field
                 {
                     displayName: 'Social Network',
@@ -125,11 +125,12 @@
                         paginationOptions.pageSize = pageSize;
                         userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetUsers, onError);
                     });
-                gridApi.edit.on.afterCellEdit($scope, function () {
+                gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef) {
                     var rowCol = $scope.gridApi.cellNav.getFocusedCell();
-                    if (rowCol !== null) {
+                   if (!uiGridValidateService.isInvalid(rowCol.row.entity, colDef)) {
                         userService.updateUser(rowCol.row.entity).then(onUserUpdate, onError);
                     }
+
                 });
                 gridApi.validate.on.validationFailed($scope, function () {
                     //alert("Please insert username");
