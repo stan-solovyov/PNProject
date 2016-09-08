@@ -1,6 +1,6 @@
 ﻿app.controller('UserCtrl',
 [
-    '$scope', 'userService', 'uiGridValidateService', function ($scope, userService, uiGridValidateService) {
+    '$scope', 'userService', 'uiGridValidateService','$timeout', function ($scope, userService, uiGridValidateService,$timeout) {
         var columnName = "", filterColumn = "", filter = '';
 
         var paginationOptions = {
@@ -36,21 +36,24 @@
             userService.removeUser(id).then(onUserDelete, onError);
         };
 
-        uiGridValidateService.setValidator('usernameValidator',
-        function (argument) {
+        var validationFactory = function(newValue) {
+            if ((/^[a-zA-Z]+$/.test(newValue)) && newValue.length < 25 && newValue!=="") {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        uiGridValidateService.setValidator('notEmpty',
+        function () {
             return function (oldValue, newValue) {
-                if (newValue !== "" && (!/[^a-zA-Z]/.test(newValue)) && newValue.length < 25) {
-                    return true; // We should not test for existence here
-                } else {
-                    return newValue.startsWith(argument);
-                }
+                    return validationFactory(newValue);
             };
         },
         function () {
-            return 'Username should contain only alphabetical characters and be less than 25 characters long.';
+            return 'Username should contain only alphabetical characters be less than 25 characters long.';
         }
   );
-
 
         $scope.gridOptions = {
             paginationPageSizes: [25, 50, 75],
@@ -67,7 +70,7 @@
                     displayName: 'Id',
                     enableCellEdit: false
                 },
-                { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: { required: true, usernameValidator: null }, cellTemplate: 'ui-grid/cellTitleValidator' },
+                { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: { notEmpty: "" }, cellTemplate: 'ui-grid/cellTitleValidator' },
                 // pre-populated search field
                 {
                     displayName: 'Social Network',
@@ -82,6 +85,13 @@
                     name: 'SocialNetworkUserId',
                     enableFiltering: false,
                     enableSorting: false,
+                    enableCellEdit: false
+                },
+                {
+                    displayName: 'Total tracked items',
+                    name: 'CountTrackedItems',
+                    enableFiltering: false,
+                    enableSorting: true,
                     enableCellEdit: false
                 },
                 {
@@ -127,10 +137,13 @@
                     });
                 gridApi.edit.on.afterCellEdit($scope, function (rowEntity, colDef) {
                     var rowCol = $scope.gridApi.cellNav.getFocusedCell();
-                   if (!uiGridValidateService.isInvalid(rowCol.row.entity, colDef)) {
-                        userService.updateUser(rowCol.row.entity).then(onUserUpdate, onError);
-                    }
-
+                    var a;
+                    $timeout(function () {
+                        a = uiGridValidateService.isInvalid(rowEntity, colDef);
+                        if (!a) {
+                            userService.updateUser(rowCol.row.entity).then(onUserUpdate, onError);
+                        }
+                    }, 0);
                 });
                 gridApi.validate.on.validationFailed($scope, function () {
                     //alert("Please insert username");

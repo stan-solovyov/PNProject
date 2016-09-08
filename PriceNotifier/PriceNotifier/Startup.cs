@@ -2,7 +2,7 @@
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
-using BLL.ProductService;
+using BLL.Services;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.EF;
@@ -28,9 +28,9 @@ namespace PriceNotifier
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
             builder.Register(context => new UserContext()).As<UserContext>().InstancePerRequest();
             builder.RegisterType<ProductRepository>().As<IRepository<Product>>().InstancePerRequest();
-            builder.RegisterType<ProductService>().As<IService<Product>>().InstancePerRequest();
+            builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
             builder.RegisterType<UserRepository>().As<IRepository<User>>().InstancePerRequest();
-            builder.RegisterType<UserService>().As<IUserService<User>>().InstancePerRequest();
+            builder.RegisterType<UserService>().As<IUserService>().InstancePerRequest();
 
             var container = builder.Build();
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);

@@ -2,13 +2,12 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using BLL.ProductService;
 using Domain.Entities;
 using Domain.Repository;
 
 namespace BLL.Services.ProductService
 {
-    public class ProductService:IService<Product>
+    public class ProductService:IProductService
     {
         private readonly IRepository<Product> _productRepository;
 

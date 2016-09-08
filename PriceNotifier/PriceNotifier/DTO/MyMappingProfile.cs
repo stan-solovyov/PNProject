@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using AutoMapper;
+﻿using AutoMapper;
+using BLL;
 using Domain.Entities;
 
 namespace PriceNotifier.DTO
@@ -16,6 +13,7 @@ namespace PriceNotifier.DTO
             CreateMap<Product, Product>();
             CreateMap<User, UserDto>();
             CreateMap<UserDto, User>();
+            CreateMap<UserFromDbWithCount, UserDtoWithCount>();
         }
     }
 }

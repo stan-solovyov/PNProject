@@ -3,7 +3,6 @@ app.controller('MainCtrl', ['$scope', 'tokenService', 'externalProductService', 
 
     var onError = function () {
         $scope.error = "Couldn't get response from the server:(";
-        //$scope.flag = false;
     };
 
     var onUserCompleteProducts = function (data) {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -16,16 +15,16 @@ namespace PriceNotifier.Controllers
     [RoutePrefix("api/books")]
     public class UsersController : ApiController
     {
-        private readonly IUserService<User> _userService;
+        private readonly IUserService _userService;
 
-        public UsersController(IUserService<User> userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
 
         // GET: api/Users
        
-        public async Task<PageResult<UserDto>> GetUsers(string sortDataField,  string sortOrder, string filter,  string filterColumn, int? currentPage, int? recordsPerPage)
+        public async Task<PageResult<UserDtoWithCount>> GetUsers(string sortDataField,  string sortOrder, string filter,  string filterColumn, int? currentPage, int? recordsPerPage)
         {
             if (!currentPage.HasValue)
             {
@@ -38,9 +37,9 @@ namespace PriceNotifier.Controllers
             }
 
             var users = await _userService.Get(sortDataField, sortOrder,filter, filterColumn,currentPage.Value,recordsPerPage.Value);
-            return new PageResult<UserDto>
+            return new PageResult<UserDtoWithCount>
             {
-                Data = Mapper.Map<IEnumerable<UserDto>>(users.Data),
+                Data = Mapper.Map<IEnumerable<UserDtoWithCount>>(users.Data),
                 TotalItems = users.TotalItems
             };
         }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
-using BLL.ProductService;
+using BLL.Services.ProductService;
 using Domain.Entities;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
@@ -15,9 +15,9 @@ namespace PriceNotifier.Controllers
     [MyAuthorize]
     public class ProductsController : ApiController
     {
-        private readonly IService<Product> _productService;
+        private readonly IProductService _productService;
 
-        public ProductsController(IService<Product> productService)
+        public ProductsController(IProductService productService)
         {
             _productService = productService;
         }

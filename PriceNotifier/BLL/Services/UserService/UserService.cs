@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
@@ -7,76 +6,15 @@ using Domain.Repository;
 
 namespace BLL.Services.UserService
 {
-    public class UserService : IUserService<User>
+    public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<Product> _productRepository;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IRepository<User> userRepository, IRepository<Product> productRepository)
         {
             _userRepository = userRepository;
-        }
-
-        public async Task<PageResult<User>> Get(string sortDataField, string sortOrder, string filter, string filterField, int currentPage, int recordsPerPage)
-        {
-            var totalItems = _userRepository.Query().Count();
-            var begin = (currentPage - 1) * recordsPerPage;
-            var query = _userRepository.Query();
-
-            switch (filterField)
-            {
-                case "Id":
-                    query = query.OrderBy(x => x.Id).Where(x => x.Id.ToString().Contains(filter));
-                    totalItems = query.Count();
-                    break;
-                case "Username":
-                    query = query.OrderBy(x => x.Id).Where(x => x.Username.Contains(filter));
-                    totalItems = query.Count();
-                    break;
-            }
-
-            switch (sortOrder)
-            {
-                case "asc":
-                        if (sortDataField == "Id")
-                        {
-                            query =  query.OrderBy(x => x.Id);
-                        }
-
-                        if (sortDataField == "Username")
-                        {
-                            query = query.OrderBy(x => x.Username);
-                        }
-
-                    break;
-
-                case "desc":
-                        if (sortDataField == "Id")
-                        {
-                            query = query.OrderByDescending(x => x.Id);
-                        }
-
-                        if (sortDataField == "Username")
-                        {
-                            query = query.OrderByDescending(x => x.Username);
-                        }
-
-                    break;
-            }
-
-            if (filterField == "Id" || filterField == "Username")
-            {
-                return new PageResult<User> {Data = await query.Skip(begin).Take(recordsPerPage).ToListAsync(), TotalItems = totalItems};
-            }
-
-            if (sortOrder == "asc" || sortOrder == "desc")
-            {
-                return new PageResult<User> { Data = await query.Skip(begin).Take(recordsPerPage).ToListAsync(), TotalItems = totalItems };
-            }
-            return new PageResult<User>
-            {
-                Data = await query.OrderBy(x => x.Id).Skip(begin).Take(recordsPerPage).ToListAsync(),
-                TotalItems = totalItems
-            };
+            _productRepository = productRepository;
         }
 
         public async Task<User> Create(User user)
@@ -99,6 +37,98 @@ namespace BLL.Services.UserService
         public async Task Delete(User user)
         {
             await _userRepository.Delete(user);
+        }
+
+        public async Task<PageResult<UserFromDbWithCount>> Get(string sortDataField, string sortOrder, string filter, string filterField, int currentPage, int recordsPerPage)
+        {
+            
+            var begin = (currentPage - 1) * recordsPerPage;
+            var query = _userRepository.Query();
+
+            var queryFinal = query.GroupJoin(_productRepository.Query(), user => user.Id, product => product.UserId,
+                (user, product) => new UserFromDbWithCount
+                {
+                    Id=user.Id,
+                    Username = user.Username,
+                    SocialNetworkUserId = user.SocialNetworkUserId,
+                    SocialNetworkName = user.SocialNetworkName,
+                    CountTrackedItems= product.Count()
+                });
+
+            switch (filterField)
+            {
+                case "Id":
+                    queryFinal = queryFinal.OrderBy(x => x.Id).Where(x => x.Id.ToString().Contains(filter));
+                    break;
+                case "Username":
+                    queryFinal = queryFinal.OrderBy(x => x.Id).Where(x => x.Username.Contains(filter));
+                    break;
+            }
+
+            switch (sortOrder)
+            {
+                case "asc":
+                    if (sortDataField == "Id")
+                    {
+                        queryFinal = queryFinal.OrderBy(x => x.Id);
+                    }
+
+                    if (sortDataField == "Username")
+                    {
+                        queryFinal = queryFinal.OrderBy(x => x.Username);
+                    }
+
+                    if (sortDataField == "CountTrackedItems")
+                    {
+                        queryFinal = queryFinal.OrderBy(x => x.CountTrackedItems);
+                    }
+
+                    break;
+
+                case "desc":
+                    if (sortDataField == "Id")
+                    {
+                        queryFinal = queryFinal.OrderByDescending(x => x.Id);
+                    }
+
+                    if (sortDataField == "Username")
+                    {
+                        queryFinal = queryFinal.OrderByDescending(x => x.Username);
+                    }
+
+                    if (sortDataField == "CountTrackedItems")
+                    {
+                        queryFinal = queryFinal.OrderByDescending(x => x.CountTrackedItems);
+                    }
+
+                    break;
+                default:
+                    queryFinal = queryFinal.OrderBy(x => x.Id);
+                    break;
+            }
+
+            //if (filterField == "Id" || filterField == "Username")
+            //{
+            //    var m = await queryFinal.Skip(begin).Take(recordsPerPage).ToListAsync();
+            //    //var s = Mapper.Map<IEnumerable<UserFromDbWithCount>>(m);
+            //    return new PageResult<UserFromDbWithCount> { Data = m, TotalItems = totalItems };
+            //}
+
+            //if (sortOrder == "asc" || sortOrder == "desc")
+            //{
+            //    var m = await queryFinal.Skip(begin).Take(recordsPerPage).ToListAsync();
+            //    //var s = Mapper.Map<IEnumerable<UserFromDbWithCount>>(m);
+            //    return new PageResult<UserFromDbWithCount> { Data = m, TotalItems = totalItems };
+            //}
+
+            var totalItems = queryFinal.Count();
+            var a = await queryFinal.Skip(begin).Take(recordsPerPage).ToListAsync();
+
+            return new PageResult<UserFromDbWithCount>
+            {
+                Data = a,
+                TotalItems = totalItems
+            };
         }
     }
 }

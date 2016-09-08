@@ -3,13 +3,13 @@
         <h2>{{Message}}</h2></cen>
     <div class="container" ng-show="dbproducts">
         <form class="form-inline">
-            <div class="form-group col-lg-offset-4">
+            <div class="form-group">
                 <label>Search</label>
-                <input type="text" ng-model="asd" class="form-control" placeholder="Search">
+                <input ng-model="searchText" class="form-control" placeholder="Search">
             </div>
         </form><br/>
     </div>
-    <div class="container" ng-repeat="product in dbproducts|filter:asd" ng-show="dbproducts">
+    <div class="container" ng-repeat="product in dbproducts|filter:searchText" ng-show="dbproducts">
         <div class="container">
             <div class="col-lg-4">
                 <h4 class="ng-cloak">{{product.Name}}</h4>
