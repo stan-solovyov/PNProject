@@ -1,9 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.OData;
+using System.Web.OData.Extensions;
+using System.Web.OData.Query;
 using AutoMapper;
 using BLL;
 using BLL.Services.UserService;
@@ -12,8 +16,7 @@ using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
-    [RoutePrefix("api/books")]
-    public class UsersController : ApiController
+   public class UsersController : ApiController
     {
         private readonly IUserService _userService;
 
@@ -23,25 +26,16 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Users
-       
-        public async Task<PageResult<UserDtoWithCount>> GetUsers(string sortDataField,  string sortOrder, string filter,  string filterColumn, int? currentPage, int? recordsPerPage)
+        public PageResult<UserDtoWithCount> GetUsers(ODataQueryOptions<UserFromDbWithCount> options)
         {
-            if (!currentPage.HasValue)
-            {
-                currentPage = 1;
-            }
+            var allUsers = _userService.Get();
+            IQueryable users = options.ApplyTo(allUsers);
+            var results = Mapper.Map<IEnumerable<UserDtoWithCount>>(users);
 
-            if (!recordsPerPage.HasValue)
-            {
-                recordsPerPage = 25;
-            }
-
-            var users = await _userService.Get(sortDataField, sortOrder,filter, filterColumn,currentPage.Value,recordsPerPage.Value);
-            return new PageResult<UserDtoWithCount>
-            {
-                Data = Mapper.Map<IEnumerable<UserDtoWithCount>>(users.Data),
-                TotalItems = users.TotalItems
-            };
+            return new PageResult<UserDtoWithCount>(
+                results,
+                Request.ODataProperties().NextLink,
+                Request.ODataProperties().TotalCount);
         }
 
         // GET: api/Users/5

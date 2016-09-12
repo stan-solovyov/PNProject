@@ -14,9 +14,9 @@
         };
 
         var onGetUsers = function (response) {
-            $scope.gridOptions.totalItems = response.data.TotalItems;
-            $scope.gridOptions.data = response.data.Data;
-            if (response.data.Data.length === 0 && response.status !== 204) {
+            $scope.gridOptions.totalItems = response.data.Count;
+            $scope.gridOptions.data = response.data.Items;
+            if (response.data.Items.length === 0 && response.status !== 204) {
                 $scope.Message = "You don't have any users.";
                 $scope.demonstrate = true;
             } else {
@@ -25,16 +25,9 @@
             }
         };
 
-        var onUserDelete = function () {
-            userService.getUsers().then(onGetUsers, onError);
-        };
-
         var onUserUpdate = function () {
         };
 
-        $scope.remove = function (id) {
-            userService.removeUser(id).then(onUserDelete, onError);
-        };
 
         var validationFactory = function(newValue) {
             if ((/^[a-zA-Z]+$/.test(newValue)) && newValue.length < 25 && newValue!=="") {
@@ -108,13 +101,14 @@
                 $scope.gridApi.core.on.sortChanged($scope,
                     function (grid, sortColumns) {
                         columnName = "";
+                        paginationOptions.sort = "";
                         if (sortColumns.length === 0) {
                             paginationOptions.sort = "";
                         } else {
                             paginationOptions.sort = sortColumns[0].sort.direction;
                             columnName = sortColumns[0].name;
                         }
-                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, "", "").then(onGetUsers, onError);
+                        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetUsers, onError);
                     });
                 $scope.gridApi.core.on.filterChanged($scope, function () {
                     var grid = this.grid;
@@ -126,11 +120,10 @@
                             filter = value.filters[0].term;
                         }
                     });
-                    userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, "", "").then(onGetUsers, onError);
+                    userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetUsers, onError);
                 });
                 gridApi.pagination.on.paginationChanged($scope,
                     function (newPage, pageSize) {
-                        columnName = "";
                         paginationOptions.pageNumber = newPage;
                         paginationOptions.pageSize = pageSize;
                         userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetUsers, onError);
@@ -145,14 +138,21 @@
                         }
                     }, 0);
                 });
-                gridApi.validate.on.validationFailed($scope, function () {
-                    //alert("Please insert username");
-                });
             }
         };
 
         $scope.gridOptions.appScopeProvider = $scope;
 
-        userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, null, null).then(onGetUsers, onError);
+        var onUserDelete = function () {
+            userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetUsers, onError);
+        };
+
+        $scope.remove = function (id) {
+            userService.removeUser(id).then(onUserDelete, onError);
+        };
+
+        if (!columnName && !filterColumn) {
+            userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetUsers, onError);
+        }
     }
 ]);

@@ -2,7 +2,6 @@
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
-using BLL.Services;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.EF;
