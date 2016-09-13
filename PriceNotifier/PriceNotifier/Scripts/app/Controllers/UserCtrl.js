@@ -61,6 +61,7 @@
                 {
                     name: 'Id',
                     displayName: 'Id',
+                    enableFiltering: false,
                     enableCellEdit: false
                 },
                 { name: 'Username', displayName: 'Username', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: true, validators: { notEmpty: "" }, cellTemplate: 'ui-grid/cellTitleValidator' },

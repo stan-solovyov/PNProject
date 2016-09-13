@@ -5,6 +5,5 @@
 @model IEnumerable<PriceNotifier.Models.LoginInfoModel>
 @foreach (var loginInfo in Model)
 {
-    @*<h2><p>Html.ActionLink(string.Format("Log In ({0})", loginInfo.ProviderName), "Login", "Home", new { providerName = @loginInfo.ProviderName }, null)</p></h2>*@
     <h2><a href="@loginInfo.LoginLinkUri">@loginInfo.ProviderName</a></h2>
 }

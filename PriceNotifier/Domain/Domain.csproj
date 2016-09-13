@@ -104,6 +104,10 @@
     <Compile Include="Migrations\201609061010416_addedAttributeUserValidation.Designer.cs">
       <DependentUpon>201609061010416_addedAttributeUserValidation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609131041153_RegEx.cs" />
+    <Compile Include="Migrations\201609131041153_RegEx.Designer.cs">
+      <DependentUpon>201609131041153_RegEx.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
@@ -144,6 +148,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609061010416_addedAttributeUserValidation.resx">
       <DependentUpon>201609061010416_addedAttributeUserValidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609131041153_RegEx.resx">
+      <DependentUpon>201609131041153_RegEx.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
