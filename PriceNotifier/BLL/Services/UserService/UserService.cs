@@ -52,9 +52,6 @@ namespace BLL.Services.UserService
                     SocialNetworkName = user.SocialNetworkName,
                     CountTrackedItems= product.Count()
                 });
-
-           
-
             return queryFinal;
         }
     }
