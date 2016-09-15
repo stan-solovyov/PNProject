@@ -1,5 +1,10 @@
 ﻿using System;
 using Autofac;
+using BLL.Services.ProductService;
+using BLL.Services.UserService;
+using Domain.EF;
+using Domain.Entities;
+using Domain.Repository;
 
 namespace NotificationApp
 {
@@ -9,28 +14,20 @@ namespace NotificationApp
         static void Main()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<Parser>().As<IParser>();
+            builder.RegisterType<PriceParser>().As<IParser>();
+            builder.RegisterType<PriceComparisonJob>().AsSelf().InstancePerLifetimeScope();
+            builder.Register(context => new UserContext()).As<UserContext>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductRepository>().As<IRepository<Product>>().InstancePerLifetimeScope();
+            builder.RegisterType<ProductService>().As<IProductService>().InstancePerLifetimeScope();
+            builder.RegisterType<UserRepository>().As<IRepository<User>>().InstancePerLifetimeScope();
+            builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
             Container = builder.Build();
 
-        }
-
-
-        public interface IParser
-        {
-            string Parse();
-        }
-
-        public class Parser : IParser
-        {
-            public string Parse()
+            using (var scope = Container.BeginLifetimeScope())
             {
-                throw new NotImplementedException();
+                var app = scope.Resolve<PriceComparisonJob>();
+                 app.Compare().Wait();
             }
-        }
-
-        public void UpdateProducts()
-        {
-            
         }
     }
 }
