@@ -7,7 +7,7 @@ using Domain.Repository;
 
 namespace BLL.Services.ProductService
 {
-    public class ProductService:IProductService
+    public class ProductService : IProductService
     {
         private readonly IRepository<Product> _productRepository;
 
@@ -18,7 +18,7 @@ namespace BLL.Services.ProductService
 
         public async Task<IEnumerable<Product>> GetByUserId(int userId)
         {
-            return await _productRepository.Query().Where(c => c.UserId == userId).ToListAsync();
+            return await _productRepository.Query().Where(c => c.Users.Any(b => b.Id == userId)).ToListAsync();
         }
 
         public async Task<Product> Create(Product product)
@@ -43,14 +43,19 @@ namespace BLL.Services.ProductService
             await _productRepository.Delete(product);
         }
 
-        public  Product GetByExtId(string externalProductId, int userId)
+        public Product GetByExtId(string externalProductId, int userId)
         {
-            return _productRepository.Query().Where(c => c.UserId == userId).FirstOrDefault(c => c.ExternalProductId == externalProductId);
+            return _productRepository.Query().Where(c => c.Users.Any(b => b.Id == userId)).FirstOrDefault(c => c.ExternalProductId == externalProductId);
         }
 
         public Product Get(int productId, int userId)
         {
-            return _productRepository.Query().Where(c => c.UserId == userId).FirstOrDefault(c => c.Id == productId);
+            return _productRepository.Query().Where(c => c.Users.Any(b => b.Id == userId)).FirstOrDefault(c => c.Id == productId);
+        }
+
+        public Product GetByExtIdFromDb(string externalProductId)
+        {
+            return _productRepository.Query().FirstOrDefault(c => c.ExternalProductId == externalProductId);
         }
     }
 }

@@ -8,6 +8,7 @@ namespace BLL.Services.ProductService
     {
         Task<IEnumerable<Product>> GetByUserId(int userId);
         Product GetByExtId(string externalProductId ,int userId);
+        Product GetByExtIdFromDb(string externalProductId);
         Product Get(int productId, int userId);
     }
 }

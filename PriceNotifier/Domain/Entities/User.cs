@@ -15,6 +15,9 @@ namespace Domain.Entities
         public  string Token { get; set; }
 
         public List<Product> Products { get; set; }
-
+        public User()
+        {
+            Products = new List<Product>();
+        }
     }
 }

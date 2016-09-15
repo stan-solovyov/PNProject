@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
@@ -10,13 +10,16 @@ namespace Domain.Entities
         public string Price { get; set; }
 
         [MaxLength(450)]
-        [Index("IX_ExtIdAndUserId", Order = 2)]
         public string ExternalProductId { get; set; }
         public string Url { get; set; }
         public string ImageUrl { get; set; }
         public bool Checked { get; set; }
 
-        [Index("IX_ExtIdAndUserId", Order = 1)]
-        public int UserId { get; set; }
+        public List<User> Users { get; set; }
+
+        public Product()
+        {
+            Users = new List<User>();
+        }
     }
 }

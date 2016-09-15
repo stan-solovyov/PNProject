@@ -8,7 +8,7 @@ namespace Domain.Migrations
         public override void Up()
         {
             AddColumn("dbo.Users", "SocialNetworkUserId", c => c.String());
-            DropColumn("dbo.Users", "SocialNetworUserId");
+            DropColumn("dbo.Users", "UserId");
         }
         
         public override void Down()

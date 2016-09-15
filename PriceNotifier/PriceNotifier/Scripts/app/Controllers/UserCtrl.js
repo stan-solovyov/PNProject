@@ -30,7 +30,7 @@
 
 
         var validationFactory = function(newValue) {
-            if ((/^[a-zA-Z]+$/.test(newValue)) && newValue.length < 25 && newValue!=="") {
+            if ((/^[а-яА-Яa-zA-Z]+$/.test(newValue)) && newValue.length < 25 && newValue !== "") {
                 return true;
             } else {
                 return false;

@@ -1,10 +1,8 @@
 ﻿using System.Linq;
 using System.Net.Http;
-using System.Web;
 using System.Web.Http;
 using Domain.EF;
 using System.Web.Http.Controllers;
-using Domain.Entities;
 
 namespace PriceNotifier.AuthFilter
 {

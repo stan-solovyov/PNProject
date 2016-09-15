@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
 using BLL.Services.ProductService;
+using BLL.Services.UserService;
 using Domain.Entities;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
@@ -16,10 +17,12 @@ namespace PriceNotifier.Controllers
     public class ProductsController : ApiController
     {
         private readonly IProductService _productService;
+        private readonly IUserService _userService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IUserService userService)
         {
             _productService = productService;
+            _userService = userService;
         }
 
         // GET: api/Products
@@ -28,8 +31,8 @@ namespace PriceNotifier.Controllers
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            var users = await _productService.GetByUserId(userId);
-            return Mapper.Map<IEnumerable<ProductDto>>(users);
+            var products = await _productService.GetByUserId(userId);
+            return Mapper.Map<IEnumerable<ProductDto>>(products);
         }
 
         // GET: api/Products/5
@@ -82,12 +85,23 @@ namespace PriceNotifier.Controllers
             var userId = owinContext.Get<int>("userId");
 
             var productFound = _productService.GetByExtId(productDto.ExternalProductId, userId);
+
             if (productFound == null)
             {
                 var product = Mapper.Map<ProductDto, Product>(productDto);
-                product.UserId = userId;
-                var productFromDb = await _productService.Create(product);
-                productDto = Mapper.Map(productFromDb, productDto);
+                User user = await _userService.GetById(userId);
+                var p = _productService.GetByExtIdFromDb(product.ExternalProductId);
+                if (p == null)
+                {
+                    user.Products.Add(product);
+                    var productFromDb = await _productService.Create(product);
+                    productDto = Mapper.Map(productFromDb, productDto);
+                    return productDto;
+                }
+
+                p.Price = product.Price;
+                user.Products.Add(p);
+                await _userService.Update(user);
                 return productDto;
             }
 

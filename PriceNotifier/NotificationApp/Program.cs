@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Specialized;
-using System.Threading.Tasks;
 using Autofac;
-using Quartz;
-using Quartz.Impl;
 
 namespace NotificationApp
 {

@@ -12,5 +12,18 @@ namespace Domain.EF
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Product> Products { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().
+              HasMany(c => c.Products).
+              WithMany(p => p.Users).
+              Map(
+               m =>
+               {
+                   m.MapLeftKey("UserId");
+                   m.MapRightKey("ProductId");
+               });
+        }
     }
 }
