@@ -5,11 +5,7 @@
 
         var getUsers = function (name, order, filter, filterColumn, currentPage, recordsPerPage) {
 
-            var request = url +
-                "?$skip=" +
-                (currentPage - 1) * recordsPerPage +
-                "&$top=" +
-                recordsPerPage;
+            var request = url + "?$skip=" + (currentPage - 1) * recordsPerPage + "&$top=" + recordsPerPage;
 
             if (name && order) {
                 request = request + "&$orderby=" + name + " " + order;
