@@ -4,6 +4,6 @@ namespace NotificationApp
 {
     public interface IParser
     {
-        double Parse(ProductDto product);
+        double Parse(string page);
     }
 }

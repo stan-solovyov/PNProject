@@ -53,6 +53,11 @@ namespace BLL.Services.ProductService
             return _productRepository.Query().Where(c => c.Users.Any(b => b.Id == userId)).FirstOrDefault(c => c.Id == productId);
         }
 
+        public async Task<IEnumerable<Product>> GetTrackedItems()
+        {
+            return await _productRepository.Query().Where(c=>c.Checked).ToListAsync();
+        }
+
         public Product GetByExtIdFromDb(string externalProductId)
         {
             return _productRepository.Query().FirstOrDefault(c => c.ExternalProductId == externalProductId);

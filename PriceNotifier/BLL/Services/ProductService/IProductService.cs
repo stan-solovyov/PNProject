@@ -10,5 +10,7 @@ namespace BLL.Services.ProductService
         Product GetByExtId(string externalProductId ,int userId);
         Product GetByExtIdFromDb(string externalProductId);
         Product Get(int productId, int userId);
+
+        Task<IEnumerable<Product>> GetTrackedItems();
     }
 }

@@ -1,17 +1,36 @@
-﻿using PriceNotifier.DTO;
+﻿using System;
+using System.Text;
+using System.Text.RegularExpressions;
+using HtmlAgilityPack;
+using PriceNotifier.DTO;
 
 namespace NotificationApp
 {
     public class PriceParser:IParser
     {
-        public double Parse(ProductDto productDto)
+        public double Parse(string html)
         {
-            double price;
-            if (double.TryParse(productDto.Price, out price))
+            double finalPrice;
+            string price = null;
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            if (doc.DocumentNode.SelectNodes("//a[@class='b-offers-desc__info-price-value b-offers-desc__info-price-value_primary']") != null)
             {
-                return price;
-            }
+                foreach (
+                    var htmlNode in
+                        doc.DocumentNode.SelectNodes(
+                            "//a[@class='b-offers-desc__info-price-value b-offers-desc__info-price-value_primary']"))
+                {
+                    var node = htmlNode.InnerText.Trim('-');
+                    string[] numbers = Regex.Split(node, @"\D+");
+                    price = numbers[0] + "," + numbers[1];
+                }
 
+                if (double.TryParse(price, out finalPrice))
+                {
+                    return finalPrice;
+                }
+            }
             return 0;
         }
     }
