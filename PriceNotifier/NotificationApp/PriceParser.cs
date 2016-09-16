@@ -1,8 +1,5 @@
-﻿using System;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using HtmlAgilityPack;
-using PriceNotifier.DTO;
 
 namespace NotificationApp
 {
@@ -10,7 +7,6 @@ namespace NotificationApp
     {
         public double Parse(string html)
         {
-            double finalPrice;
             string price = null;
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(html);
@@ -26,6 +22,7 @@ namespace NotificationApp
                     price = numbers[0] + "," + numbers[1];
                 }
 
+                double finalPrice;
                 if (double.TryParse(price, out finalPrice))
                 {
                     return finalPrice;

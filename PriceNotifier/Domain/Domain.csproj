@@ -112,6 +112,10 @@
     <Compile Include="Migrations\201609150917589_manyToMany.Designer.cs">
       <DependentUpon>201609150917589_manyToMany.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609161502164_doublePrice.cs" />
+    <Compile Include="Migrations\201609161502164_doublePrice.Designer.cs">
+      <DependentUpon>201609161502164_doublePrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
@@ -158,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201609150917589_manyToMany.resx">
       <DependentUpon>201609150917589_manyToMany.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609161502164_doublePrice.resx">
+      <DependentUpon>201609161502164_doublePrice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

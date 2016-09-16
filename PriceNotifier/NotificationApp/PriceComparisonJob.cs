@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using BLL.Services.ProductService;
@@ -10,7 +9,7 @@ namespace NotificationApp
     {
         private readonly IParser _parseService;
         private readonly IProductService _productService;
-        private double _priceFromSite, _priceFromDb;
+        private double _priceFromSite;
         public PriceComparisonJob(IParser service, IProductService productService)
         {
             _parseService = service;
@@ -26,7 +25,7 @@ namespace NotificationApp
                 UseDefaultCredentials = false,
                 Credentials = new System.Net.NetworkCredential("stanislav.soloview@gmail.com", "1691811qwe"),
                 EnableSsl = true,
-                Timeout = 20000
+                Timeout = 10000
             };
 
             MailMessage mail = new MailMessage();
@@ -46,51 +45,40 @@ namespace NotificationApp
                         _priceFromSite = _parseService.Parse(html);
                     }
 
-                    _priceFromDb = 0;
-                    if (product.Price != null)
+                    if (product.Price==0 && _priceFromSite != 0)
                     {
-                        _priceFromDb = double.Parse(product.Price.Replace(".", ","));
-                    }
-                    var newPrice = _priceFromSite.ToString(CultureInfo.CurrentCulture);
-
-                    if (string.IsNullOrEmpty(product.Price) && _priceFromSite != 0)
-                    {
-                        product.Price = _priceFromSite.ToString(CultureInfo.CurrentCulture);
-                        await _productService.Update(product);
-
                         mail.Subject = "Product is in stock";
                         mail.Body = $"The item <a href = '{product.Url}'> {product.Name} </a>  is available for purchase for {_priceFromSite} BYR.";
                         smtpServer.Send(mail);
+                        product.Price = _priceFromSite;
+                        await _productService.Update(product);
                     }
 
-                    if (_priceFromDb > _priceFromSite)
+                    if (product.Price > _priceFromSite)
                     {
-                        product.Price = newPrice;
-                        await _productService.Update(product);
-
                         mail.Subject = "Price drop";
-                        mail.Body = $"The price for <a href = '{product.Url}'> {product.Name} </a>  has decreased on {(_priceFromDb - _priceFromSite)} BYR.";
+                        mail.Body = $"The price for <a href = '{product.Url}'> {product.Name} </a>  has decreased on {product.Price - _priceFromSite} BYR.";
                         smtpServer.Send(mail);
+                        product.Price = _priceFromSite;
+                        await _productService.Update(product);
                     }
 
-                    if (_priceFromDb < _priceFromSite)
+                    if (product.Price < _priceFromSite)
                     {
-                        product.Price = newPrice;
-                        await _productService.Update(product);
-
                         mail.Subject = "Price increase";
-                        mail.Body = $"The price for <a href = '{product.Url}'> {product.Name} </a>  has increased on {(_priceFromSite - _priceFromDb)} BYR.";
+                        mail.Body = $"The price for <a href = '{product.Url}'> {product.Name} </a>  has increased on {_priceFromSite - product.Price} BYR.";
                         smtpServer.Send(mail);
+                        product.Price = _priceFromSite;
+                        await _productService.Update(product);
                     }
 
-                    if (_priceFromDb!= 0 && _priceFromSite==0)
+                    if (product.Price != 0 && _priceFromSite==0)
                     {
-                        product.Price = newPrice;
-                        await _productService.Update(product);
-
                         mail.Subject = "Product is out of sale";
                         mail.Body = $"Unfortunately the <a href = '{product.Url}'> {product.Name} </a>  is out of sale.";
                         smtpServer.Send(mail);
+                        product.Price = _priceFromSite;
+                        await _productService.Update(product);
                     }
                 }
             }

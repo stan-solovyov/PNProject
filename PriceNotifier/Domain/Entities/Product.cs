@@ -7,7 +7,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Price { get; set; }
+        public double Price { get; set; }
 
         [MaxLength(450)]
         public string ExternalProductId { get; set; }

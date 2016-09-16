@@ -15,7 +15,7 @@
 
             var price;
             if (product.prices === null) {
-                price = null;
+                price = 0;
             } else {
                 price = product.prices.price_min.amount;
             }
