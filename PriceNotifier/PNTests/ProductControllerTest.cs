@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
 using BLL.Services.ProductService;
+using BLL.Services.UserService;
 using Domain.Entities;
 using Microsoft.Owin;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,15 +34,16 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = userId
             };
             var mockService = new Mock<IProductService>();
+            var mockService1 = new Mock<IUserService>();
             mockService.Setup(x => x.GetByUserId(userId))
                 .ReturnsAsync(new List<Product>{ product });
-            var controller = new ProductsController(mockService.Object);
+            var controller = new ProductsController(mockService.Object,mockService1.Object);
 
             //Set up OwinContext
             controller.Request = new HttpRequestMessage();
@@ -68,7 +70,7 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = 1
@@ -107,7 +109,7 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = 1
@@ -120,7 +122,7 @@ namespace PNTests
                     Checked = true,
                     ExternalProductId = "12345",
                     Name = "asdasasf",
-                    Price = "3214",
+                    Price = 3214,
                     Url = "aasdsad",
                     ImageUrl = "asdasd",
                     UserId = 1
@@ -148,7 +150,7 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "432",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = userId
@@ -160,7 +162,7 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "432",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd"
             };
@@ -194,7 +196,7 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd",
                 UserId = userId
@@ -206,7 +208,7 @@ namespace PNTests
                 Checked = true,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
-                Price = "3214",
+                Price = 3214,
                 Url = "aasdsad",
                 ImageUrl = "asdasd"
             };

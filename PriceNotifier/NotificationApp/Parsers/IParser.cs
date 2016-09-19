@@ -1,6 +1,4 @@
-﻿using PriceNotifier.DTO;
-
-namespace NotificationApp
+﻿namespace NotificationApp.Parsers
 {
     public interface IParser
     {

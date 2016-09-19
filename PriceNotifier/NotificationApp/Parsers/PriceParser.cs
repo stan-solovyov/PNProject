@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
-namespace NotificationApp
+namespace NotificationApp.Parsers
 {
     public class PriceParser:IParser
     {
