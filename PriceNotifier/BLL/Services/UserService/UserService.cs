@@ -50,7 +50,7 @@ namespace BLL.Services.UserService
                     Username = user.Username,
                     SocialNetworkUserId = user.SocialNetworkUserId,
                     SocialNetworkName = user.SocialNetworkName,
-                    CountTrackedItems= product.Count()
+                    CountTrackedItems= user.Products.Count
                 });
             return queryFinal;
         }

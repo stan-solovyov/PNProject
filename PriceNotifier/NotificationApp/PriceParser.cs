@@ -12,10 +12,7 @@ namespace NotificationApp
             doc.LoadHtml(html);
             if (doc.DocumentNode.SelectNodes("//a[@class='b-offers-desc__info-price-value b-offers-desc__info-price-value_primary']") != null)
             {
-                foreach (
-                    var htmlNode in
-                        doc.DocumentNode.SelectNodes(
-                            "//a[@class='b-offers-desc__info-price-value b-offers-desc__info-price-value_primary']"))
+                foreach (var htmlNode in doc.DocumentNode.SelectNodes("//a[@class='b-offers-desc__info-price-value b-offers-desc__info-price-value_primary']"))
                 {
                     var node = htmlNode.InnerText.Trim('-');
                     string[] numbers = Regex.Split(node, @"\D+");

@@ -2,7 +2,7 @@
     <br />
     <div class="container col-lg-8">
         <form class="form-group" name="searchUser">
-            <label for="productInput"> Insert the name of the item for tracking:</label>
+            <label for="productInput"> What product you'd like to find:</label>
             <input class="form-control" type="text" id="productInput" required="" placeholder="Item name" ng-model="productname" ng-change="search(productname)" ng-model-options="{debounce: 750}" /><br />
         </form>
         <div class="container" ng-repeat="product in products" ng-show="products">
