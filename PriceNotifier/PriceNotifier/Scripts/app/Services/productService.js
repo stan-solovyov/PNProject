@@ -27,7 +27,6 @@
                 Url: product.html_url,
                 ImageUrl: product.images.icon,
                 Checked: true
-
             };
 
             return $http.post(url,

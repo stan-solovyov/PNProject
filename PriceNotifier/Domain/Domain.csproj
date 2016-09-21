@@ -64,62 +64,16 @@
     <Compile Include="EF\UserContext.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\User.cs" />
-    <Compile Include="Migrations\201608091515097_InitialCreate.cs" />
-    <Compile Include="Migrations\201608091515097_InitialCreate.Designer.cs">
-      <DependentUpon>201608091515097_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608151454399_Product.cs" />
-    <Compile Include="Migrations\201608151454399_Product.Designer.cs">
-      <DependentUpon>201608151454399_Product.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608160831092_addProductsList.cs" />
-    <Compile Include="Migrations\201608160831092_addProductsList.Designer.cs">
-      <DependentUpon>201608160831092_addProductsList.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608161227198_userId.cs" />
-    <Compile Include="Migrations\201608161227198_userId.Designer.cs">
-      <DependentUpon>201608161227198_userId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608181252129_AddCHecked.cs" />
-    <Compile Include="Migrations\201608181252129_AddCHecked.Designer.cs">
-      <DependentUpon>201608181252129_AddCHecked.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608231654105_externalProductId.cs" />
-    <Compile Include="Migrations\201608231654105_externalProductId.Designer.cs">
-      <DependentUpon>201608231654105_externalProductId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608240842407_Index.cs" />
-    <Compile Include="Migrations\201608240842407_Index.Designer.cs">
-      <DependentUpon>201608240842407_Index.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608240947471_IndexMaxLength.cs" />
-    <Compile Include="Migrations\201608240947471_IndexMaxLength.Designer.cs">
-      <DependentUpon>201608240947471_IndexMaxLength.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201608291125499_SocialNetworkUserId.cs" />
-    <Compile Include="Migrations\201608291125499_SocialNetworkUserId.Designer.cs">
-      <DependentUpon>201608291125499_SocialNetworkUserId.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609061010416_addedAttributeUserValidation.cs" />
-    <Compile Include="Migrations\201609061010416_addedAttributeUserValidation.Designer.cs">
-      <DependentUpon>201609061010416_addedAttributeUserValidation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609131041153_RegEx.cs" />
-    <Compile Include="Migrations\201609131041153_RegEx.Designer.cs">
-      <DependentUpon>201609131041153_RegEx.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609150917589_manyToMany.cs" />
-    <Compile Include="Migrations\201609150917589_manyToMany.Designer.cs">
-      <DependentUpon>201609150917589_manyToMany.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609161502164_doublePrice.cs" />
-    <Compile Include="Migrations\201609161502164_doublePrice.Designer.cs">
-      <DependentUpon>201609161502164_doublePrice.cs</DependentUpon>
+    <Compile Include="Entities\UserProduct.cs" />
+    <Compile Include="Migrations\201609200941496_changedDBModel.cs" />
+    <Compile Include="Migrations\201609200941496_changedDBModel.Designer.cs">
+      <DependentUpon>201609200941496_changedDBModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Repository\ProductRepository.cs" />
+    <Compile Include="Repository\UserProductRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,44 +81,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608091515097_InitialCreate.resx">
-      <DependentUpon>201608091515097_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608151454399_Product.resx">
-      <DependentUpon>201608151454399_Product.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608160831092_addProductsList.resx">
-      <DependentUpon>201608160831092_addProductsList.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608161227198_userId.resx">
-      <DependentUpon>201608161227198_userId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608181252129_AddCHecked.resx">
-      <DependentUpon>201608181252129_AddCHecked.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608231654105_externalProductId.resx">
-      <DependentUpon>201608231654105_externalProductId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608240842407_Index.resx">
-      <DependentUpon>201608240842407_Index.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608240947471_IndexMaxLength.resx">
-      <DependentUpon>201608240947471_IndexMaxLength.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201608291125499_SocialNetworkUserId.resx">
-      <DependentUpon>201608291125499_SocialNetworkUserId.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609061010416_addedAttributeUserValidation.resx">
-      <DependentUpon>201609061010416_addedAttributeUserValidation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609131041153_RegEx.resx">
-      <DependentUpon>201609131041153_RegEx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609150917589_manyToMany.resx">
-      <DependentUpon>201609150917589_manyToMany.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609161502164_doublePrice.resx">
-      <DependentUpon>201609161502164_doublePrice.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609200941496_changedDBModel.resx">
+      <DependentUpon>201609200941496_changedDBModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

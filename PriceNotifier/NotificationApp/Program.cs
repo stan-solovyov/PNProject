@@ -22,6 +22,7 @@ namespace NotificationApp
             builder.Register(context => new UserContext()).As<UserContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalProductService>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<MailService>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<UserProductRepository>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<ProductRepository>().As<IRepository<Product>>().InstancePerLifetimeScope();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerLifetimeScope();
             builder.RegisterType<UserRepository>().As<IRepository<User>>().InstancePerLifetimeScope();

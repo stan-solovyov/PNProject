@@ -11,6 +11,7 @@ namespace BLL.Services.ProductService
         Product GetByExtIdFromDb(string externalProductId);
         Product Get(int productId, int userId);
 
+        Task DeleteFromUserProduct(int userId, int productId);
         Task<IEnumerable<Product>> GetTrackedItems();
     }
 }

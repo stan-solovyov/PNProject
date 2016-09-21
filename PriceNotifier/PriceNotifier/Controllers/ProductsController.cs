@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -32,7 +33,15 @@ namespace PriceNotifier.Controllers
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
             var products = await _productService.GetByUserId(userId);
-            return Mapper.Map<IEnumerable<ProductDto>>(products);
+            List<ProductDto> productDtos = new List<ProductDto>();
+            foreach (var product in products)
+            {
+                var p = Mapper.Map<Product, ProductDto>(product);
+                p.Checked = product.UserProducts.Where(c => c.ProductId == product.ProductId && c.UserId == userId).Select(b => b.Checked).Single();
+                productDtos.Add(p);
+            }
+
+            return productDtos;
         }
 
         // GET: api/Products/5
@@ -64,8 +73,10 @@ namespace PriceNotifier.Controllers
             if (productFound != null)
             {
                 productFound = Mapper.Map(productDto, productFound);
+                productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked = productDto.Checked;
                 await _productService.Update(productFound);
                 productDto = Mapper.Map(productFound, productDto);
+                productDto.Checked = productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked;
                 return productDto;
             }
 
@@ -93,14 +104,15 @@ namespace PriceNotifier.Controllers
                 var p = _productService.GetByExtIdFromDb(product.ExternalProductId);
                 if (p == null)
                 {
-                    user.Products.Add(product);
-                    var productFromDb = await _productService.Create(product);
-                    productDto = Mapper.Map(productFromDb, productDto);
+                    product = await _productService.Create(product);
+                    user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
+                    await _userService.Update(user);
+                    productDto = Mapper.Map(product, productDto);
                     return productDto;
                 }
 
                 p.Price = product.Price;
-                user.Products.Add(p);
+                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
                 return productDto;
             }
@@ -112,13 +124,22 @@ namespace PriceNotifier.Controllers
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> Delete(int id)
         {
+            var owinContext = Request.GetOwinContext();
+            var userId = owinContext.Get<int>("userId");
+            User user = await _userService.GetById(userId);
             Product product = await _productService.GetById(id);
+
             if (product == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            await _productService.Delete(product);
+            await _productService.DeleteFromUserProduct(user.UserId, product.ProductId);
+            if (product.UserProducts.All(c => c.ProductId != id))
+            {
+                await _productService.Delete(product);
+            }
+
             return Ok();
         }
     }

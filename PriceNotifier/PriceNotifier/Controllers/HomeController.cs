@@ -109,7 +109,7 @@ namespace PriceNotifier.Controllers
             var userFound = db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
             if (userFound != null)
             {
-                userFound.Token = GetHashString(user.Id + user.SocialNetworkName + user.SocialNetworkUserId);
+                userFound.Token = GetHashString(user.UserId + user.SocialNetworkName + user.SocialNetworkUserId);
                 db.SaveChanges();
                 HttpCookie cookie = new HttpCookie("Token");
                 cookie.Value = userFound.Token;

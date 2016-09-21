@@ -43,14 +43,14 @@ namespace BLL.Services.UserService
             
             var query = _userRepository.Query();
 
-            var queryFinal = query.GroupJoin(_productRepository.Query(), user => user.Id, product => product.Id,
+            var queryFinal = query.GroupJoin(_productRepository.Query(), user => user.UserId, product => product.ProductId,
                 (user, product) => new UserFromDbWithCount
                 {
-                    Id=user.Id,
+                    Id=user.UserId,
                     Username = user.Username,
                     SocialNetworkUserId = user.SocialNetworkUserId,
                     SocialNetworkName = user.SocialNetworkName,
-                    CountTrackedItems= user.Products.Count
+                    CountTrackedItems= user.UserProducts.Count(c => c.Checked)
                 });
             return queryFinal;
         }

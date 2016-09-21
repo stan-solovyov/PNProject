@@ -8,7 +8,7 @@ namespace PriceNotifier.DTO
     {
         public MyMappingProfile()
         {
-            CreateMap<Product, ProductDto>();
+            CreateMap<Product, ProductDto>().ForMember("Id",opt=>opt.MapFrom(c=>c.ProductId));
             CreateMap<ProductDto, Product>();
             CreateMap<Product, Product>();
             CreateMap<User, UserDto>();

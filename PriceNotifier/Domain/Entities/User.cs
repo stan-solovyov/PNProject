@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class User
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
         [Required(ErrorMessage = "Username is required.")]
         [MaxLength(25, ErrorMessage = "Name cannot be longer than 25 characters.")]
         [RegularExpression(@"^[а-яА-Яa-zA-Z]+$", ErrorMessage = "Username should contain only alphabetical characters")]
@@ -14,10 +14,6 @@ namespace Domain.Entities
         public string SocialNetworkName { get; set; }
         public  string Token { get; set; }
 
-        public List<Product> Products { get; set; }
-        public User()
-        {
-            Products = new List<Product>();
-        }
+        public virtual List<UserProduct> UserProducts { get; set; }
     }
 }
