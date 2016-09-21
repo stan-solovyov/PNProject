@@ -1,0 +1,33 @@
+﻿@model Domain.Entities.User
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Email</title>
+</head>
+<body>
+    <br />
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <h4>Hello @Model.Username! Please enter your e-mail, where we'll send notifications.</h4>
+        <form>
+            <div class="form-group">
+                <label for="InputEmail">Email address:</label>
+                <input type="email" class="form-control" id="InputEmail" placeholder="Email" name="email">
+            </div>
+            <div><input type="submit" class="btn btn-primary" value="Submit" /></div>
+        </form>
+    }
+    <div style="margin-top:700px"></div>
+</body>
+</html>
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.validate.min.js")
+}

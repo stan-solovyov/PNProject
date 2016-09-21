@@ -14,6 +14,8 @@ namespace Domain.Entities
         public string SocialNetworkName { get; set; }
         public  string Token { get; set; }
 
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        public string Email { get; set; }
         public virtual List<UserProduct> UserProducts { get; set; }
     }
 }

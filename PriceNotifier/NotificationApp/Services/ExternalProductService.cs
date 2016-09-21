@@ -14,7 +14,7 @@ namespace NotificationApp.Services
             _parseService = parseService;
         }
 
-        public async Task<string>  GetExternalPrductPage(string address)
+        public async Task<string> GetExternalPrductPage(string address)
         {
             string html;
             using (var client = new HttpClient())
@@ -26,7 +26,7 @@ namespace NotificationApp.Services
 
         public double ParsePrice(string html)
         {
-            return  _parseService.Parse(html);
+            return _parseService.Parse(html);
         }
 
     }

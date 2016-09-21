@@ -1,4 +1,6 @@
-﻿using OAuth2;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using OAuth2;
 using OAuth2.Client;
 using PriceNotifier.Models;
 using System.Linq;
@@ -8,6 +10,8 @@ using Domain.Entities;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Routing;
+using PriceNotifier.AuthFilter;
 
 namespace PriceNotifier.Controllers
 {
@@ -46,18 +50,55 @@ namespace PriceNotifier.Controllers
             _authorizationRoot = authorizationRoot;
         }
 
+        [CookieAuthorize]
         public ActionResult Index()
         {
             if (Request.Cookies.AllKeys.Contains("Token"))
             {
-                var token = Request.Cookies.Get("Token");
+                var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
+                var user = db.Users.FirstOrDefault(c => c.Token == token);
                 if (token != null)
                 {
-                    ViewData["token"] = token.Value;
+                    ViewData["token"] = token;
                 }
-                return View();
+
+                if (!string.IsNullOrEmpty(user.Email))
+                {
+                    return View();
+                }
             }
             return RedirectToAction("Login");
+        }
+
+        [CookieAuthorize]
+        [HttpGet]
+        public ActionResult Email()
+        {
+            var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
+            var user = db.Users.FirstOrDefault(c => c.Token == token);
+            return View(user);
+        }
+
+        [CookieAuthorize]
+        [HttpPost]
+        public ActionResult Email(string email)
+        {
+            var foo = new EmailAddressAttribute();
+            var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
+            var user = db.Users.FirstOrDefault(c => c.Token == token);
+            if (foo.IsValid(email))
+            {
+                if (user != null)
+                {
+                    user.Email = email;
+                }
+
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError("Invalid e-mail", "Please verify your e-mail address.");
+            return View(user);
         }
 
         /// <summary>
@@ -94,8 +135,8 @@ namespace PriceNotifier.Controllers
 
                 if (userid == null)
                 {
-                        db.Users.Add(user);
-                        db.SaveChanges();
+                    db.Users.Add(user);
+                    db.SaveChanges();
                 }
                 else
                 {
@@ -114,6 +155,11 @@ namespace PriceNotifier.Controllers
                 HttpCookie cookie = new HttpCookie("Token");
                 cookie.Value = userFound.Token;
                 ControllerContext.HttpContext.Response.Cookies.Add(cookie);
+                if (string.IsNullOrEmpty(userFound.Email))
+                {
+                    return RedirectToAction("Email", "Home");
+                }
+
                 return RedirectToAction("Index", "Home");
             }
             return RedirectToAction("Login", "Home");

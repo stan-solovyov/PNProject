@@ -20,6 +20,15 @@ namespace PriceNotifier
                 });
 
             routes.MapRoute(
+                "Email", // Route name
+                "email/", // URL with parameters
+                new
+                {
+                    controller = "Home",
+                    action = "Email",
+                });
+
+            routes.MapRoute(
                 name: "AuthRoute",
                 url: "Home/Auth/{providerName}",
                 defaults: new { controller = "Home", action = "Auth", providerName = UrlParameter.Optional }

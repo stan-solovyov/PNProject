@@ -69,6 +69,14 @@
     <Compile Include="Migrations\201609200941496_changedDBModel.Designer.cs">
       <DependentUpon>201609200941496_changedDBModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201609210903519_emailAdded.cs" />
+    <Compile Include="Migrations\201609210903519_emailAdded.Designer.cs">
+      <DependentUpon>201609210903519_emailAdded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201609211014134_RequiredRemoved.cs" />
+    <Compile Include="Migrations\201609211014134_RequiredRemoved.Designer.cs">
+      <DependentUpon>201609211014134_RequiredRemoved.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
@@ -83,6 +91,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201609200941496_changedDBModel.resx">
       <DependentUpon>201609200941496_changedDBModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609210903519_emailAdded.resx">
+      <DependentUpon>201609210903519_emailAdded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201609211014134_RequiredRemoved.resx">
+      <DependentUpon>201609211014134_RequiredRemoved.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
