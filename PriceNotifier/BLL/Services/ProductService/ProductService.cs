@@ -57,7 +57,7 @@ namespace BLL.Services.ProductService
 
         public async Task<IEnumerable<Product>> GetTrackedItems()
         {
-            return await _productRepository.Query().Where(c=>c.UserProducts.Any(d=>d.Checked)).ToListAsync();
+            return await _productRepository.Query().Where(c=>c.UserProducts.Any(d=>d.Checked)).Include(c=>c.UserProducts.Select(a=>a.User)).ToListAsync();
         }
 
         public Product GetByExtIdFromDb(string externalProductId)

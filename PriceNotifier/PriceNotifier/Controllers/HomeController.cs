@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using OAuth2;
 using OAuth2.Client;
 using PriceNotifier.Models;
@@ -10,7 +9,6 @@ using Domain.Entities;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
-using System.Web.Routing;
 using PriceNotifier.AuthFilter;
 
 namespace PriceNotifier.Controllers
@@ -50,18 +48,17 @@ namespace PriceNotifier.Controllers
             _authorizationRoot = authorizationRoot;
         }
 
-        [CookieAuthorize]
         public ActionResult Index()
         {
             if (Request.Cookies.AllKeys.Contains("Token"))
             {
                 var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
                 var user = db.Users.FirstOrDefault(c => c.Token == token);
+
                 if (token != null)
                 {
                     ViewData["token"] = token;
                 }
-
                 if (!string.IsNullOrEmpty(user.Email))
                 {
                     return View();
@@ -70,12 +67,14 @@ namespace PriceNotifier.Controllers
             return RedirectToAction("Login");
         }
 
+
         [CookieAuthorize]
         [HttpGet]
         public ActionResult Email()
         {
-            var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
-            var user = db.Users.FirstOrDefault(c => c.Token == token);
+            var owinContext = Request.GetOwinContext();
+            var userId = owinContext.Get<int>("userId");
+            var user = db.Users.FirstOrDefault(c => c.UserId==userId);
             return View(user);
         }
 
@@ -84,8 +83,9 @@ namespace PriceNotifier.Controllers
         public ActionResult Email(string email)
         {
             var foo = new EmailAddressAttribute();
-            var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
-            var user = db.Users.FirstOrDefault(c => c.Token == token);
+            var owinContext = Request.GetOwinContext();
+            var userId = owinContext.Get<int>("userId");
+            var user = db.Users.FirstOrDefault(c => c.UserId==userId);
             if (foo.IsValid(email))
             {
                 if (user != null)
@@ -97,7 +97,7 @@ namespace PriceNotifier.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError("Invalid e-mail", "Please verify your e-mail address.");
+            ModelState.AddModelError("Invalid e-mail", "Email should not be empty.");
             return View(user);
         }
 
@@ -126,7 +126,8 @@ namespace PriceNotifier.Controllers
                 SocialNetworkName = a.ProviderName,
                 Username = a.FirstName,
                 SocialNetworkUserId = a.Id,
-                Token = ""
+                Token = "",
+                Email = null
             };
 
             if (db.Users != null)
@@ -140,7 +141,8 @@ namespace PriceNotifier.Controllers
                 }
                 else
                 {
-                    userid.Token = user.Token;
+                    //userid.Token = user.Token;
+                    userid.SocialNetworkUserId = user.SocialNetworkUserId;
                     userid.SocialNetworkName = user.SocialNetworkName;
                     userid.Username = user.Username;
                     db.SaveChanges();

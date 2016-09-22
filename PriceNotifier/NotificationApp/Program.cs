@@ -1,6 +1,4 @@
-﻿using System;
-using Autofac;
-using BLL.Services;
+﻿using Autofac;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.EF;

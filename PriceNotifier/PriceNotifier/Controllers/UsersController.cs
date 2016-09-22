@@ -10,19 +10,22 @@ using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using AutoMapper;
 using BLL;
+using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
 using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
-   public class UsersController : ApiController
+    public class UsersController : ApiController
     {
         private readonly IUserService _userService;
+        private readonly IProductService _productService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IProductService productService)
         {
             _userService = userService;
+            _productService = productService;
         }
 
         // GET: api/Users
@@ -100,9 +103,20 @@ namespace PriceNotifier.Controllers
         public async Task<IHttpActionResult> DeleteUser(int id)
         {
             User user = await _userService.GetById(id);
+            var up = user.UserProducts.Where(a => a.UserId == user.UserId).Select(c => c.ProductId).ToList();
+
             if (user == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            foreach (var productId in up)
+            {
+                Product product = await _productService.GetById(productId);
+                if (product.UserProducts.Count(c => c.ProductId == productId) == 1)
+                {
+                    await _productService.Delete(product);
+                }
             }
 
             await _userService.Delete(user);
