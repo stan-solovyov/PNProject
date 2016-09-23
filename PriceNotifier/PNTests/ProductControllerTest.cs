@@ -27,31 +27,39 @@ namespace PNTests
         public async Task GetProductsTest()
         {
             //Arrange
-            var userId = 7;
+            var userId = 11;
+            List<UserProduct> products = new List<UserProduct>
+            {
+                new UserProduct { Checked = true, ProductId = 33, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 17}
+            };
+
             Product product = new Product
             {
-                ProductId = 297,
+                ProductId = 33,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
                 Price = 3214,
                 Url = "aasdsad",
-                ImageUrl = "asdasd"
+                ImageUrl = "asdasd",
+                UserProducts = products
             };
             var mockService = new Mock<IProductService>();
             var mockService1 = new Mock<IUserService>();
             mockService.Setup(x => x.GetByUserId(userId))
-                .ReturnsAsync(new List<Product>{ product });
-            var controller = new ProductsController(mockService.Object,mockService1.Object);
+                .ReturnsAsync(new List<Product> { product });
+            var controller = new ProductsController(mockService.Object, mockService1.Object);
 
             //Set up OwinContext
             controller.Request = new HttpRequestMessage();
             controller.Request.SetOwinContext(new OwinContext());
             var owinContext = controller.Request.GetOwinContext();
             owinContext.Set("userId", userId);
-            
+
             //Act
-            IEnumerable<ProductDto> result =  await controller.GetProducts();
-            
+            IEnumerable<ProductDto> result = await controller.GetProducts();
+
             //Assert
             Assert.IsNotNull(result);
         }
@@ -81,153 +89,205 @@ namespace PNTests
             Assert.IsNotNull(result);
         }
 
-        //[TestMethod]
-        //[ExpectedException(typeof(HttpResponseException))]
-        //public async Task GetNotExistingProductByIdTest()
-        //{
-        //    //Arrange
-        //    var productId = 0;
-        //    var mockService = new Mock<IProductService>();
-        //    var controller = new ProductsController(mockService.Object);
-        //    //Act
-        //    ProductDto result = await controller.Get(productId);
-        //    //Assert
-        //    Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-        //}
+        [TestMethod]
+        [ExpectedException(typeof(HttpResponseException))]
+        public async Task GetNotExistingProductByIdTest()
+        {
+            //Arrange
+            var productId = 0;
+            var mockService = new Mock<IProductService>();
+            var mockService1 = new Mock<IUserService>();
+            var controller = new ProductsController(mockService.Object, mockService1.Object);
+            //Act
+            ProductDto result = await controller.Get(productId);
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
 
-        //[TestMethod]
-        //public async Task DeleteProductTest()
-        //{
-        //    //Arrange
-        //    var productId = 297;
-        //    var product = new Product
-        //    {
-        //        Id = productId,
-        //        Checked = true,
-        //        ExternalProductId = "12345",
-        //        Name = "asdasasf",
-        //        Price = 3214,
-        //        Url = "aasdsad",
-        //        ImageUrl = "asdasd",
-        //        UserId = 1
-        //    };
-        //    var mockService = new Mock<IProductService>();
-        //    mockService.Setup(x => x.GetById(productId))
-        //        .ReturnsAsync(new Product
-        //        {
-        //            Id = productId,
-        //            Checked = true,
-        //            ExternalProductId = "12345",
-        //            Name = "asdasasf",
-        //            Price = 3214,
-        //            Url = "aasdsad",
-        //            ImageUrl = "asdasd",
-        //            UserId = 1
-        //        }).Verifiable();
+        [TestMethod]
+        public async Task DeleteProductTest()
+        {
+            //Arrange
+            var productId = 33;
+            var userId = 11;
+            List<UserProduct> products = new List<UserProduct>
+            {
+                new UserProduct { Checked = true, ProductId = 33, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 17}
+            };
 
-        //    mockService.Setup(x => x.Delete(product));
-        //    var controller = new ProductsController(mockService.Object);
-        //    //Act
-        //    IHttpActionResult result = await controller.Delete(productId);
+            var product = new Product
+            {
+                ProductId = productId,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = 3214,
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserProducts = products
+            };
+            var mockService = new Mock<IProductService>();
+            var mockService1 = new Mock<IUserService>();
+            mockService.Setup(x => x.GetById(productId))
+                .ReturnsAsync(new Product
+                {
+                    ProductId = productId,
+                    ExternalProductId = "12345",
+                    Name = "asdasasf",
+                    Price = 3214,
+                    Url = "aasdsad",
+                    ImageUrl = "asdasd",
+                    UserProducts = products
+                }).Verifiable();
 
-        //    //Assert
-        //    Assert.IsInstanceOfType(result, typeof(OkResult));
-        //    mockService.Verify();
-        //}
+            mockService1.Setup(x => x.GetById(userId))
+               .ReturnsAsync(new User
+               {
+                   UserId = userId,
+                   SocialNetworkName = "Twitter",
+                   Username = "Stan",
+                   SocialNetworkUserId = "297397558",
+                   Token = "4f60b211517aa86a67bace12231d2530",
+                   Email = "stanislav.soloviyev@yandex.ru",
+                   UserProducts = products
+               }).Verifiable();
 
-        //[TestMethod]
-        //public async Task CreateNewProductTest()
-        //{
-        //    //Arrange
-        //    var userId = 1;
-          
-        //    Product newProduct = new Product
-        //    {
-        //        Id = 298,
-        //        Checked = true,
-        //        ExternalProductId = "432",
-        //        Name = "asdasasf",
-        //        Price = 3214,
-        //        Url = "aasdsad",
-        //        ImageUrl = "asdasd",
-        //        UserId = userId
-        //    };
+            mockService.Setup(x => x.Delete(product));
+            var controller = new ProductsController(mockService.Object, mockService1.Object) { Request = new HttpRequestMessage() };
+            //Set up OwinContext
+            controller.Request.SetOwinContext(new OwinContext());
+            var owinContext = controller.Request.GetOwinContext();
+            owinContext.Set("userId", userId);
+            //Act
+            IHttpActionResult result = await controller.Delete(productId);
 
-        //    ProductDto newProductDto = new ProductDto()
-        //    {
-        //        Id = 298,
-        //        Checked = true,
-        //        ExternalProductId = "432",
-        //        Name = "asdasasf",
-        //        Price = 3214,
-        //        Url = "aasdsad",
-        //        ImageUrl = "asdasd"
-        //    };
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(OkResult));
+            mockService.Verify();
+        }
 
-        //    var mockService = new Mock<IProductService>();
-        //    mockService.Setup(x => x.GetByExtId(newProductDto.ExternalProductId, userId)).Returns((Product) null);
-        //    mockService.Setup(x => x.Create(It.IsAny<Product>())).ReturnsAsync(newProduct).Callback<Product>(c => Assert.AreEqual(c.UserId, userId));
+        [TestMethod]
+        public async Task CreateNewProductTest()
+        {
+            //Arrange
+            var userId = 11;
+            var productId = 33;
+            List<UserProduct> products = new List<UserProduct>
+            {
+                new UserProduct { Checked = true, ProductId = 33, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 17}
+            };
 
-        //    var controller = new ProductsController(mockService.Object) {Request = new HttpRequestMessage()};
-        //    //Set up OwinContext
-        //    controller.Request.SetOwinContext(new OwinContext());
-        //    var owinContext = controller.Request.GetOwinContext();
-        //    owinContext.Set("userId", userId);
+            Product newProduct = new Product
+            {
+                ProductId = productId,
+                ExternalProductId = "432",
+                Name = "asdasasf",
+                Price = 3214,
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserProducts = products
+            };
 
-        //    //Act
-        //    ProductDto result = await controller.Post(newProductDto);
-        //    //Assert
-        //    Assert.IsNotNull(result);
-        //}
+            ProductDto newProductDto = new ProductDto()
+            {
+                Id = productId,
+                Checked = true,
+                ExternalProductId = "432",
+                Name = "asdasasf",
+                Price = 3214,
+                Url = "aasdsad",
+                ImageUrl = "asdasd"
+            };
 
-        //[TestMethod]
-        //public async Task UpdateProductTest()
-        //{
+            User user = new User
+            {
+                UserId = userId,
+                SocialNetworkName = "Twitter",
+                Username = "Stan",
+                SocialNetworkUserId = "297397558",
+                Token = "4f60b211517aa86a67bace12231d2530",
+                Email = "stanislav.soloviyev@yandex.ru",
+                UserProducts = products
+            };
 
-        //    //Arrange
-        //    var userId = 1;
-        //    var productId = 297;
-        //    var product = new Product
-        //    {
-        //        Id = productId,
-        //        Checked = true,
-        //        ExternalProductId = "12345",
-        //        Name = "asdasasf",
-        //        Price = 3214,
-        //        Url = "aasdsad",
-        //        ImageUrl = "asdasd",
-        //        UserId = userId
-        //    };
+            var mockService = new Mock<IProductService>();
+            var mockService1 = new Mock<IUserService>();
+            mockService.Setup(x => x.GetByExtId(newProductDto.ExternalProductId, userId)).Returns((Product)null);
+            mockService.Setup(x => x.GetByExtIdFromDb(newProduct.ExternalProductId)).Returns(newProduct);
+            mockService.Setup(x => x.Create(It.IsAny<Product>())).ReturnsAsync(newProduct);
+            mockService1.Setup(x => x.GetById(userId)).ReturnsAsync(user).Verifiable();
+            var controller = new ProductsController(mockService.Object, mockService1.Object) { Request = new HttpRequestMessage() };
+            //Set up OwinContext
+            controller.Request.SetOwinContext(new OwinContext());
+            var owinContext = controller.Request.GetOwinContext();
+            owinContext.Set("userId", userId);
 
-        //    var productDto = new ProductDto
-        //    {
-        //        Id = productId,
-        //        Checked = true,
-        //        ExternalProductId = "12345",
-        //        Name = "asdasasf",
-        //        Price = 3214,
-        //        Url = "aasdsad",
-        //        ImageUrl = "asdasd"
-        //    };
+            //Act
+            ProductDto result = await controller.Post(newProductDto);
+            //Assert
+            Assert.IsNotNull(result);
+            mockService.Verify();
+        }
 
-        //    var mockService = new Mock<IProductService>();
-        //    mockService.Setup(x => x.Get(productId, userId))
-        //        .Returns(product);
+        [TestMethod]
+        public async Task UpdateProductTest()
+        {
 
-        //    mockService.Setup(x => x.Update(It.IsAny<Product>())).Returns(Task.FromResult(false)).Callback<Product>(c => Assert.AreEqual(c.UserId, userId)).Verifiable();
-        //    var controller = new ProductsController(mockService.Object);
+            //Arrange
+            var userId = 11;
+            var productId = 33;
 
-        //    //Set up OwinContext
-        //    controller.Request = new HttpRequestMessage();
-        //    controller.Request.SetOwinContext(new OwinContext());
-        //    var owinContext = controller.Request.GetOwinContext();
-        //    owinContext.Set("userId", userId);
+            List<UserProduct> products = new List<UserProduct>
+            {
+                new UserProduct { Checked = true, ProductId = 33, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 11},
+                new UserProduct { Checked = true, ProductId = 34, UserId = 17}
+            };
 
-        //    //Act
-        //    ProductDto result = await controller.Put(productDto);
-        //    //Assert
-        //    Assert.IsNotNull(result);
-        //    mockService.Verify();
-        //}
+            var product = new Product
+            {
+                ProductId = productId,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = 3214,
+                Url = "aasdsad",
+                ImageUrl = "asdasd",
+                UserProducts = products
+            };
+
+            var productDto = new ProductDto
+            {
+                Id = productId,
+                Checked = true,
+                ExternalProductId = "12345",
+                Name = "asdasasf",
+                Price = 3214,
+                Url = "aasdsad",
+                ImageUrl = "asdasd"
+            };
+
+            var mockService = new Mock<IProductService>();
+            var mockService1 = new Mock<IUserService>();
+            mockService.Setup(x => x.Get(productId, userId))
+                .Returns(product);
+
+            mockService.Setup(x => x.Update(It.IsAny<Product>())).Returns(Task.FromResult(false)).Verifiable();
+            var controller = new ProductsController(mockService.Object, mockService1.Object);
+
+            //Set up OwinContext
+            controller.Request = new HttpRequestMessage();
+            controller.Request.SetOwinContext(new OwinContext());
+            var owinContext = controller.Request.GetOwinContext();
+            owinContext.Set("userId", userId);
+
+            //Act
+            ProductDto result = await controller.Put(productDto);
+            //Assert
+            Assert.IsNotNull(result);
+            mockService.Verify();
+        }
     }
 }

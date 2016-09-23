@@ -3,7 +3,7 @@ using HtmlAgilityPack;
 
 namespace NotificationApp.Parsers
 {
-    public class PriceParser:IParser
+    public class PriceParser : IParser
     {
         public double Parse(string html)
         {
@@ -17,6 +17,15 @@ namespace NotificationApp.Parsers
                     var node = htmlNode.InnerText.Trim('-');
                     string[] numbers = Regex.Split(node, @"\D+");
                     price = numbers[0] + "," + numbers[1];
+
+                    if (numbers[1].Length == 3)
+                    {
+                        if (numbers[2].Length == 3)
+                        {
+                            price = numbers[0] + numbers[1] + numbers[2] + "," + numbers[3];
+                        }
+                        price = numbers[0] + numbers[1] + "," + numbers[2];
+                    }
                 }
 
                 double finalPrice;

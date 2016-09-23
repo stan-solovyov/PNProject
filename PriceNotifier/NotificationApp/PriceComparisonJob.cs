@@ -29,10 +29,10 @@ namespace NotificationApp
                     var html = await _externalProductService.GetExternalPrductPage(product.Url);
                     _priceFromSite = _externalProductService.ParsePrice(html);
 
-                    //if (product.Price == _priceFromSite)
-                    //{
-                    //    continue;
-                    //}
+                    if (product.Price == _priceFromSite)
+                    {
+                        continue;
+                    }
 
                     var emails = product.UserProducts.Where(c => c.ProductId == product.ProductId).Select(m => m.User.Email).ToList();
                     if (product.Price == 0 && _priceFromSite != 0)
