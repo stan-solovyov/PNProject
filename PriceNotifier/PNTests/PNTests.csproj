@@ -99,6 +99,10 @@
       <Project>{F1727D8E-E517-41EE-9D64-4114EF2458DE}</Project>
       <Name>Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NotificationApp\NotificationApp.csproj">
+      <Project>{3ca5b3b8-049e-4e57-b332-1e69c18ac6ce}</Project>
+      <Name>NotificationApp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PriceNotifier\PriceNotifier.csproj">
       <Project>{4A635014-CAF4-4329-B6DC-2B3E11F2F583}</Project>
       <Name>PriceNotifier</Name>

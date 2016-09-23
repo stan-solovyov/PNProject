@@ -68,6 +68,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IExternalProductService.cs" />
+    <Compile Include="Interfaces\IMailService.cs" />
     <Compile Include="Services\ExternalProductService.cs" />
     <Compile Include="Parsers\IParser.cs" />
     <Compile Include="Parsers\PriceParser.cs" />

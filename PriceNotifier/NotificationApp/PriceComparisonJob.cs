@@ -1,17 +1,17 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BLL.Services.ProductService;
-using NotificationApp.Services;
+using NotificationApp.Interfaces;
 
 namespace NotificationApp
 {
     public class PriceComparisonJob
     {
         private readonly IProductService _productService;
-        private readonly ExternalProductService _externalProductService;
-        private readonly MailService _mailService;
+        private readonly IExternalProductService _externalProductService;
+        private readonly IMailService _mailService;
         private double _priceFromSite;
-        public PriceComparisonJob(IProductService productService, ExternalProductService externalProductService, MailService mailService)
+        public PriceComparisonJob(IProductService productService, IExternalProductService externalProductService, IMailService mailService)
         {
             _productService = productService;
             _externalProductService = externalProductService;

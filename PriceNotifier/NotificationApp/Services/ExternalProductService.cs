@@ -1,10 +1,11 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using NotificationApp.Interfaces;
 using NotificationApp.Parsers;
 
 namespace NotificationApp.Services
 {
-    public class ExternalProductService
+    public class ExternalProductService: IExternalProductService
     {
 
         private readonly IParser _parseService;
