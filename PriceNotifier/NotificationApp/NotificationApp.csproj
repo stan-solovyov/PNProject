@@ -72,6 +72,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutofacJobFactory.cs" />
     <Compile Include="Interfaces\IExternalProductService.cs" />
     <Compile Include="Interfaces\IMailService.cs" />
     <Compile Include="JobScheduler.cs" />
@@ -80,7 +81,6 @@
     <Compile Include="Parsers\IParser.cs" />
     <Compile Include="Parsers\PriceParser.cs" />
     <Compile Include="PriceComparisonJob.cs" />
-    <Compile Include="PriceUpdate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MailService.cs" />
   </ItemGroup>

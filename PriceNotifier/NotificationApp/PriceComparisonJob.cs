@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using BLL.Services.ProductService;
 using NotificationApp.Interfaces;
+using Quartz;
 
 namespace NotificationApp
 {
-    public class PriceComparisonJob
+    public class PriceComparisonJob:IJob
     {
         private readonly IProductService _productService;
         private readonly IExternalProductService _externalProductService;
@@ -71,6 +72,11 @@ namespace NotificationApp
                     await _productService.Update(product);
                 }
             }
+        }
+
+        public  void Execute(IJobExecutionContext context)
+        {
+            Compare().Wait();
         }
     }
 }

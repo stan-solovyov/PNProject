@@ -47,6 +47,9 @@
       <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Quartz">
+      <HintPath>..\packages\Quartz.2.4.1\lib\net40\Quartz.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
