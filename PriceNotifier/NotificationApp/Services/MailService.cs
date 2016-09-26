@@ -1,8 +1,9 @@
 ﻿using System.Net.Mail;
+using NotificationApp.Interfaces;
 
 namespace NotificationApp.Services
 {
-    public class MailService
+    public class MailService:IMailService
     {
         readonly SmtpClient _smtpServer = new SmtpClient();
         public void ProductAvailable(string email,string productUrl,string productName,double priceFromSite)
