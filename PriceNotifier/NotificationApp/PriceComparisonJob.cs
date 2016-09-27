@@ -6,7 +6,7 @@ using Quartz;
 
 namespace NotificationApp
 {
-    public class PriceComparisonJob:IJob
+    public class PriceComparisonJob : IJob
     {
         private readonly IProductService _productService;
         private readonly IExternalProductService _externalProductService;
@@ -17,6 +17,11 @@ namespace NotificationApp
             _productService = productService;
             _externalProductService = externalProductService;
             _mailService = mailService;
+        }
+
+        public void Execute(IJobExecutionContext context)
+        {
+            Compare().Wait();
         }
 
         public async Task Compare()
@@ -48,7 +53,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price,_priceFromSite);
+                            _mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
                         }
                     }
 
@@ -56,7 +61,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price,_priceFromSite);
+                            _mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
                         }
                     }
 
@@ -72,11 +77,6 @@ namespace NotificationApp
                     await _productService.Update(product);
                 }
             }
-        }
-
-        public  void Execute(IJobExecutionContext context)
-        {
-            Compare().Wait();
         }
     }
 }
