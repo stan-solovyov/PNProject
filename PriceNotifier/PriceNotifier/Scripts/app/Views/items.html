@@ -1,31 +1,32 @@
 ﻿<div>
     <cen style="text-align: center" ng-show="demonstrate">
-        <h2>{{Message}}</h2></cen>
+        <h2>{{Message}}</h2>
+    </cen>
     <div class="container" ng-show="dbproducts">
         <form class="form-inline">
             <div class="form-group">
                 <label>Search</label>
                 <input ng-model="searchText" class="form-control" placeholder="Search">
             </div>
-        </form><br/>
+        </form><br />
     </div>
     <div class="container" ng-repeat="product in dbproducts|filter:searchText" ng-show="dbproducts">
         <div class="container">
             <div class="col-lg-4">
                 <h4 class="ng-cloak">{{product.Name}}</h4>
-                <img class="ng-cloak" ng-src="{{product.ImageUrl}}" title="{{product.Name}}"/>
+                <img class="ng-cloak" ng-src="{{product.ImageUrl}}" title="{{product.Name}}" />
             </div>
             <div class="col-lg-offset-6">
-                <br/>
-                <h5 class="ng-cloak">Ссылка в каталоге Onliner.by:</h5><a class="ng-cloak" href="{{product.Url}}">{{product.Name}}</a>
-                <h5 class="ng-cloak">Minimal price: {{product.Price}} руб.</h5>
+                <br />
+                <h5 class="ng-cloak">Item's link at Onliner.by:</h5><a class="ng-cloak" href="{{product.Url}}">{{product.Name}}</a>
+                <h5 class="ng-cloak" ng-animate="'animate'">Minimal price:<span animate-on-change='product.Price'> {{product.Price|number}} </span> руб.</h5>
                 <button type="button" class="btn btn-danger ng-cloak" ng-click="remove(product)">Remove item</button>
                 <label class="ng-cloak">
                     Keep tracking:
                     <input type="checkbox" ng-model="product.Checked" ng-change="update(product)">
-                </label><br/>
+                </label><br />
             </div>
         </div>
-        <hr class="ng-cloak"/>
+        <hr class="ng-cloak" />
     </div>
 </div>

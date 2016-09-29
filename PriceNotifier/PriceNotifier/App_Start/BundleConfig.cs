@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace PriceNotifier
 {
@@ -28,6 +27,7 @@ namespace PriceNotifier
                       "~/Scripts/angular.min.js",
                       "~/Scripts/angular-route.min.js",
                       "~/Scripts/jquery-3.1.0.min.js",
+                      "~/Scripts/jquery.signalR-2.2.1.min.js",
                       "~/Scripts/bootstrap.min.js",
                       "~/Scripts/loading-bar.min.js",
                       "~/Scripts/angular-animate.min.js",

@@ -1,6 +1,6 @@
 ﻿app.controller('UserCtrl',
 [
-    '$scope', 'userService', 'uiGridValidateService','$timeout', function ($scope, userService, uiGridValidateService,$timeout) {
+    '$scope', 'userService', 'uiGridValidateService', '$timeout', function ($scope, userService, uiGridValidateService, $timeout) {
         var columnName = "", filterColumn = "", filter = '';
 
         var paginationOptions = {
@@ -29,7 +29,7 @@
         };
 
 
-        var validationFactory = function(newValue) {
+        var validationFactory = function (newValue) {
             if ((/^[а-яА-Яa-zA-Z]+$/.test(newValue)) && newValue.length < 25 && newValue !== "") {
                 return true;
             } else {
@@ -40,7 +40,7 @@
         uiGridValidateService.setValidator('notEmpty',
         function () {
             return function (oldValue, newValue) {
-                    return validationFactory(newValue);
+                return validationFactory(newValue);
             };
         },
         function () {

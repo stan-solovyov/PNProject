@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using BLL.Services.ProductService;
 using NotificationApp.Interfaces;
+using PriceNotifier.Models;
 using Quartz;
 
 namespace NotificationApp
@@ -41,6 +44,7 @@ namespace NotificationApp
                     }
 
                     var emails = product.UserProducts.Where(c => c.ProductId == product.ProductId).Select(m => m.User.Email).ToList();
+                    var userIds = product.UserProducts.Where(c => c.Product == product).Select(a => a.UserId);
                     if (product.Price == 0 && _priceFromSite != 0)
                     {
                         foreach (var email in emails)
@@ -70,6 +74,15 @@ namespace NotificationApp
                         foreach (var email in emails)
                         {
                             _mailService.ProductOutOfStock(email, product.Url, product.Name);
+                        }
+                    }
+                    var uri = "api/price";
+                    using (HttpClient httpClient = new HttpClient())
+                    {
+                        httpClient.BaseAddress = new Uri("http://localhost:59476/");
+                        foreach (var userId in userIds)
+                        {
+                            await httpClient.PostAsJsonAsync(uri, new UpdatedPrice { Price = _priceFromSite, ProductId = product.ProductId, UserId = userId });
                         }
                     }
 

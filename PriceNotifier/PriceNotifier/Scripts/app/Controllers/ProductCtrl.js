@@ -1,5 +1,25 @@
 ﻿app.controller('ProductCtrl', ['$scope', 'productService', function ($scope, productService) {
 
+    $scope.price = $.connection.priceHub;
+    $scope.price.client.updatePrice = function (p) {
+        $scope.updatedPrice = p;
+        angular.forEach($scope.dbproducts,
+            function (product) {
+                if (product.Id === $scope.updatedPrice.ProductId) {
+                    product.Price = $scope.updatedPrice.Price;
+                    $scope.boxClass = true;
+                    $scope.$apply();
+                }
+            });
+    };
+
+    $.connection.hub.start()
+     .done(function () {
+         console.log('Now connected, connection ID=' + $.connection.hub.id);
+         $scope.price.server.joinGroup("Clients");
+     })
+     .fail(function () { console.log('Could not Connect!'); });
+
     var onError = function () {
         $scope.error = "Couldn't get response from the server:(";
     };
@@ -7,7 +27,7 @@
     $scope.message = "There are no items in thrack list.";
     var onUserProducts = function (response) {
         $scope.dbproducts = response.data;
-        if ($scope.dbproducts.length === 0 && response.status!== 204) {
+        if ($scope.dbproducts.length === 0 && response.status !== 204) {
             $scope.Message = "You don't have any items in the list yet.";
             $scope.demonstrate = true;
         } else {

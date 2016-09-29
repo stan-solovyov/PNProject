@@ -69,3 +69,11 @@ cen {
   display: flex ;
   align-content: stretch;
 }
+
+.change-up {
+    background-color: green;
+}
+
+.change {
+    background-color: red;
+}
