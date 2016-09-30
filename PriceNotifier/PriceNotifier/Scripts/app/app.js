@@ -1,5 +1,5 @@
 ﻿/// <reference path="../angular.min.js" />
-var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ngRoute', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate']);
+var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ngRoute', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap']);
 
 app.config(['$httpProvider', '$routeProvider', '$locationProvider', function ($httpProvider, $routeProvider, $locationProvider) {
     $httpProvider.interceptors.push('tokenInterceptorService');
@@ -33,7 +33,7 @@ app.directive('animateOnChange', function ($animate, $timeout) {
             if (nv !== ov) {
                 var c = nv > ov ? 'change-up' : 'change';
                 $animate.addClass(elem, c).then(function () {
-                    $timeout(function () { $animate.removeClass(elem, c) },4000);
+                    $timeout(function () { $animate.removeClass(elem, c) }, 4000);
                 });
             }
         });

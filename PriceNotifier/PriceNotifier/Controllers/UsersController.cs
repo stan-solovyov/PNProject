@@ -13,10 +13,12 @@ using BLL;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
+using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
+    [MyAuthorize]
     public class UsersController : ApiController
     {
         private readonly IUserService _userService;
@@ -75,27 +77,6 @@ namespace PriceNotifier.Controllers
             }
 
             throw new HttpResponseException(HttpStatusCode.NotFound);
-        }
-
-        // POST: api/Users
-        [ResponseType(typeof(UserDto))]
-        public async Task<UserDto> PostUser(UserDto userDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-
-            var userFound = _userService.GetById(userDto.Id);
-            if (userFound == null)
-            {
-                var user = Mapper.Map<UserDto, User>(userDto);
-                var userUpdated = await _userService.Create(user);
-                userDto = Mapper.Map(userUpdated, userDto);
-                return userDto;
-            }
-
-            throw new HttpResponseException(HttpStatusCode.Conflict);
         }
 
         // DELETE: api/Users/5

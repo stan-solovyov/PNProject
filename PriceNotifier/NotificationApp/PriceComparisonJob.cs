@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BLL.Services.ProductService;
 using NotificationApp.Interfaces;
+using PriceNotifier.DTO;
 using PriceNotifier.Models;
 using Quartz;
 
@@ -76,14 +78,25 @@ namespace NotificationApp
                             _mailService.ProductOutOfStock(email, product.Url, product.Name);
                         }
                     }
-                    var uri = "api/price";
+
+                    var priceUri = "api/price";
+                    var priceHistoryUri = "api/PriceHistories/";
                     using (HttpClient httpClient = new HttpClient())
                     {
                         httpClient.BaseAddress = new Uri("http://localhost:59476/");
                         foreach (var userId in userIds)
                         {
-                            await httpClient.PostAsJsonAsync(uri, new UpdatedPrice { Price = _priceFromSite, ProductId = product.ProductId, UserId = userId });
+                            await httpClient.PostAsJsonAsync(priceUri, new UpdatedPrice { Price = _priceFromSite, ProductId = product.ProductId, UserId = userId });
                         }
+
+                        await httpClient.PostAsJsonAsync(priceHistoryUri,
+                            new PriceHistoryDto
+                            {
+                                ProductId = product.ProductId,
+                                Date = DateTime.Now.ToString("dddd dd MMMM yyyy HH:mm", CultureInfo.CreateSpecificCulture("en-US")),
+                                NewPrice = _priceFromSite,
+                                OldPrice = product.Price
+                            });
                     }
 
                     product.Price = _priceFromSite;

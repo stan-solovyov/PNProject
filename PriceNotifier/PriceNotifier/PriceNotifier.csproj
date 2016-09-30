@@ -245,10 +245,13 @@
     <Compile Include="AuthFilter\CookieAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PriceController.cs" />
+    <Compile Include="Controllers\PriceHistoriesController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="DTO\AutoMapperInitializer.cs" />
     <Compile Include="DTO\MyMappingProfile.cs" />
+    <Compile Include="DTO\PriceHistoryDto.cs" />
+    <Compile Include="DTO\ProductDTO.cs" />
     <Compile Include="DTO\UserDto.cs" />
     <Compile Include="DTO\UserDtoWithCount.cs" />
     <Compile Include="Global.asax.cs">
@@ -272,6 +275,7 @@
     <Content Include="Content\MVCsite.css" />
     <Content Include="Content\toaster.css" />
     <Content Include="Content\toaster.min.css" />
+    <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="Content\ui-grid.css" />
     <Content Include="Content\ui-grid.min.css" />
     <Content Include="Content\ui-grid.svg" />
@@ -306,6 +310,10 @@
     <Content Include="Scripts\angular-scenario.js" />
     <Content Include="Scripts\angular-touch.js" />
     <Content Include="Scripts\angular-touch.min.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap-tpls.min.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.js" />
+    <Content Include="Scripts\angular-ui\ui-bootstrap.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\app\app.js" />
@@ -314,6 +322,7 @@
     <Content Include="Scripts\app\Controllers\UserCtrl.js" />
     <Content Include="Scripts\app\Services\externalProductService.js" />
     <Content Include="Scripts\app\Services\pagerService.js" />
+    <Content Include="Scripts\app\Services\priceChangeService.js" />
     <Content Include="Scripts\app\Services\tokenInterceptor.js" />
     <Content Include="Scripts\app\Services\tokenService.js" />
     <Content Include="Scripts\app\Services\productService.js" />
@@ -339,6 +348,7 @@
     <Content Include="Scripts\app\Services\UserService.js" />
     <Content Include="Scripts\app\Views\items.html" />
     <Content Include="Scripts\app\Views\main.html" />
+    <Content Include="Scripts\app\Views\priceHistory.html" />
     <Content Include="Scripts\app\Views\users.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

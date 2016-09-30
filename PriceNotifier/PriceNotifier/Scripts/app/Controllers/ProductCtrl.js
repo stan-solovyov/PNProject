@@ -1,4 +1,4 @@
-﻿app.controller('ProductCtrl', ['$scope', 'productService', function ($scope, productService) {
+﻿app.controller('ProductCtrl', ['$scope', 'productService', 'priceChangeService', '$uibModal', function ($scope, productService, priceChangeService, $uibModal) {
 
     $scope.price = $.connection.priceHub;
     $scope.price.client.updatePrice = function (p) {
@@ -24,7 +24,38 @@
         $scope.error = "Couldn't get response from the server:(";
     };
 
-    $scope.message = "There are no items in thrack list.";
+    $scope.openNotificatnHistory = function (size, productId) {
+        var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: '/scripts/app/Views/priceHistory.html',
+            controller: ModalInstanceCtrl,
+            scope: $scope,
+            size: size,
+            resolve: {
+                priceChanges: function () {
+                    return priceChangeService.getPriceChanges(productId);
+                }
+            }
+        });
+    };
+
+    function ModalInstanceCtrl($uibModalInstance, priceChanges) {
+        var ctrl = $scope;
+        if (priceChanges.length === 0) {
+            $scope.Note = "You don't have any history for this item.";
+            $scope.show = true;
+        } else {
+            $scope.Note = null;
+            $scope.show = false;
+            $scope.priceChanges = priceChanges;
+        }
+
+        $scope.ok = function () {
+            $uibModalInstance.close();
+        };
+    };
+
+    $scope.message = "There are no items in track list.";
     var onUserProducts = function (response) {
         $scope.dbproducts = response.data;
         if ($scope.dbproducts.length === 0 && response.status !== 204) {
@@ -51,3 +82,4 @@
     productService.getProducts().then(onUserProducts, onError);
 }
 ]);
+

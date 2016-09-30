@@ -59,7 +59,7 @@ namespace PriceNotifier.Controllers
                 {
                     ViewData["token"] = token;
                 }
-                if (!string.IsNullOrEmpty(user.Email))
+                if (!string.IsNullOrEmpty(user?.Email))
                 {
                     return View();
                 }

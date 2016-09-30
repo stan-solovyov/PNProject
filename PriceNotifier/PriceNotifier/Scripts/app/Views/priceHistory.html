@@ -1,0 +1,14 @@
+﻿<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Price changes history:</h3>
+</div>
+<div class="modal-body" id="modal-body">
+    <div ng-show="show">
+        <h2>{{Note}}</h2>
+    </div>
+    <ul ng-repeat="record in priceChanges">
+        <li><h5 class="ng-cloak">The price changed from {{record.OldPrice}} BYN to {{record.NewPrice}} BYN on {{record.Date }}</h5></li>
+    </ul>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+</div>

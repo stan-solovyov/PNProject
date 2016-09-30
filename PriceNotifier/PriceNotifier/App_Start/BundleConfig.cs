@@ -30,6 +30,7 @@ namespace PriceNotifier
                       "~/Scripts/jquery.signalR-2.2.1.min.js",
                       "~/Scripts/bootstrap.min.js",
                       "~/Scripts/loading-bar.min.js",
+                      "~/Scripts/angular-ui/ui-bootstrap-tpls.min.js",
                       "~/Scripts/angular-animate.min.js",
                       "~/Scripts/toaster.min.js",
                       "~/Scripts/ui-grid.min.js",
@@ -41,6 +42,7 @@ namespace PriceNotifier
                       "~/Scripts/app/Services/externalProductService.js",
                       "~/Scripts/app/Services/userService.js",
                       "~/Scripts/app/Services/pagerService.js",
+                      "~/Scripts/app/Services/priceChangeService.js",
                       "~/Scripts/app/Controllers/MainCtrl.js",
                       "~/Scripts/app/Controllers/UserCtrl.js",
                       "~/Scripts/app/Controllers/ProductCtrl.js"));
