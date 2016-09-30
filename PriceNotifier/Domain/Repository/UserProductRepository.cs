@@ -12,7 +12,6 @@ namespace Domain.Repository
             _context = context;
         }
 
-
         public async Task Delete(int userId, int productId)
         {
             var productToDelete = await _context.UserProducts.FindAsync(userId, productId);

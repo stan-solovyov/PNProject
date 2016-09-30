@@ -62,20 +62,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EF\UserContext.cs" />
+    <Compile Include="Entities\PriceHistory.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProduct.cs" />
-    <Compile Include="Migrations\201609200941496_changedDBModel.cs" />
-    <Compile Include="Migrations\201609200941496_changedDBModel.Designer.cs">
-      <DependentUpon>201609200941496_changedDBModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609210903519_emailAdded.cs" />
-    <Compile Include="Migrations\201609210903519_emailAdded.Designer.cs">
-      <DependentUpon>201609210903519_emailAdded.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609211014134_RequiredRemoved.cs" />
-    <Compile Include="Migrations\201609211014134_RequiredRemoved.Designer.cs">
-      <DependentUpon>201609211014134_RequiredRemoved.cs</DependentUpon>
+    <Compile Include="Migrations\201609300840441_PriceHistory.cs" />
+    <Compile Include="Migrations\201609300840441_PriceHistory.Designer.cs">
+      <DependentUpon>201609300840441_PriceHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,14 +82,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609200941496_changedDBModel.resx">
-      <DependentUpon>201609200941496_changedDBModel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609210903519_emailAdded.resx">
-      <DependentUpon>201609210903519_emailAdded.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609211014134_RequiredRemoved.resx">
-      <DependentUpon>201609211014134_RequiredRemoved.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201609300840441_PriceHistory.resx">
+      <DependentUpon>201609300840441_PriceHistory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

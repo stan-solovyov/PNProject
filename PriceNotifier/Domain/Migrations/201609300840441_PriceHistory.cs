@@ -1,9 +1,8 @@
 namespace Domain.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
-    public partial class changedDBModel : DbMigration
+
+    public partial class PriceHistory : DbMigration
     {
         public override void Up()
         {
@@ -19,6 +18,20 @@ namespace Domain.Migrations
                         ImageUrl = c.String(),
                     })
                 .PrimaryKey(t => t.ProductId);
+            
+            CreateTable(
+                "dbo.PriceHistories",
+                c => new
+                    {
+                        PriceHistoryId = c.Int(nullable: false, identity: true),
+                        Date = c.DateTime(nullable: false),
+                        OldPrice = c.Double(nullable: false),
+                        NewPrice = c.Double(nullable: false),
+                        Product_ProductId = c.Int(),
+                    })
+                .PrimaryKey(t => t.PriceHistoryId)
+                .ForeignKey("dbo.Products", t => t.Product_ProductId)
+                .Index(t => t.Product_ProductId);
             
             CreateTable(
                 "dbo.UserProducts",
@@ -43,6 +56,7 @@ namespace Domain.Migrations
                         SocialNetworkUserId = c.String(),
                         SocialNetworkName = c.String(),
                         Token = c.String(),
+                        Email = c.String(),
                     })
                 .PrimaryKey(t => t.UserId);
             
@@ -52,10 +66,13 @@ namespace Domain.Migrations
         {
             DropForeignKey("dbo.UserProducts", "UserId", "dbo.Users");
             DropForeignKey("dbo.UserProducts", "ProductId", "dbo.Products");
+            DropForeignKey("dbo.PriceHistories", "Product_ProductId", "dbo.Products");
             DropIndex("dbo.UserProducts", new[] { "ProductId" });
             DropIndex("dbo.UserProducts", new[] { "UserId" });
+            DropIndex("dbo.PriceHistories", new[] { "Product_ProductId" });
             DropTable("dbo.Users");
             DropTable("dbo.UserProducts");
+            DropTable("dbo.PriceHistories");
             DropTable("dbo.Products");
         }
     }

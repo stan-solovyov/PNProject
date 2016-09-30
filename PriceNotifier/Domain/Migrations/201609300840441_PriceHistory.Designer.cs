@@ -7,13 +7,13 @@ namespace Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class RequiredRemoved : IMigrationMetadata
+    public sealed partial class PriceHistory : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(RequiredRemoved));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(PriceHistory));
         
         string IMigrationMetadata.Id
         {
-            get { return "201609211014134_RequiredRemoved"; }
+            get { return "201609300840441_PriceHistory"; }
         }
         
         string IMigrationMetadata.Source

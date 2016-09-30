@@ -13,7 +13,7 @@ namespace Domain.Entities
         public string ExternalProductId { get; set; }
         public string Url { get; set; }
         public string ImageUrl { get; set; }
-        
+        public virtual List<PriceHistory> PriceHistories { get; set; }
         public virtual List<UserProduct> UserProducts { get; set; }
     }
 }
