@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
+using BLL.Services.PriceHistoryService;
 using BLL.Services.ProductService;
+using Domain.Entities;
 using NotificationApp.Interfaces;
-using PriceNotifier.DTO;
 using PriceNotifier.Models;
 using Quartz;
 
@@ -16,12 +16,15 @@ namespace NotificationApp
         private readonly IProductService _productService;
         private readonly IExternalProductService _externalProductService;
         private readonly IMailService _mailService;
-        private double _priceFromSite;
-        public PriceComparisonJob(IProductService productService, IExternalProductService externalProductService, IMailService mailService)
+        private readonly IPriceHistoryService _priceHistoryService;
+        private readonly ISignalRService _signalRService;
+        public PriceComparisonJob(IProductService productService, IExternalProductService externalProductService, IMailService mailService,IPriceHistoryService priceHistoryService,ISignalRService signalRService)
         {
             _productService = productService;
             _externalProductService = externalProductService;
+            _priceHistoryService = priceHistoryService;
             _mailService = mailService;
+            _signalRService = signalRService;
         }
 
         public void Execute(IJobExecutionContext context)
@@ -32,13 +35,14 @@ namespace NotificationApp
         public async Task Compare()
         {
             var products = await _productService.GetTrackedItems();
+            var updatedPriceList = new List<UpdatedPrice>();
 
             if (products != null)
             {
                 foreach (var product in products)
                 {
                     var html = await _externalProductService.GetExternalPrductPage(product.Url);
-                    _priceFromSite = _externalProductService.ParsePrice(html);
+                    var _priceFromSite = _externalProductService.ParsePrice(html);
 
                     if (product.Price == _priceFromSite)
                     {
@@ -51,7 +55,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.ProductAvailable(email, product.Url, product.Name, _priceFromSite);
+                            //_mailService.ProductAvailable(email, product.Url, product.Name, _priceFromSite);
                         }
                     }
 
@@ -59,7 +63,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
+                            //_mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
                         }
                     }
 
@@ -67,7 +71,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
+                            //_mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
                         }
                     }
 
@@ -75,32 +79,35 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.ProductOutOfStock(email, product.Url, product.Name);
+                            //_mailService.ProductOutOfStock(email, product.Url, product.Name);
                         }
                     }
 
-                    var priceUri = "api/price";
-                    var priceHistoryUri = "api/PriceHistories/";
-                    using (HttpClient httpClient = new HttpClient())
+                    foreach (var userId in userIds)
                     {
-                        httpClient.BaseAddress = new Uri("http://localhost:59476/");
-                        foreach (var userId in userIds)
+                        var up = new UpdatedPrice
                         {
-                            await httpClient.PostAsJsonAsync(priceUri, new UpdatedPrice { Price = _priceFromSite, ProductId = product.ProductId, UserId = userId });
-                        }
-
-                        await httpClient.PostAsJsonAsync(priceHistoryUri,
-                            new PriceHistoryDto
-                            {
-                                ProductId = product.ProductId,
-                                Date = DateTime.Now.ToString("dddd dd MMMM yyyy HH:mm", CultureInfo.CreateSpecificCulture("en-US")),
-                                NewPrice = _priceFromSite,
-                                OldPrice = product.Price
-                            });
+                            Price = _priceFromSite,
+                            ProductId = product.ProductId,
+                            UserId = userId
+                        };
+                        updatedPriceList.Add(up);
                     }
 
+                    await _priceHistoryService.Create(new PriceHistory
+                    {
+                        ProductId = product.ProductId,
+                        Date = DateTime.Now,
+                        NewPrice = _priceFromSite,
+                        OldPrice = product.Price
+                    });
                     product.Price = _priceFromSite;
                     await _productService.Update(product);
+                }
+
+                if (updatedPriceList.Count != 0)
+                {
+                    await _signalRService.SendPriceUpdate(updatedPriceList);
                 }
             }
         }

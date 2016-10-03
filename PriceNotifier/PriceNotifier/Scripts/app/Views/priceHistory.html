@@ -6,8 +6,11 @@
         <h2>{{Note}}</h2>
     </div>
     <ul ng-repeat="record in priceChanges">
-        <li><h5 class="ng-cloak">The price changed from {{record.OldPrice}} BYN to {{record.NewPrice}} BYN on {{record.Date }}</h5></li>
+        <li><h5 class="ng-cloak">The price changed from {{record.OldPrice}} BYN to {{record.NewPrice}} BYN on {{format(record.Date)|date:'MM/dd/yyyy @ h:mma'}}</h5></li>
     </ul>
+    <canvas id="base" class="chart-bar"
+            chart-data="data" chart-labels="labels" chart-series="series" chart-colors="colors" chart-options="options"
+            chart-dataset-override="datasetOverride"></canvas> 
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>

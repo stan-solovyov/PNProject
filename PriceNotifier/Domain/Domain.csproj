@@ -66,17 +66,9 @@
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProduct.cs" />
-    <Compile Include="Migrations\201609300840441_PriceHistory.cs" />
-    <Compile Include="Migrations\201609300840441_PriceHistory.Designer.cs">
-      <DependentUpon>201609300840441_PriceHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609301147297_DateFrormatChanged.cs" />
-    <Compile Include="Migrations\201609301147297_DateFrormatChanged.Designer.cs">
-      <DependentUpon>201609301147297_DateFrormatChanged.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201609301219313_DBChange.cs" />
-    <Compile Include="Migrations\201609301219313_DBChange.Designer.cs">
-      <DependentUpon>201609301219313_DBChange.cs</DependentUpon>
+    <Compile Include="Migrations\201610030831151_dateFormatChanged.cs" />
+    <Compile Include="Migrations\201610030831151_dateFormatChanged.Designer.cs">
+      <DependentUpon>201610030831151_dateFormatChanged.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,14 +83,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201609300840441_PriceHistory.resx">
-      <DependentUpon>201609300840441_PriceHistory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609301147297_DateFrormatChanged.resx">
-      <DependentUpon>201609301147297_DateFrormatChanged.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201609301219313_DBChange.resx">
-      <DependentUpon>201609301219313_DBChange.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610030831151_dateFormatChanged.resx">
+      <DependentUpon>201610030831151_dateFormatChanged.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

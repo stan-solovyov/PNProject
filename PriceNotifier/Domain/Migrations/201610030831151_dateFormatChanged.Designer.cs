@@ -7,13 +7,13 @@ namespace Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class DBChange : IMigrationMetadata
+    public sealed partial class dateFormatChanged : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(DBChange));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(dateFormatChanged));
         
         string IMigrationMetadata.Id
         {
-            get { return "201609301219313_DBChange"; }
+            get { return "201610030831151_dateFormatChanged"; }
         }
         
         string IMigrationMetadata.Source

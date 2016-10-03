@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BLL.Services.PriceHistoryService;
 using BLL.Services.ProductService;
 using Domain.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,7 +20,7 @@ namespace NotificationAppTests
         [TestCase(12, 11)]
         [TestCase(12, 13)]
         [TestCase(12, 0)]
-        public async Task ProductPriceTests(double priceFromDb,double priceFromSite)
+        public async Task ProductPriceTests(double priceFromDb, double priceFromSite)
         {
             //Arrange
             double parsedPrice = priceFromSite;
@@ -55,7 +56,8 @@ namespace NotificationAppTests
             var mockProductService = new Mock<IProductService>();
             var mockExternalProductService = new Mock<IExternalProductService>();
             var mockMailService = new Mock<IMailService>();
-
+            var mockSignalRService = new Mock<ISignalRService>();
+            var mockPriceHistoryService = new Mock<IPriceHistoryService>();
             mockProductService.Setup(x => x.GetTrackedItems()).ReturnsAsync(products).Verifiable();
             if (priceFromDb != priceFromSite)
             {
@@ -63,9 +65,16 @@ namespace NotificationAppTests
             }
             mockExternalProductService.Setup(x => x.GetExternalPrductPage(It.IsAny<string>())).ReturnsAsync(It.IsAny<string>()).Verifiable();
             mockExternalProductService.Setup(x => x.ParsePrice(It.IsAny<string>())).Returns(parsedPrice).Verifiable();
-            mockMailService.Setup(x=>x.ProductAvailable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<double>())).Verifiable();
+            mockMailService.Setup(x => x.ProductAvailable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<double>())).Verifiable();
 
-            var priceComparisonJob = new PriceComparisonJob(mockProductService.Object, mockExternalProductService.Object, mockMailService.Object);
+            var priceComparisonJob = new PriceComparisonJob
+                (
+                    mockProductService.Object,
+                    mockExternalProductService.Object,
+                    mockMailService.Object,
+                    mockPriceHistoryService.Object,
+                    mockSignalRService.Object
+                );
 
             //Act
             await priceComparisonJob.Compare();

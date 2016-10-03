@@ -1,11 +1,26 @@
 namespace Domain.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
-
-    public partial class PriceHistory : DbMigration
+    
+    public partial class dateFormatChanged : DbMigration
     {
         public override void Up()
         {
+            CreateTable(
+                "dbo.PriceHistories",
+                c => new
+                    {
+                        PriceHistoryId = c.Int(nullable: false, identity: true),
+                        Date = c.DateTime(nullable: false),
+                        OldPrice = c.Double(nullable: false),
+                        NewPrice = c.Double(nullable: false),
+                        ProductId = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => t.PriceHistoryId)
+                .ForeignKey("dbo.Products", t => t.ProductId, cascadeDelete: true)
+                .Index(t => t.ProductId);
+            
             CreateTable(
                 "dbo.Products",
                 c => new
@@ -18,20 +33,6 @@ namespace Domain.Migrations
                         ImageUrl = c.String(),
                     })
                 .PrimaryKey(t => t.ProductId);
-            
-            CreateTable(
-                "dbo.PriceHistories",
-                c => new
-                    {
-                        PriceHistoryId = c.Int(nullable: false, identity: true),
-                        Date = c.DateTime(nullable: false),
-                        OldPrice = c.Double(nullable: false),
-                        NewPrice = c.Double(nullable: false),
-                        Product_ProductId = c.Int(),
-                    })
-                .PrimaryKey(t => t.PriceHistoryId)
-                .ForeignKey("dbo.Products", t => t.Product_ProductId)
-                .Index(t => t.Product_ProductId);
             
             CreateTable(
                 "dbo.UserProducts",
@@ -66,14 +67,14 @@ namespace Domain.Migrations
         {
             DropForeignKey("dbo.UserProducts", "UserId", "dbo.Users");
             DropForeignKey("dbo.UserProducts", "ProductId", "dbo.Products");
-            DropForeignKey("dbo.PriceHistories", "Product_ProductId", "dbo.Products");
+            DropForeignKey("dbo.PriceHistories", "ProductId", "dbo.Products");
             DropIndex("dbo.UserProducts", new[] { "ProductId" });
             DropIndex("dbo.UserProducts", new[] { "UserId" });
-            DropIndex("dbo.PriceHistories", new[] { "Product_ProductId" });
+            DropIndex("dbo.PriceHistories", new[] { "ProductId" });
             DropTable("dbo.Users");
             DropTable("dbo.UserProducts");
-            DropTable("dbo.PriceHistories");
             DropTable("dbo.Products");
+            DropTable("dbo.PriceHistories");
         }
     }
 }

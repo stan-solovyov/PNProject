@@ -83,6 +83,7 @@
     <Compile Include="AutofacJobFactory.cs" />
     <Compile Include="Interfaces\IExternalProductService.cs" />
     <Compile Include="Interfaces\IMailService.cs" />
+    <Compile Include="Interfaces\ISignalRService.cs" />
     <Compile Include="JobScheduler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\ExternalProductService.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="PriceComparisonJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MailService.cs" />
+    <Compile Include="Services\SignalRService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
