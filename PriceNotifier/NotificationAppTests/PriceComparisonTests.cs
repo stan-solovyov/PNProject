@@ -81,6 +81,7 @@ namespace NotificationAppTests
             //Assert
 
             mockProductService.Verify();
+            mockExternalProductService.Verify();
         }
     }
 }
