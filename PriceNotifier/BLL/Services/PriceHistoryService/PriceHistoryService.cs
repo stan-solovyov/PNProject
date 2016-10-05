@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Domain.Repository;
@@ -36,9 +34,10 @@ namespace BLL.Services.PriceHistoryService
             await _priceHistoryRepository.Delete(entity);
         }
 
-        public async Task<IEnumerable<PriceHistory>> GetByProductId(int productId)
+        public IQueryable<PriceHistory> GetByProductId(int productId)
         {
-            return await _priceHistoryRepository.Query().Where(c => c.Product.ProductId == productId).ToListAsync();
+            var query = _priceHistoryRepository.Query().Where(c => c.Product.ProductId == productId);
+            return query;
         }
     }
 }

@@ -5,14 +5,18 @@
     <div ng-show="show">
         <h2>{{Note}}</h2>
     </div>
-    <div ng-show="showChart">
+    <!--<div ng-show="showChart">
         <ul ng-repeat="record in priceChanges">
-            <li><h5 class="ng-cloak">The price changed from {{record.OldPrice}} BYN to {{record.NewPrice}} BYN on {{format(record.Date)|date:'MM/dd/yyyy @ h:mma'}}</h5></li>
+            <li><h5 class="ng-cloak">The price changed from {{record.OldPrice}} BYN to {{record.NewPrice}} BYN on {{format(record.Date)|date:'MM/dd/yyyy @ hh:mma'}}</h5></li>
         </ul>
-    </div>
+    </div>-->
     <canvas id="base" class="chart-bar" ng-show="showChart"
-            chart-data="data" chart-labels="labels" chart-series="series" chart-colors="colors" chart-options="options"
-            chart-dataset-override="datasetOverride"></canvas> 
+            chart-data="data" chart-series="series" chart-colors="colors" chart-options="options"
+            chart-dataset-override="datasetOverride"></canvas>
+    <ul class="pager">
+        <li><a href="#" ng-click="previous()">Previous</a></li>
+        <li><a href="#" ng-click="next()">Next</a></li>
+    </ul>
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>

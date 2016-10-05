@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.OData;
+using System.Web.OData.Extensions;
+using System.Web.OData.Query;
 using AutoMapper;
 using BLL.Services.PriceHistoryService;
 using Domain.Entities;
@@ -20,17 +24,16 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/PriceHistories/5
-        public async Task<IEnumerable<PriceHistoryDto>> GetPriceHistory(int id)
+        public PageResult<PriceHistoryDto> GetPriceHistory(int id, ODataQueryOptions<PriceHistory> options)
         {
-            var priceHistories = await _priceHistoryService.GetByProductId(id);
-            if (priceHistories == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
+            var allPriceHistories = _priceHistoryService.GetByProductId(id);
+            IQueryable priceHistories = options.ApplyTo(allPriceHistories);
+            var results = Mapper.Map<IEnumerable<PriceHistoryDto>>(priceHistories);
 
-            var priceHistoriesDto = Mapper.Map<IEnumerable<PriceHistoryDto>>(priceHistories);
-
-            return priceHistoriesDto;
+            return new PageResult<PriceHistoryDto>(
+                results,
+                Request.ODataProperties().NextLink,
+                Request.ODataProperties().TotalCount);
         }
 
         // POST: api/PriceHistories

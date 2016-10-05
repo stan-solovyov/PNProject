@@ -1,6 +1,5 @@
 ﻿app.controller('ProductCtrl', ['$scope', 'productService', 'priceChangeService', '$uibModal', function ($scope, productService, priceChangeService, $uibModal) {
 
-    var datesForChart = [];
     $scope.price = $.connection.priceHub;
     $scope.price.client.updatePrice = function (p) {
         $scope.updatedPrice = p;
@@ -25,7 +24,13 @@
         $scope.error = "Couldn't get response from the server:(";
     };
 
+    $scope.main = {
+        page: 1,
+        take: 100
+    };
+
     $scope.openNotificatnHistory = function (size, productId) {
+        $scope.productId = productId;
         var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: '/scripts/app/Views/priceHistory.html',
@@ -34,19 +39,19 @@
             size: size,
             resolve: {
                 priceChanges: function () {
-                    return priceChangeService.getPriceChanges(productId);
+                    return priceChangeService.getPriceChangesPage(productId, $scope.main.page, $scope.main.take);
                 }
             }
         });
     };
 
     $scope.format = function (date) {
-        var dateFormatted = Date.parse(date);
-        return dateFormatted;
+        var dateFormatted = moment(date);
+        var d = new Date(dateFormatted);
+        return d;
     };
 
     function ModalInstanceCtrl($uibModalInstance, priceChanges) {
-        var ctrl = $scope;
         if (priceChanges.length === 0) {
             $scope.Note = "You don't have any history for this item.";
             $scope.show = true;
@@ -55,12 +60,14 @@
             $scope.Note = null;
             $scope.show = false;
             $scope.showChart = true;
-            $scope.priceChanges = priceChanges;
+            $scope.priceChanges = priceChanges.data.Items;
+            $scope.main.pages = Math.ceil(priceChanges.data.Count / $scope.main.take);
+            var datesForChart = [];
             var pricesForChart = [];
             var dataChart = [];
-            angular.forEach(priceChanges,
+            angular.forEach($scope.priceChanges,
                 function (p) {
-                    var date = moment(p.Date);
+                    var date = new Date(p.Date);
                     datesForChart.push(date);
                     pricesForChart.push(p.NewPrice);
                 });
@@ -74,11 +81,8 @@
             }
 
             $scope.data = [dataChart];
-
-
             $scope.colors = ['#45b7cd', '#ff6384', '#ff8e72'];
             $scope.series = ['Price change, BYN'];
-            $scope.labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
             $scope.datasetOverride = [
                 {
@@ -95,7 +99,6 @@
                         {
                             type: 'time',
                             time: {
-                                //unit:'hour',
                                 displayFormats: {
                                     month: 'MMM D, hA'
                                 }
@@ -108,6 +111,44 @@
         };
         $scope.ok = function () {
             $uibModalInstance.close();
+        };
+
+        $scope.next = function () {
+            if ($scope.main.page > 1) {
+                $scope.main.page--;
+                $scope.loadPage($scope.productId);
+            }
+        };
+
+        $scope.previous = function () {
+            if ($scope.main.page < $scope.main.pages) {
+                $scope.main.page++;
+                $scope.loadPage($scope.productId);
+            }
+        };
+
+        $scope.loadPage = function (productId) {
+            priceChangeService.getPriceChangesPage(productId, $scope.main.page, $scope.main.take).then(function (response) {
+                $scope.historyPrices = response.data.Items;
+                var pChart = [];
+                var dChart = [];
+                var dFinal = [];
+                angular.forEach($scope.historyPrices,
+                    function (p) {
+                        var date = new Date(p.Date);
+                        dChart.push(date);
+                        pChart.push(p.NewPrice);
+                    });
+
+                for (var t = 0; t < pChart.length; t++) {
+                    var b = {
+                        x: dChart[t],
+                        y: pChart[t]
+                    };
+                    dFinal.push(b);
+                }
+                $scope.data = [dFinal];
+            });
         };
     };
 

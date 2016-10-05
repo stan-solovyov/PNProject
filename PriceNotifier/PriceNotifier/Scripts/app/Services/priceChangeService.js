@@ -3,20 +3,17 @@
 
         var url = '/api/PriceHistories/';
 
-        var getPriceChanges = function (productId) {
+        var getPriceChangesPage = function (productId, currentPage, recordsPerPage) {
 
-            return $http({
-                method: 'get',
-                url: url + productId,
-                headers: {
-                    'Content-type': 'application/json'
-                }
-            }).then(function (response) {
-                return response.data;
-            });
+            var request = url + productId + "?$skip=" + (currentPage - 1) * recordsPerPage + "&$top=" + recordsPerPage + "&$orderby=" + "Date" + " " + "desc";
+
+            return $http.get(request + "&$count=true")
+                 .then(function (response) {
+                     return response;
+                 });
         };
 
         return {
-            getPriceChanges: getPriceChanges
+            getPriceChangesPage: getPriceChangesPage
         };
     }]);
