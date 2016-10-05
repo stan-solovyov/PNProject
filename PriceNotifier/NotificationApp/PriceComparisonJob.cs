@@ -55,7 +55,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            //_mailService.ProductAvailable(email, product.Url, product.Name, _priceFromSite);
+                            _mailService.ProductAvailable(email, product.Url, product.Name, _priceFromSite);
                         }
                     }
 
@@ -63,7 +63,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            //_mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
+                            _mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
                         }
                     }
 
@@ -71,7 +71,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            //_mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
+                            _mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
                         }
                     }
 
@@ -79,7 +79,7 @@ namespace NotificationApp
                     {
                         foreach (var email in emails)
                         {
-                            //_mailService.ProductOutOfStock(email, product.Url, product.Name);
+                            _mailService.ProductOutOfStock(email, product.Url, product.Name);
                         }
                     }
 

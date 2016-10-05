@@ -52,6 +52,7 @@
     };
 
     function ModalInstanceCtrl($uibModalInstance, priceChanges) {
+        $scope.showPages = true;
         if (priceChanges.length === 0) {
             $scope.Note = "You don't have any history for this item.";
             $scope.show = true;
@@ -62,6 +63,9 @@
             $scope.showChart = true;
             $scope.priceChanges = priceChanges.data.Items;
             $scope.main.pages = Math.ceil(priceChanges.data.Count / $scope.main.take);
+            if ($scope.main.pages === 1) {
+                $scope.showPages = false;
+            };
             var datesForChart = [];
             var pricesForChart = [];
             var dataChart = [];
