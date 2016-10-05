@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using System.Web.OData;
 using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using BLL;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
@@ -35,7 +35,7 @@ namespace PriceNotifier.Controllers
         {
             var allUsers = _userService.Get();
             IQueryable users = options.ApplyTo(allUsers);
-            var results = Mapper.Map<IEnumerable<UserDtoWithCount>>(users);
+            var results = users.ProjectTo<UserDtoWithCount>();
 
             return new PageResult<UserDtoWithCount>(
                 results,
