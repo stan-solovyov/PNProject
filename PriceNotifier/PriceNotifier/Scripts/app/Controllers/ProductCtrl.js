@@ -110,6 +110,7 @@
             };
         };
         $scope.ok = function () {
+            $scope.main.page = 1;
             $uibModalInstance.close();
         };
 
