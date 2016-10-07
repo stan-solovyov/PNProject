@@ -27,10 +27,10 @@ namespace Domain.Repository
             return await DbSet.FindAsync(id);
         }
 
-        public async Task Update(Product product)
+        public Task Update(Product product)
         {
             _context.Entry(product).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
 
         public async Task<Product> Create(Product product)
@@ -40,10 +40,10 @@ namespace Domain.Repository
             return product;
         }
 
-        public async Task Delete(Product product)
+        public Task Delete(Product product)
         {
             DbSet.Remove(product);
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
     }
 }

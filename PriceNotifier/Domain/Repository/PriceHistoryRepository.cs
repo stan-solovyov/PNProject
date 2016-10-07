@@ -24,10 +24,10 @@ namespace Domain.Repository
             return await _context.PriceHistories.FindAsync(id);
         }
 
-        public async Task Update(PriceHistory entity)
+        public Task Update(PriceHistory entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
 
         public async Task<PriceHistory> Create(PriceHistory entity)
@@ -37,10 +37,10 @@ namespace Domain.Repository
             return entity;
         }
 
-        public async Task Delete(PriceHistory entity)
+        public Task Delete(PriceHistory entity)
         {
             _context.PriceHistories.Remove(entity);
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
     }
 }

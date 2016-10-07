@@ -29,9 +29,9 @@ namespace BLL.Services.ProductService
             return product;
         }
 
-        public async Task Update(Product product)
+        public Task Update(Product product)
         {
-            await _productRepository.Update(product);
+            return _productRepository.Update(product);
         }
 
         public async Task<Product> GetById(int productId)
@@ -40,9 +40,9 @@ namespace BLL.Services.ProductService
             return product;
         }
 
-        public async Task Delete(Product product)
+        public Task Delete(Product product)
         {
-            await _productRepository.Delete(product);
+            return _productRepository.Delete(product);
         }
 
         public Product GetByExtId(string externalProductId, int userId)
@@ -65,9 +65,9 @@ namespace BLL.Services.ProductService
             return _productRepository.Query().FirstOrDefault(c => c.ExternalProductId == externalProductId);
         }
 
-        public async Task DeleteFromUserProduct(int userId, int productId)
+        public Task DeleteFromUserProduct(int userId, int productId)
         {
-            await _userProductRepository.Delete(userId, productId);
+            return _userProductRepository.Delete(userId, productId);
         }
     }
 }

@@ -19,9 +19,9 @@ namespace BLL.Services.PriceHistoryService
             return entity;
         }
 
-        public async Task Update(PriceHistory entity)
+        public Task Update(PriceHistory entity)
         {
-            await _priceHistoryRepository.Update(entity);
+            return _priceHistoryRepository.Update(entity);
         }
 
         public async Task<PriceHistory> GetById(int priceHistoryId)
@@ -29,9 +29,9 @@ namespace BLL.Services.PriceHistoryService
             return await _priceHistoryRepository.Get(priceHistoryId);
         }
 
-        public async Task Delete(PriceHistory entity)
+        public Task Delete(PriceHistory entity)
         {
-            await _priceHistoryRepository.Delete(entity);
+            return _priceHistoryRepository.Delete(entity);
         }
 
         public IQueryable<PriceHistory> GetByProductId(int productId)

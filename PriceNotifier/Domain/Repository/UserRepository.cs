@@ -25,10 +25,10 @@ namespace Domain.Repository
             return await _context.Users.FindAsync(userId);
         }
 
-        public async Task Update(User user)
+        public Task Update(User user)
         {
             _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
 
         public async Task<User> Create(User user)
@@ -38,10 +38,10 @@ namespace Domain.Repository
             return user;
         }
 
-        public async Task Delete(User user)
+        public Task Delete(User user)
         {
             _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            return _context.SaveChangesAsync();
         }
     }
 }

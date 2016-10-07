@@ -23,9 +23,9 @@ namespace BLL.Services.UserService
             return user;
         }
 
-        public async Task Update(User user)
+        public  Task Update(User user)
         {
-            await _userRepository.Update(user);
+            return _userRepository.Update(user);
         }
 
         public async Task<User> GetById(int userId)
@@ -34,9 +34,9 @@ namespace BLL.Services.UserService
             return user;
         }
 
-        public async Task Delete(User user)
+        public Task Delete(User user)
         {
-            await _userRepository.Delete(user);
+            return _userRepository.Delete(user);
         }
 
         public IQueryable<UserFromDbWithCount> Get()
