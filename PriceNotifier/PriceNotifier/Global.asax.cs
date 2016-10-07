@@ -9,6 +9,7 @@ using RestSharp;
 using System.Reflection;
 using OAuth2;
 
+
 namespace PriceNotifier
 {
     public class WebApiApplication : System.Web.HttpApplication
@@ -23,7 +24,6 @@ namespace PriceNotifier
 
             SetDependencyResolver();
         }
-
 
         private void SetDependencyResolver()
         {

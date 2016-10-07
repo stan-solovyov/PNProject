@@ -74,7 +74,7 @@ namespace PriceNotifier.Controllers
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            var user = db.Users.FirstOrDefault(c => c.UserId==userId);
+            var user = db.Users.FirstOrDefault(c => c.UserId == userId);
             return View(user);
         }
 
@@ -85,7 +85,7 @@ namespace PriceNotifier.Controllers
             var foo = new EmailAddressAttribute();
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            var user = db.Users.FirstOrDefault(c => c.UserId==userId);
+            var user = db.Users.FirstOrDefault(c => c.UserId == userId);
             if (foo.IsValid(email))
             {
                 if (user != null)

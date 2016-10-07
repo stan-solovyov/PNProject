@@ -8,9 +8,13 @@ using BLL.Services.UserService;
 using Domain.EF;
 using Domain.Entities;
 using Domain.Repository;
+using Messages;
 using Microsoft.Owin;
 using Owin;
 using PriceNotifier.DTO;
+using PriceNotifier.Rhino_Bus_Service;
+using Rhino.ServiceBus;
+using Rhino.ServiceBus.Impl;
 
 [assembly: OwinStartup(typeof(PriceNotifier.Startup))]
 
@@ -20,7 +24,6 @@ namespace PriceNotifier
     {
         public void Configuration(IAppBuilder app)
         {
-
             var builder = new ContainerBuilder();
 
             HttpConfiguration config = new HttpConfiguration();
@@ -33,9 +36,15 @@ namespace PriceNotifier
             builder.RegisterType<UserService>().As<IUserService>().InstancePerRequest();
             builder.RegisterType<PriceHistoryRepository>().As<IRepository<PriceHistory>>().InstancePerRequest();
             builder.RegisterType<PriceHistoryService>().As<IPriceHistoryService>().InstancePerRequest();
-            builder.RegisterType<UserProductRepository>().AsSelf().InstancePerRequest();
-
+            builder.RegisterType<UpdatedPricesConsumer>().As<ConsumerOf<UpdatedPricesMessage>>();
+            builder.RegisterType<UserProductRepository>().As<IUserProductRepository>().InstancePerRequest();
             var container = builder.Build();
+
+            //injecting RSB with Autofac
+            new RhinoServiceBusConfiguration().UseAutofac(container).Configure();
+            var bus = container.Resolve<IStartableServiceBus>();
+            bus.Start();
+
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
             app.MapSignalR();
             app.UseAutofacMiddleware(container);

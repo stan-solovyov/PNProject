@@ -3,10 +3,10 @@ using NotificationApp.Interfaces;
 
 namespace NotificationApp.Services
 {
-    public class MailService:IMailService
+    public class MailService : IMailService
     {
         readonly SmtpClient _smtpServer = new SmtpClient();
-        public void ProductAvailable(string email,string productUrl,string productName,double priceFromSite)
+        public void ProductAvailable(string email, string productUrl, string productName, double priceFromSite)
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress("price_notifier@gmail.com");
@@ -17,7 +17,7 @@ namespace NotificationApp.Services
             _smtpServer.Send(mail);
         }
 
-        public void PriceFromDbHigher(string email, string productUrl, string productName, double priceFromDb,double priceFromSite)
+        public void PriceFromDbHigher(string email, string productUrl, string productName, double priceFromDb, double priceFromSite)
         {
             MailMessage mail = new MailMessage();
             mail.From = new MailAddress("price_notifier@gmail.com");

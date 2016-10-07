@@ -1,4 +1,4 @@
-﻿namespace PriceNotifier.Models
+﻿namespace Messages
 {
     public class UpdatedPrice
     {

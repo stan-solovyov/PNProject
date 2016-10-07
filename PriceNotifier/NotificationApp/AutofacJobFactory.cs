@@ -16,10 +16,9 @@ namespace NotificationApp
         {
             return (IJob)_container.Resolve(bundle.JobDetail.JobType);
         }
-
         public void ReturnJob(IJob job)
         {
-            
+
         }
     }
 }

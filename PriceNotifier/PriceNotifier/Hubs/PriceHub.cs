@@ -3,7 +3,7 @@ using Microsoft.AspNet.SignalR;
 
 namespace PriceNotifier.Hubs
 {
-    public class PriceHub:Hub
+    public class PriceHub : Hub
     {
         public async Task JoinGroup(string groupName)
         {

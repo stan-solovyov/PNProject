@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Domain.Entities;
-
-namespace PriceNotifier.DTO
+﻿namespace PriceNotifier.DTO
 {
     public class ProductDto
     {

@@ -10,9 +10,9 @@ namespace BLL.Services.ProductService
     public class ProductService : IProductService
     {
         private readonly IRepository<Product> _productRepository;
-        private readonly UserProductRepository _userProductRepository;
+        private readonly IUserProductRepository _userProductRepository;
 
-        public ProductService(IRepository<Product> productRepository, UserProductRepository userProductRepository)
+        public ProductService(IRepository<Product> productRepository, IUserProductRepository userProductRepository)
         {
             _productRepository = productRepository;
             _userProductRepository = userProductRepository;
@@ -57,7 +57,7 @@ namespace BLL.Services.ProductService
 
         public async Task<IEnumerable<Product>> GetTrackedItems()
         {
-            return await _productRepository.Query().Where(c=>c.UserProducts.Any(d=>d.Checked)).Include(c=>c.UserProducts.Select(a=>a.User)).ToListAsync();
+            return await _productRepository.Query().Where(c => c.UserProducts.Any(d => d.Checked)).Include(c => c.UserProducts.Select(a => a.User)).ToListAsync();
         }
 
         public Product GetByExtIdFromDb(string externalProductId)
@@ -67,7 +67,7 @@ namespace BLL.Services.ProductService
 
         public async Task DeleteFromUserProduct(int userId, int productId)
         {
-            await _userProductRepository.Delete(userId,productId);
+            await _userProductRepository.Delete(userId, productId);
         }
     }
 }

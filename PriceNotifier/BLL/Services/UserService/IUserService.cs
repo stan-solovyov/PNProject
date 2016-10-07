@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace BLL.Services.UserService
 {
-    public interface IUserService:IService<User>
+    public interface IUserService : IService<User>
     {
         IQueryable<UserFromDbWithCount> Get();
     }

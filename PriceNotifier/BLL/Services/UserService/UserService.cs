@@ -40,17 +40,17 @@ namespace BLL.Services.UserService
 
         public IQueryable<UserFromDbWithCount> Get()
         {
-            
+
             var query = _userRepository.Query();
 
             var queryFinal = query.GroupJoin(_productRepository.Query(), user => user.UserId, product => product.ProductId,
                 (user, product) => new UserFromDbWithCount
                 {
-                    Id=user.UserId,
+                    Id = user.UserId,
                     Username = user.Username,
                     SocialNetworkUserId = user.SocialNetworkUserId,
                     SocialNetworkName = user.SocialNetworkName,
-                    CountTrackedItems= user.UserProducts.Count(c => c.Checked)
+                    CountTrackedItems = user.UserProducts.Count(c => c.Checked)
                 });
             return queryFinal;
         }

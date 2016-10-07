@@ -6,20 +6,20 @@ using System.Web.Http.Controllers;
 
 namespace PriceNotifier.AuthFilter
 {
-    public class MyAuthorizeAttribute: AuthorizeAttribute
+    public class MyAuthorizeAttribute : AuthorizeAttribute
     {
-       
+
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             var req = actionContext.Request.Headers;
-           
+
             if (req.Contains("X-Auth"))
             {
                 var tokenTransferred = req.GetValues("X-Auth").First();
                 //check for null
                 if (!string.IsNullOrEmpty(tokenTransferred))
                 {
-                     UserContext db = new UserContext();
+                    UserContext db = new UserContext();
 
                     var userFound = db.Users.Any(c => c.Token == tokenTransferred);
 

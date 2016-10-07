@@ -8,6 +8,7 @@ using Moq;
 using NotificationApp;
 using NotificationApp.Interfaces;
 using NUnit.Framework;
+using Messages;
 
 namespace NotificationAppTests
 {
@@ -25,6 +26,7 @@ namespace NotificationAppTests
             //Arrange
             double parsedPrice = priceFromSite;
             var userId = 11;
+
             var user = new User
             {
                 UserId = userId,
@@ -56,16 +58,18 @@ namespace NotificationAppTests
             var mockProductService = new Mock<IProductService>();
             var mockExternalProductService = new Mock<IExternalProductService>();
             var mockMailService = new Mock<IMailService>();
-            var mockSignalRService = new Mock<ISignalRService>();
             var mockPriceHistoryService = new Mock<IPriceHistoryService>();
+            var mockMessageService = new Mock<IMessageService>();
             mockProductService.Setup(x => x.GetTrackedItems()).ReturnsAsync(products).Verifiable();
             if (priceFromDb != priceFromSite)
             {
                 mockProductService.Setup(x => x.Update(It.IsAny<Product>())).Returns(Task.FromResult(false)).Verifiable();
+                mockMessageService.Setup(c => c.SendPriceUpdate(It.IsAny<UpdatedPricesMessage>())).Verifiable();
             }
             mockExternalProductService.Setup(x => x.GetExternalPrductPage(It.IsAny<string>())).ReturnsAsync(It.IsAny<string>()).Verifiable();
             mockExternalProductService.Setup(x => x.ParsePrice(It.IsAny<string>())).Returns(parsedPrice).Verifiable();
             mockMailService.Setup(x => x.ProductAvailable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<double>())).Verifiable();
+
 
             var priceComparisonJob = new PriceComparisonJob
                 (
@@ -73,7 +77,7 @@ namespace NotificationAppTests
                     mockExternalProductService.Object,
                     mockMailService.Object,
                     mockPriceHistoryService.Object,
-                    mockSignalRService.Object
+                    mockMessageService.Object
                 );
 
             //Act

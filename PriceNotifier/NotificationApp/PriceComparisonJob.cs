@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using BLL.Services.PriceHistoryService;
 using BLL.Services.ProductService;
 using Domain.Entities;
+using Messages;
 using NotificationApp.Interfaces;
-using PriceNotifier.Models;
 using Quartz;
 
 namespace NotificationApp
@@ -17,14 +17,14 @@ namespace NotificationApp
         private readonly IExternalProductService _externalProductService;
         private readonly IMailService _mailService;
         private readonly IPriceHistoryService _priceHistoryService;
-        private readonly ISignalRService _signalRService;
-        public PriceComparisonJob(IProductService productService, IExternalProductService externalProductService, IMailService mailService,IPriceHistoryService priceHistoryService,ISignalRService signalRService)
+        private readonly IMessageService _messageService;
+        public PriceComparisonJob(IProductService productService, IExternalProductService externalProductService, IMailService mailService, IPriceHistoryService priceHistoryService, IMessageService messageService)
         {
             _productService = productService;
             _externalProductService = externalProductService;
             _priceHistoryService = priceHistoryService;
             _mailService = mailService;
-            _signalRService = signalRService;
+            _messageService = messageService;
         }
 
         public void Execute(IJobExecutionContext context)
@@ -105,10 +105,10 @@ namespace NotificationApp
                     await _productService.Update(product);
                 }
 
-                if (updatedPriceList.Count != 0)
+                _messageService.SendPriceUpdate(new UpdatedPricesMessage
                 {
-                    await _signalRService.SendPriceUpdate(updatedPriceList);
-                }
+                    UpdatedPricesList = updatedPriceList
+                });
             }
         }
     }

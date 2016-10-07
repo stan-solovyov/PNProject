@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Domain.Repository
 {
-    public class PriceHistoryRepository:IRepository<PriceHistory>
+    public class PriceHistoryRepository : IRepository<PriceHistory>
     {
         private readonly UserContext _context;
 

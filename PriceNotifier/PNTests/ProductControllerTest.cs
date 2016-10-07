@@ -141,6 +141,8 @@ namespace PNTests
                     UserProducts = products
                 }).Verifiable();
 
+            mockProductService.Setup(x => x.DeleteFromUserProduct(userId, productId)).Returns(Task.FromResult(false)).Verifiable();
+
             mockUserService.Setup(x => x.GetById(userId))
                .ReturnsAsync(new User
                {

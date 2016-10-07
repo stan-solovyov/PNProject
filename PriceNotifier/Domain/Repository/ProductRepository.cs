@@ -9,7 +9,7 @@ namespace Domain.Repository
     public class ProductRepository: IRepository<Product>
     {
         private readonly UserContext _context;
-        protected DbSet<Product> DbSet;
+        private readonly DbSet<Product> DbSet;
 
         public ProductRepository(UserContext context)
         {
