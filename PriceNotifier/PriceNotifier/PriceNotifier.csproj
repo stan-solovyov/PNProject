@@ -1220,10 +1220,6 @@
       <Project>{a5df9774-1ce9-4ebf-b5bb-32b371f8edc4}</Project>
       <Name>Messages</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utils\Utils.csproj">
-      <Project>{C121655A-0094-4891-9121-8277249E4CC3}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

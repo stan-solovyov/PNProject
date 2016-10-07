@@ -152,10 +152,6 @@
       <Project>{4A635014-CAF4-4329-B6DC-2B3E11F2F583}</Project>
       <Name>PriceNotifier</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Utils\Utils.csproj">
-      <Project>{C121655A-0094-4891-9121-8277249E4CC3}</Project>
-      <Name>Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

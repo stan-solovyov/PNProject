@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAppTests", "Not
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messages.csproj", "{A5DF9774-1CE9-4EBF-B5BB-32B371F8EDC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{C121655A-0094-4891-9121-8277249E4CC3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +51,6 @@ Global
 		{A5DF9774-1CE9-4EBF-B5BB-32B371F8EDC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5DF9774-1CE9-4EBF-B5BB-32B371F8EDC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5DF9774-1CE9-4EBF-B5BB-32B371F8EDC4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C121655A-0094-4891-9121-8277249E4CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C121655A-0094-4891-9121-8277249E4CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C121655A-0094-4891-9121-8277249E4CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C121655A-0094-4891-9121-8277249E4CC3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
