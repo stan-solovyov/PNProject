@@ -14,7 +14,7 @@ using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
-    [MyAuthorize]
+    [TokenAuthorize]
     public class ProductsController : ApiController
     {
         private readonly IProductService _productService;

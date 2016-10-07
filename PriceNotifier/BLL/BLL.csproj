@@ -64,7 +64,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\UserService\IUserService.cs" />
     <Compile Include="Services\UserService\UserService.cs" />
-    <Compile Include="UserFromDBWithCount.cs" />
+    <Compile Include="Models\UserFromDBWithCount.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

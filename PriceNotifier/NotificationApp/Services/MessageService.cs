@@ -1,5 +1,6 @@
 ﻿using Messages;
 using NotificationApp.Interfaces;
+using NotificationApp.RhinoServiceBus;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Hosting;
 

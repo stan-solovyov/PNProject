@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using OAuth2;
 using OAuth2.Client;
-using PriceNotifier.Models;
 using System.Linq;
 using System.Web.Mvc;
 using Domain.EF;
@@ -10,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 using PriceNotifier.AuthFilter;
+using PriceNotifier.ViewModels;
 
 namespace PriceNotifier.Controllers
 {

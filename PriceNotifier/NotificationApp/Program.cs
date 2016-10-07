@@ -6,6 +6,8 @@ using Domain.EF;
 using Domain.Entities;
 using Domain.Repository;
 using NotificationApp.Interfaces;
+using NotificationApp.JobSetup;
+using NotificationApp.JobTask;
 using NotificationApp.Parsers;
 using NotificationApp.Services;
 

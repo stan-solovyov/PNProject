@@ -2,7 +2,7 @@
 using PriceNotifier.Hubs;
 using Rhino.ServiceBus;
 
-namespace PriceNotifier.Rhino_Bus_Service
+namespace PriceNotifier.RSBMessageConsumer
 {
     public class UpdatedPricesConsumer : SignalRBase<PriceHub>, ConsumerOf<UpdatedPricesMessage>
     {

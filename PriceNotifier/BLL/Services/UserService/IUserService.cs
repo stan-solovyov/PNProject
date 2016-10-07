@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BLL.Models;
 using Domain.Entities;
 
 namespace BLL.Services.UserService

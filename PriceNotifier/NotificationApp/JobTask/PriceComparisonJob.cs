@@ -9,7 +9,7 @@ using Messages;
 using NotificationApp.Interfaces;
 using Quartz;
 
-namespace NotificationApp
+namespace NotificationApp.JobTask
 {
     public class PriceComparisonJob : IJob
     {
@@ -42,40 +42,40 @@ namespace NotificationApp
                 foreach (var product in products)
                 {
                     var html = await _externalProductService.GetExternalPrductPage(product.Url);
-                    var _priceFromSite = _externalProductService.ParsePrice(html);
+                    var priceFromSite = _externalProductService.ParsePrice(html);
 
-                    if (product.Price == _priceFromSite)
+                    if (product.Price == priceFromSite)
                     {
                         continue;
                     }
 
                     var emails = product.UserProducts.Where(c => c.ProductId == product.ProductId).Select(m => m.User.Email).ToList();
                     var userIds = product.UserProducts.Where(c => c.Product == product).Select(a => a.UserId);
-                    if (product.Price == 0 && _priceFromSite != 0)
+                    if (product.Price == 0 && priceFromSite != 0)
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.ProductAvailable(email, product.Url, product.Name, _priceFromSite);
+                            _mailService.ProductAvailable(email, product.Url, product.Name, priceFromSite);
                         }
                     }
 
-                    if (product.Price > _priceFromSite && _priceFromSite != 0)
+                    if (product.Price > priceFromSite && priceFromSite != 0)
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
+                            _mailService.PriceFromDbHigher(email, product.Url, product.Name, product.Price, priceFromSite);
                         }
                     }
 
-                    if (product.Price != 0 && product.Price < _priceFromSite)
+                    if (product.Price != 0 && product.Price < priceFromSite)
                     {
                         foreach (var email in emails)
                         {
-                            _mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, _priceFromSite);
+                            _mailService.PriceFromSiteHigher(email, product.Url, product.Name, product.Price, priceFromSite);
                         }
                     }
 
-                    if (product.Price != 0 && _priceFromSite == 0)
+                    if (product.Price != 0 && priceFromSite == 0)
                     {
                         foreach (var email in emails)
                         {
@@ -87,7 +87,7 @@ namespace NotificationApp
                     {
                         var up = new UpdatedPrice
                         {
-                            Price = _priceFromSite,
+                            Price = priceFromSite,
                             ProductId = product.ProductId,
                             UserId = userId
                         };
@@ -98,17 +98,21 @@ namespace NotificationApp
                     {
                         ProductId = product.ProductId,
                         Date = DateTime.Now,
-                        NewPrice = _priceFromSite,
+                        NewPrice = priceFromSite,
                         OldPrice = product.Price
                     });
-                    product.Price = _priceFromSite;
+                    product.Price = priceFromSite;
                     await _productService.Update(product);
                 }
 
-                _messageService.SendPriceUpdate(new UpdatedPricesMessage
+                if (updatedPriceList.Count != 0)
                 {
-                    UpdatedPricesList = updatedPriceList
-                });
+                    _messageService.SendPriceUpdate(new UpdatedPricesMessage
+                    {
+                        UpdatedPricesList = updatedPriceList
+                    });
+
+                }
             }
         }
     }

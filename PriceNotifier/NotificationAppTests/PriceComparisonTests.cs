@@ -5,10 +5,10 @@ using BLL.Services.ProductService;
 using Domain.Entities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using NotificationApp;
 using NotificationApp.Interfaces;
 using NUnit.Framework;
 using Messages;
+using NotificationApp.JobTask;
 
 namespace NotificationAppTests
 {

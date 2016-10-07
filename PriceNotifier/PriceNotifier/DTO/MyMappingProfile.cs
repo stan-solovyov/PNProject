@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BLL;
+using BLL.Models;
 using Domain.Entities;
 
 namespace PriceNotifier.DTO

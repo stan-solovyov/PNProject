@@ -2,7 +2,7 @@
 using Quartz;
 using Quartz.Spi;
 
-namespace NotificationApp
+namespace NotificationApp.JobSetup
 {
     public class AutofacJobFactory : IJobFactory
     {

@@ -1,6 +1,6 @@
 ﻿using Rhino.ServiceBus.Autofac;
 
-namespace NotificationApp
+namespace NotificationApp.RhinoServiceBus
 {
     public class ClientBootStrapper : AutofacBootStrapper
     {

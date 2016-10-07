@@ -2,7 +2,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@model IEnumerable<PriceNotifier.Models.LoginInfoModel>
+@model IEnumerable<PriceNotifier.ViewModels.LoginInfoModel>
 @foreach (var loginInfo in Model)
 {
     <h2><a href="@loginInfo.LoginLinkUri">@loginInfo.ProviderName</a></h2>

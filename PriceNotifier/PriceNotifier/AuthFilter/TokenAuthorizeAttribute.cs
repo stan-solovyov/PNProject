@@ -6,7 +6,7 @@ using System.Web.Http.Controllers;
 
 namespace PriceNotifier.AuthFilter
 {
-    public class MyAuthorizeAttribute : AuthorizeAttribute
+    public class TokenAuthorizeAttribute : AuthorizeAttribute
     {
 
         protected override bool IsAuthorized(HttpActionContext actionContext)

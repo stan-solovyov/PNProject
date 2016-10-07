@@ -9,7 +9,7 @@ using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BLL;
+using BLL.Models;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
@@ -18,7 +18,7 @@ using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
-    [MyAuthorize]
+    [TokenAuthorize]
     public class UsersController : ApiController
     {
         private readonly IUserService _userService;

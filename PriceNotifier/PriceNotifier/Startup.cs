@@ -12,7 +12,7 @@ using Messages;
 using Microsoft.Owin;
 using Owin;
 using PriceNotifier.DTO;
-using PriceNotifier.Rhino_Bus_Service;
+using PriceNotifier.RSBMessageConsumer;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Impl;
 

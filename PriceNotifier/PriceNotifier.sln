@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{6EA1D6B9-5AEE-459E-86A6-3E542C5A34B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PNTests", "PNTests\PNTests.csproj", "{5DEAFF16-009E-4918-9259-B6D52D7BD0E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceNotifier.Tests", "PNTests\PriceNotifier.Tests.csproj", "{5DEAFF16-009E-4918-9259-B6D52D7BD0E3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationApp", "NotificationApp\NotificationApp.csproj", "{3CA5B3B8-049E-4E57-B332-1E69C18AC6CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationAppTests", "NotificationAppTests\NotificationAppTests.csproj", "{B7DDC380-4748-48B4-ABE6-44BFA27EEF48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationApp.Tests", "NotificationAppTests\NotificationApp.Tests.csproj", "{B7DDC380-4748-48B4-ABE6-44BFA27EEF48}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "Messages\Messages.csproj", "{A5DF9774-1CE9-4EBF-B5BB-32B371F8EDC4}"
 EndProject

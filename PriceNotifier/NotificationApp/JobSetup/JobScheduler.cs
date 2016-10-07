@@ -1,8 +1,9 @@
 ﻿using Autofac;
+using NotificationApp.JobTask;
 using Quartz;
 using Quartz.Impl;
 
-namespace NotificationApp
+namespace NotificationApp.JobSetup
 {
     public class JobScheduler
     {
