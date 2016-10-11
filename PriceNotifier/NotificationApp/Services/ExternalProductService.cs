@@ -8,9 +8,9 @@ namespace NotificationApp.Services
     public class ExternalProductService: IExternalProductService
     {
 
-        private readonly IParser _parseService;
+        private readonly IPriceParser _parseService;
 
-        public ExternalProductService(IParser parseService)
+        public ExternalProductService(IPriceParser parseService)
         {
             _parseService = parseService;
         }

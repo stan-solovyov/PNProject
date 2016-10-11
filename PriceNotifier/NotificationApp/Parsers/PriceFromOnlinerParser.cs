@@ -3,7 +3,7 @@ using HtmlAgilityPack;
 
 namespace NotificationApp.Parsers
 {
-    public class PriceParser : IParser
+    public class PriceFromOnlinerParser : IPriceParser
     {
         public double Parse(string html)
         {

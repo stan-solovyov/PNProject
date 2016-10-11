@@ -8,7 +8,6 @@ namespace PriceNotifier.AuthFilter
 {
     public class TokenAuthorizeAttribute : AuthorizeAttribute
     {
-
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
             var req = actionContext.Request.Headers;

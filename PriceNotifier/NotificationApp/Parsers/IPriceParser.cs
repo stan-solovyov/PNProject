@@ -1,6 +1,6 @@
 ﻿namespace NotificationApp.Parsers
 {
-    public interface IParser
+    public interface IPriceParser
     {
         double Parse(string page);
     }

@@ -109,8 +109,8 @@
     <Compile Include="JobSetup\JobScheduler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Services\ExternalProductService.cs" />
-    <Compile Include="Parsers\IParser.cs" />
-    <Compile Include="Parsers\PriceParser.cs" />
+    <Compile Include="Parsers\IPriceParser.cs" />
+    <Compile Include="Parsers\PriceFromOnlinerParser.cs" />
     <Compile Include="JobTask\PriceComparisonJob.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MailService.cs" />

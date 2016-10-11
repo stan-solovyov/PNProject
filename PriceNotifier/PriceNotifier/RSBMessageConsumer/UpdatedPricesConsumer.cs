@@ -15,7 +15,6 @@ namespace PriceNotifier.RSBMessageConsumer
                     Hub.Clients.Group("Clients").updatePrice(up);
                 }
             }
-
         }
     }
 }

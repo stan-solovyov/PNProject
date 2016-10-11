@@ -18,7 +18,7 @@ namespace NotificationApp
         static void Main()
         {
             var builder = new ContainerBuilder();
-            builder.RegisterType<PriceParser>().As<IParser>();
+            builder.RegisterType<PriceFromOnlinerParser>().As<IPriceParser>();
             builder.RegisterType<PriceComparisonJob>().AsSelf().InstancePerLifetimeScope();
             builder.Register(context => new UserContext()).As<UserContext>().InstancePerLifetimeScope();
             builder.RegisterType<ExternalProductService>().As<IExternalProductService>().InstancePerLifetimeScope();
