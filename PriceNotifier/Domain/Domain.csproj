@@ -64,15 +64,12 @@
     <Compile Include="EF\UserContext.cs" />
     <Compile Include="Entities\PriceHistory.cs" />
     <Compile Include="Entities\Product.cs" />
+    <Compile Include="Entities\ProvidersProductInfo.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProduct.cs" />
-    <Compile Include="Migrations\201610030831151_dateFormatChanged.cs" />
-    <Compile Include="Migrations\201610030831151_dateFormatChanged.Designer.cs">
-      <DependentUpon>201610030831151_dateFormatChanged.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201610071355483_ValidationAttributes.cs" />
-    <Compile Include="Migrations\201610071355483_ValidationAttributes.Designer.cs">
-      <DependentUpon>201610071355483_ValidationAttributes.cs</DependentUpon>
+    <Compile Include="Migrations\201610121224313_changedDB.cs" />
+    <Compile Include="Migrations\201610121224313_changedDB.Designer.cs">
+      <DependentUpon>201610121224313_changedDB.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,11 +85,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201610030831151_dateFormatChanged.resx">
-      <DependentUpon>201610030831151_dateFormatChanged.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201610071355483_ValidationAttributes.resx">
-      <DependentUpon>201610071355483_ValidationAttributes.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201610121224313_changedDB.resx">
+      <DependentUpon>201610121224313_changedDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

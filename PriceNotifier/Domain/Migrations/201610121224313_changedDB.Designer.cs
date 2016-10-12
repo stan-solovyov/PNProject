@@ -7,13 +7,13 @@ namespace Domain.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class ValidationAttributes : IMigrationMetadata
+    public sealed partial class changedDB : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(ValidationAttributes));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(changedDB));
         
         string IMigrationMetadata.Id
         {
-            get { return "201610071355483_ValidationAttributes"; }
+            get { return "201610121224313_changedDB"; }
         }
         
         string IMigrationMetadata.Source

@@ -20,7 +20,7 @@ namespace BLL.Services.ProductService
 
         public async Task<IEnumerable<Product>> GetByUserId(int userId)
         {
-            return await _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).ToListAsync();
+            return await _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).Include(c=>c.ProvidersProductInfos).ToListAsync();
         }
 
         public async Task<Product> Create(Product product)

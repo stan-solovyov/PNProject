@@ -141,7 +141,6 @@ namespace PriceNotifier.Controllers
                 }
                 else
                 {
-                    //userid.Token = user.Token;
                     userid.SocialNetworkUserId = user.SocialNetworkUserId;
                     userid.SocialNetworkName = user.SocialNetworkName;
                     userid.Username = user.Username;

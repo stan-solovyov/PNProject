@@ -13,16 +13,19 @@
         var addProducts = function (product) {
             product.hiding = true;
 
-            var price;
+            var MinPrice,MaxPrice;
             if (product.prices === null) {
-                price = 0;
+                MinPrice = 0;
+                MaxPrice = 0;
             } else {
-                price = product.prices.price_min.amount;
+                MinPrice = product.prices.price_min.amount;
+                MaxPrice = product.prices.price_max.amount;
             }
 
             var productDto = {
                 Name: product.full_name,
-                Price: price,
+                MinPrice: MinPrice,
+                MaxPrice: MaxPrice,
                 ExternalProductId: product.id,
                 Url: product.html_url,
                 ImageUrl: product.images.icon,

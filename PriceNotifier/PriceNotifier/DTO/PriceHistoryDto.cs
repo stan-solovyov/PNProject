@@ -8,6 +8,6 @@ namespace PriceNotifier.DTO
         public DateTime Date { get; set; }
         public double OldPrice { get; set; }
         public double NewPrice { get; set; }
-        public int ProductId { get; set; }
+        public int ProviderId { get; set; }
     }
 }

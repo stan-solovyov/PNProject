@@ -13,7 +13,8 @@ namespace Domain.Entities
         [Required]
         public double NewPrice { get; set; }
         [Required]
-        public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public int ProviderId { get; set; }
+
+        public ProvidersProductInfo ProvidersProductInfo { get; set; }
     }
 }

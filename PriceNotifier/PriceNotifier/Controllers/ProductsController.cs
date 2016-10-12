@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using AutoMapper;
+using BLL.Services.PriceParserService;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
@@ -19,11 +20,15 @@ namespace PriceNotifier.Controllers
     {
         private readonly IProductService _productService;
         private readonly IUserService _userService;
+        private readonly IOneKPriceParser _oneKPriceParser;
+        private readonly IMigomPriceParser _migomPriceParser;
 
-        public ProductsController(IProductService productService, IUserService userService)
+        public ProductsController(IProductService productService, IUserService userService,IOneKPriceParser oneKPriceParser,IMigomPriceParser migomPriceParser)
         {
             _productService = productService;
             _userService = userService;
+            _oneKPriceParser = oneKPriceParser;
+            _migomPriceParser = migomPriceParser;
         }
 
         // GET: api/Products
@@ -38,6 +43,10 @@ namespace PriceNotifier.Controllers
             {
                 var p = Mapper.Map<Product, ProductDto>(product);
                 p.Checked = product.UserProducts.Where(c => c.ProductId == product.ProductId && c.UserId == userId).Select(b => b.Checked).Single();
+                p.ImageUrl = product.ProvidersProductInfos.First(c => c.ProductId == product.ProductId).ImageUrl;
+                p.MaxPrice = product.ProvidersProductInfos.Where(c => c.ProductId == product.ProductId).Max(c=>c.MaxPrice);
+                p.MinPrice = product.ProvidersProductInfos.Where(c => c.ProductId == product.ProductId).Min(c=>c.MinPrice);
+                p.Url = product.ProvidersProductInfos.First(c => c.ProductId == product.ProductId).Url;
                 productDtos.Add(p);
             }
 
@@ -95,24 +104,59 @@ namespace PriceNotifier.Controllers
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
 
-            var productFound = _productService.GetByExtId(productDto.ExternalProductId, userId);
+            var product = Mapper.Map<ProductDto, Product>(productDto);
+            User user = await _userService.GetById(userId);
+            var p = _productService.GetByExtIdFromDb(product.ExternalProductId);
+            string html, address;
 
-            if (productFound == null)
+            if (p == null)
             {
-                var product = Mapper.Map<ProductDto, Product>(productDto);
-                User user = await _userService.GetById(userId);
-                var p = _productService.GetByExtIdFromDb(product.ExternalProductId);
-                if (p == null)
+                product = await _productService.Create(product);
+                product.ProvidersProductInfos.Add(new ProvidersProductInfo { ImageUrl = productDto.ImageUrl, MinPrice = productDto.MinPrice, MaxPrice = productDto.MaxPrice, ProviderName = "Onliner", Url = productDto.Url });
+                address = await _oneKPriceParser.GetProdLinks(productDto.Name);
+                if (!string.IsNullOrEmpty(address))
                 {
-                    product = await _productService.Create(product);
-                    user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
-                    await _userService.Update(user);
-                    productDto = Mapper.Map(product, productDto);
-                    return productDto;
+                    html = await _oneKPriceParser.GetExternalPrductPage(address);
+                    var providersProductInfo = _oneKPriceParser.ParsePrice(html);
+                    providersProductInfo.Url = address;
+                    product.ProvidersProductInfos.Add(providersProductInfo);
                 }
 
-                p.Price = product.Price;
-                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.ProductId, UserId = user.UserId });
+                address = await _migomPriceParser.GetProdLinks(productDto.Name);
+                if (!string.IsNullOrEmpty(address))
+                {
+                    html = await _migomPriceParser.GetExternalPrductPage(address);
+                    var providersProductInfo = _migomPriceParser.ParsePrice(html);
+                    providersProductInfo.Url = address;
+                    product.ProvidersProductInfos.Add(providersProductInfo);
+                }
+
+                await _productService.Update(product);
+                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
+                await _userService.Update(user);
+                productDto = Mapper.Map(product, productDto);
+                return productDto;
+            }
+
+            address = await _oneKPriceParser.GetProdLinks(productDto.Name);
+            if (!string.IsNullOrEmpty(address))
+            {
+                html = await _oneKPriceParser.GetExternalPrductPage(address);
+                var oneKProductInfo = _oneKPriceParser.ParsePrice(html);
+                var oneKProduct = p.ProvidersProductInfos.Single(c => c.Url == address);
+                oneKProduct.MinPrice = oneKProductInfo.MinPrice;
+                oneKProduct.MaxPrice = oneKProductInfo.MaxPrice;
+            }
+
+            var onlinerProduct = p.ProvidersProductInfos.Single(c => c.Url == productDto.Url);
+            onlinerProduct.MinPrice = productDto.MinPrice;
+            onlinerProduct.MaxPrice = productDto.MaxPrice;
+            await _productService.Update(p);
+
+            var productFound = _productService.GetByExtId(productDto.ExternalProductId, userId);
+            if (productFound == null)
+            {
+                user.UserProducts.Add(new UserProduct {Checked = true, ProductId = p.ProductId, UserId = user.UserId});
                 await _userService.Update(user);
                 return productDto;
             }
