@@ -2,6 +2,7 @@
 using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
+using BLL.Services;
 using BLL.Services.PriceHistoryService;
 using BLL.Services.PriceParserService;
 using BLL.Services.ProductService;
@@ -39,8 +40,8 @@ namespace PriceNotifier
             builder.RegisterType<PriceHistoryService>().As<IPriceHistoryService>().InstancePerRequest();
             builder.RegisterType<UpdatedPricesConsumer>().As<ConsumerOf<UpdatedPricesMessage>>();
             builder.RegisterType<UserProductRepository>().As<IUserProductRepository>().InstancePerRequest();
-            builder.RegisterType<PriceFrom1KParser>().As<IOneKPriceParser>().InstancePerRequest();
-            builder.RegisterType<PriceFromMigomParser>().As<IMigomPriceParser>().InstancePerRequest();
+            builder.RegisterType<PriceFrom1KParser>().As<IProviderProductInfoParser>().InstancePerRequest();
+            builder.RegisterType<PriceFromMigomParser>().As<IProviderProductInfoParser>().InstancePerRequest();
             var container = builder.Build();
 
             //injecting RSB with Autofac

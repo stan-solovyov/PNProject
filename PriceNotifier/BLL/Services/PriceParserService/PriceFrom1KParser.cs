@@ -1,97 +1,78 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Domain.Entities;
 using HtmlAgilityPack;
 
 namespace BLL.Services.PriceParserService
 {
-    public class PriceFrom1KParser:IOneKPriceParser
+    public class PriceFrom1KParser : IProviderProductInfoParser
     {
-        public async Task<string> GetProdLinks(string productName)
+        public async Task<ProvidersProductInfo> GetProvidersProductInfo(string productName)
         {
             string html, uri = "", address = "http://1k.by/products/search?searchFor=products&s_keywords=";
+            double minPrice = 0;
+            double maxPrice = 0;
+            string imageUrl = null;
             using (var client = new HttpClient())
             {
                 html = await client.GetStringAsync(address + productName);
             }
 
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
-            if (doc.DocumentNode.SelectNodes("//*[@id='compare_products']/div/div[3]/a") != null)
+            if (html != null)
             {
-                foreach (var htmlNode in doc.DocumentNode.SelectNodes("//*[@class='pr-line_link']"))
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html);
+                var node = doc.QuerySelectorAll(".pr-line_about a").FirstOrDefault();
+                if (node?.Attributes["href"] != null)
                 {
-                    if (htmlNode.Attributes["href"] != null)
+                    uri = node.Attributes["href"].Value;
+                }
+
+                if (!string.IsNullOrEmpty(uri))
+                {
+                    using (var client = new HttpClient())
                     {
-                        return uri = htmlNode.Attributes["href"].Value;
+                        html = await client.GetStringAsync(uri);
                     }
-                    return uri;
 
-                }
-            }
+                    doc.LoadHtml(html);
+                    var allNodes = doc.QuerySelectorAll(".price");
+                    var nodes = allNodes.QuerySelectorAll("span [itemprop=lowPrice]").FirstOrDefault();
 
-            return uri;
-        }
-
-        public async Task<string> GetExternalPrductPage(string address)
-        {
-            string html;
-            if (!string.IsNullOrEmpty(address))
-            {
-                using (var client = new HttpClient())
-                {
-                    html = await client.GetStringAsync(address);
-                }
-                return html;
-            }
-            return "";
-        }
-
-        public ProvidersProductInfo ParsePrice(string html)
-        {
-            double minPrice=0,maxPrice=0;
-            string imageUrl = null;
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
-            if (doc.DocumentNode.SelectNodes("/html/body/div[1]/div[5]/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div[1]/div[2]/div[1]/div/div[1]/div[1]/span") != null)
-            {
-                foreach (var htmlNode in doc.DocumentNode.SelectNodes("/html/body/div[1]/div[5]/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div[1]/div[2]/div[1]/div/div[1]/div[1]/span"))
-                {
-                    if (!string.IsNullOrEmpty(htmlNode.InnerText))
+                    if (!string.IsNullOrEmpty(nodes?.InnerText))
                     {
-                        var price = htmlNode.InnerText;
+                        var price = nodes.InnerText;
                         minPrice = double.Parse(price);
                     }
-                }
-            }
 
-            if (doc.DocumentNode.SelectNodes("/html/body/div[1]/div[5]/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div[1]/div[2]/div[1]/div/div[3]/div[1]/span") != null)
-            {
-                foreach (var htmlNode in doc.DocumentNode.SelectNodes("/html/body/div[1]/div[5]/div[2]/div[2]/div[1]/div/div[1]/div[3]/div/div[1]/div[2]/div[1]/div/div[3]/div[1]/span"))
-                {
-                    if (!string.IsNullOrEmpty(htmlNode.InnerText))
+                    nodes = allNodes.QuerySelectorAll("span [itemprop=highPrice]").FirstOrDefault();
+                    if (!string.IsNullOrEmpty(nodes?.InnerText))
                     {
-                        var price = htmlNode.InnerText;
+                        var price = nodes.InnerText;
                         maxPrice = double.Parse(price);
                     }
-                }
-            }
 
-            if (doc.DocumentNode.SelectNodes("//*[@id='colorbox_image_1000']/img") != null)
-            {
-                foreach (var htmlNode in doc.DocumentNode.SelectNodes("//*[@id='colorbox_image_1000']/img"))
-                {
-                    if (!string.IsNullOrEmpty(htmlNode.GetAttributeValue("src","")))
+                    nodes = doc.QuerySelectorAll(".product_img [itemprop=image]").FirstOrDefault();
+                    if (!string.IsNullOrEmpty(nodes?.GetAttributeValue("src", "")))
                     {
-                        imageUrl = htmlNode.GetAttributeValue("src", "");
-                        
+                        imageUrl = nodes.GetAttributeValue("src", "");
                     }
+
+                    ProvidersProductInfo p = new ProvidersProductInfo
+                    {
+                        ProviderName = "1K",
+                        MaxPrice = maxPrice,
+                        MinPrice = minPrice,
+                        ImageUrl = imageUrl,
+                        Url = uri
+                    };
+                    return p;
                 }
             }
 
-            ProvidersProductInfo p = new ProvidersProductInfo {ProviderName = "1K",MaxPrice = maxPrice, MinPrice = minPrice, ImageUrl = imageUrl};
-
-            return p;
+            return null;
         }
     }
 }

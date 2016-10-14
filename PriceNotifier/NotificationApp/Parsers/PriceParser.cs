@@ -1,9 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 
 namespace NotificationApp.Parsers
 {
-    public class PriceFromOnlinerParser : IPriceParser
+    public class PriceParser : IPriceParser
     {
         public double Parse(string html)
         {
@@ -34,6 +36,20 @@ namespace NotificationApp.Parsers
                     return finalPrice;
                 }
             }
+
+            var nodes = doc.QuerySelectorAll(".price span [itemprop=lowPrice]").FirstOrDefault();
+            if (!string.IsNullOrEmpty(nodes?.InnerText))
+            {
+                var p = nodes.InnerText;
+                double finalPrice;
+                if (double.TryParse(p, out finalPrice))
+                {
+                    return finalPrice;
+                }
+                p = p.Replace('.', ',');
+                return double.Parse(p);
+            }
+
             return 0;
         }
     }

@@ -34,9 +34,9 @@ namespace BLL.Services.PriceHistoryService
             return _priceHistoryRepository.Delete(entity);
         }
 
-        public IQueryable<PriceHistory> GetByProductId(int productId)
+        public IQueryable<PriceHistory> GetByProductIdAndProvider(int productId, string provider)
         {
-            var query = _priceHistoryRepository.Query().Where(c => c.ProviderId == productId);
+            var query = _priceHistoryRepository.Query().Where(c => c.ProvidersProductInfo.ProductId == productId && c.ProvidersProductInfo.ProviderName == provider);
             return query;
         }
     }

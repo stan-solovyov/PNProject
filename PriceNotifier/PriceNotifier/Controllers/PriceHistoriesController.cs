@@ -20,9 +20,9 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/PriceHistories/5
-        public PageResult<PriceHistoryDto> GetPriceHistory(int id, ODataQueryOptions<PriceHistory> options)
+        public PageResult<PriceHistoryDto> GetPriceHistory(int id,string name, ODataQueryOptions<PriceHistory> options)
         {
-            var allPriceHistories = _priceHistoryService.GetByProductId(id);
+            var allPriceHistories = _priceHistoryService.GetByProductIdAndProvider(id,name);
             IQueryable priceHistories = options.ApplyTo(allPriceHistories);
             var results = priceHistories.ProjectTo<PriceHistoryDto>();
 

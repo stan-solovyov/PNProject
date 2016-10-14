@@ -5,6 +5,6 @@ namespace BLL.Services.PriceHistoryService
 {
     public interface IPriceHistoryService:IService<PriceHistory>
     {
-        IQueryable<PriceHistory> GetByProductId(int productId);
+        IQueryable<PriceHistory> GetByProductIdAndProvider(int productId,string provider);
     }
 }

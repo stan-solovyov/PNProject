@@ -1,89 +1,82 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Domain.Entities;
 using HtmlAgilityPack;
 
 namespace BLL.Services.PriceParserService
 {
-    public class PriceFromMigomParser : IMigomPriceParser
+    public class PriceFromMigomParser : IProviderProductInfoParser
     {
-        public async Task<string> GetProdLinks(string productName)
+        public async Task<ProvidersProductInfo> GetProvidersProductInfo(string productName)
         {
-            string html = null, uri = "", address = "http://www.migom.by/search/?search_user=&search_type=products&search_str=";
+            string html = null,
+                uri = "",
+                address = "http://www.migom.by/search/?search_user=&search_type=products&search_str=";
+            double minPrice = 0;
+            double maxPrice = 0;
+            string imageUrl = null;
             using (var client = new HttpClient())
             {
                 html = await client.GetStringAsync(address + productName);
             }
 
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
-            var nodes = doc.DocumentNode.SelectNodes("/html/body/div[2]/div/div[5]/div[1]/div[3]/div[1]/div/div[2]/div[1]/div/div[2]/h2/a");
-            if (nodes.Count == 1)
+            if (html != null)
             {
-                if (nodes[0].Attributes["href"] != null)
+                HtmlDocument doc = new HtmlDocument();
+                doc.LoadHtml(html);
+                var nodes = doc.QuerySelectorAll("h2 a").FirstOrDefault();
+                if (nodes?.Attributes["href"] != null)
                 {
-                    return uri = "http://www.migom.by" + nodes[0].Attributes["href"].Value;
+                    uri = "http://www.migom.by" + nodes.Attributes["href"].Value;
                 }
-                return uri;
-            }
 
-            return uri;
-        }
-
-        public async Task<string> GetExternalPrductPage(string address)
-        {
-            string html;
-            if (!string.IsNullOrEmpty(address))
-            {
-                using (var client = new HttpClient())
+                if (!string.IsNullOrEmpty(uri))
                 {
-                    html = await client.GetStringAsync(address);
-                }
-                return html;
-            }
-            return "";
-        }
-
-        public ProvidersProductInfo ParsePrice(string html)
-        {
-            double minPrice = 0, maxPrice = 0;
-            string imageUrl = null;
-            HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(html);
-            var nodes = doc.DocumentNode.SelectNodes("//*[@id='product']/div[1]/div/div/div[2]/div/div[1]/div[1]/a[1]/span");
-            if (nodes.Count == 1)
-            {
-                if (!string.IsNullOrEmpty(nodes[0].InnerText))
-                {
-                    var price = nodes[0].InnerText;
-                    price = price.Replace('.', ',');
-                    minPrice = double.Parse(price);
-                }
-            }
-
-            nodes = doc.DocumentNode.SelectNodes("//*[@id='product']/div[1]/div/div/div[2]/div/div[1]/div[1]/a[2]/span");
-            if (nodes.Count == 1)
-            {
-                if (!string.IsNullOrEmpty(nodes[0].InnerText))
-                {
-                    var price = nodes[0].InnerText;
-                    price = price.Replace('.', ',');
-                    maxPrice = double.Parse(price);
-                }
-            }
-
-            nodes = doc.DocumentNode.SelectNodes("//*[@id='product']/div[1]/div/div/div[1]/figure/div/a/img");
-            if (nodes.Count == 1)
-            {
-                    if (!string.IsNullOrEmpty(nodes[0].GetAttributeValue("src", "")))
+                    using (var client = new HttpClient())
                     {
-                        imageUrl = nodes[0].GetAttributeValue("src", "");
+                        html = await client.GetStringAsync(uri);
                     }
+
+                    doc.LoadHtml(html);
+                    var allNodes = doc.QuerySelectorAll(".price");
+                    nodes = allNodes.QuerySelectorAll("span [itemprop=lowPrice]").First();
+                    if (!string.IsNullOrEmpty(nodes?.InnerText))
+                    {
+                        var price = nodes.InnerText;
+                        price = price.Replace('.', ',');
+                        minPrice = double.Parse(price);
+                    }
+
+                    nodes = allNodes.QuerySelectorAll("span [itemprop=highPrice]").First();
+                    if (!string.IsNullOrEmpty(nodes?.InnerText))
+                    {
+                        var price = nodes.InnerText;
+                        price = price.Replace('.', ',');
+                        maxPrice = double.Parse(price);
+                    }
+
+                    nodes = doc.QuerySelectorAll(".b-item-card__top-img-i [itemprop=image]").First();
+                    if (!string.IsNullOrEmpty(nodes?.GetAttributeValue("src", "")))
+                    {
+                        imageUrl = nodes.GetAttributeValue("src", "");
+                    }
+
+                    ProvidersProductInfo p = new ProvidersProductInfo
+                    {
+                        ProviderName = "Migom",
+                        MaxPrice = maxPrice,
+                        MinPrice = minPrice,
+                        ImageUrl = imageUrl,
+                        Url = uri
+                    };
+
+                    return p;
+                }
             }
 
-            ProvidersProductInfo p = new ProvidersProductInfo { ProviderName = "Migom", MaxPrice = maxPrice, MinPrice = minPrice, ImageUrl = imageUrl };
-
-            return p;
+            return null;
         }
     }
 }

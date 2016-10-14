@@ -2,9 +2,16 @@
     <h3 class="modal-title" id="modal-title">Price changes history</h3>
 </div>
 <div class="modal-body" id="modal-body">
+    <div>
+        <button class="btn btn-default" type="button" ng-click="openOnlinerHistory()">Onliner.by</button>
+        <button class="btn btn-default" type="button" ng-click="openMigomHistory()">Migom.by</button>
+        <button class="btn btn-default" type="button" ng-click="open1KHistory()">1K.by</button>
+    </div>
     <div ng-show="show">
         <h3>{{Note}}</h3>
     </div>
+    <br/>
+    <br/>
     <canvas id="base" class="chart-bar" ng-show="showChart"
             chart-data="data" chart-series="series" chart-colors="colors" chart-options="options"
             chart-dataset-override="datasetOverride"></canvas>

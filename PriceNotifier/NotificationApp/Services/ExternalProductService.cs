@@ -15,19 +15,16 @@ namespace NotificationApp.Services
             _parseService = parseService;
         }
 
-        public async Task<string> GetExternalPrductPage(string address)
+        public async Task<double> ParsePrice(string address)
         {
             string html;
             using (var client = new HttpClient())
             {
                 html = await client.GetStringAsync(address);
             }
-            return html;
-        }
 
-        public double ParsePrice(string html)
-        {
-            return _parseService.Parse(html);
+            var price = _parseService.Parse(html);
+            return price;
         }
 
     }

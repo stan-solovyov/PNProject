@@ -29,6 +29,7 @@
         take: 100
     };
 
+    $scope.provider = 'Onliner';
     $scope.openNotificatnHistory = function (size, productId) {
         $scope.productId = productId;
         var modalInstance = $uibModal.open({
@@ -39,16 +40,10 @@
             size: size,
             resolve: {
                 priceChanges: function () {
-                    return priceChangeService.getPriceChangesPage(productId, $scope.main.page, $scope.main.take);
+                    return priceChangeService.getPriceChangesPage(productId,$scope.provider, $scope.main.page, $scope.main.take);
                 }
             }
         });
-    };
-
-    $scope.format = function (date) {
-        var dateFormatted = moment(date);
-        var d = new Date(dateFormatted);
-        return d;
     };
 
     function ModalInstanceCtrl($uibModalInstance, priceChanges) {
@@ -114,6 +109,32 @@
                 }
             };
         };
+
+        $scope.openOnlinerHistory = function () {
+            $scope.provider = 'Onliner';
+            $scope.main.page = 1;
+            priceChangeService.getPriceChangesPage($scope.productId, $scope.provider, $scope.main.page, $scope.main.take).then(function (response) {
+                ModalInstanceCtrl($uibModalInstance, response);
+            });
+        }
+
+        $scope.openMigomHistory = function () {
+            $scope.provider = 'Migom';
+            $scope.main.page = 1;
+            priceChangeService.getPriceChangesPage($scope.productId, $scope.provider, $scope.main.page, $scope.main.take).then(function (response) {
+                ModalInstanceCtrl($uibModalInstance, response);
+            });
+        }
+
+        $scope.open1KHistory = function () {
+            var provider = '1K';
+            $scope.main.page = 1;
+            priceChangeService.getPriceChangesPage($scope.productId, provider, $scope.main.page, $scope.main.take).then(function (response) {
+                ModalInstanceCtrl($uibModalInstance, response);
+            });
+        }
+
+
         $scope.ok = function () {
             $scope.main.page = 1;
             $uibModalInstance.close();
@@ -122,19 +143,19 @@
         $scope.next = function () {
             if ($scope.main.page > 1) {
                 $scope.main.page--;
-                $scope.loadPage($scope.productId);
+                $scope.loadPage($scope.productId, $scope.provider);
             }
         };
 
         $scope.previous = function () {
             if ($scope.main.page < $scope.main.pages) {
                 $scope.main.page++;
-                $scope.loadPage($scope.productId);
+                $scope.loadPage($scope.productId, $scope.provider);
             }
         };
 
-        $scope.loadPage = function (productId) {
-            priceChangeService.getPriceChangesPage(productId, $scope.main.page, $scope.main.take).then(function (response) {
+        $scope.loadPage = function (productId, provider) {
+            priceChangeService.getPriceChangesPage(productId, provider, $scope.main.page, $scope.main.take).then(function (response) {
                 $scope.historyPrices = response.data.Items;
                 var pChart = [];
                 var dChart = [];

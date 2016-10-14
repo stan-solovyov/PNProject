@@ -3,9 +3,8 @@
 
         var url = '/api/PriceHistories/';
 
-        var getPriceChangesPage = function (productId, currentPage, recordsPerPage) {
-
-            var request = url + productId + "?$skip=" + (currentPage - 1) * recordsPerPage + "&$top=" + recordsPerPage + "&$orderby=" + "Date" + " " + "desc";
+        var getPriceChangesPage = function (productId, provider, currentPage, recordsPerPage) {
+            var request = url + productId + "/" + provider + "?$skip=" + (currentPage - 1) * recordsPerPage + "&$top=" + recordsPerPage + "&$orderby=" + "Date" + " " + "desc";
 
             return $http.get(request + "&$count=true")
                  .then(function (response) {
