@@ -8,10 +8,8 @@ namespace Domain.Entities
         public int PriceHistoryId { get; set; }
         [Required]
         public DateTime Date { get; set; }
-        [Required]
-        public double OldPrice { get; set; }
-        [Required]
-        public double NewPrice { get; set; }
+        public double? OldPrice { get; set; }
+        public double? NewPrice { get; set; }
         [Required]
         public int ProviderId { get; set; }
 

@@ -7,7 +7,7 @@ namespace NotificationApp.Parsers
 {
     public class PriceParser : IPriceParser
     {
-        public double Parse(string html)
+        public double? Parse(string html)
         {
             string price = null;
             HtmlDocument doc = new HtmlDocument();
@@ -50,7 +50,7 @@ namespace NotificationApp.Parsers
                 return double.Parse(p);
             }
 
-            return 0;
+            return null;
         }
     }
 }

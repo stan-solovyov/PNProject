@@ -4,6 +4,6 @@ namespace NotificationApp.Interfaces
 {
     public interface IExternalProductService
     {
-        Task<double> ParsePrice(string address);
+        Task<double?> ParsePrice(string address);
     }
 }

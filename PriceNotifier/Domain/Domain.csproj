@@ -71,6 +71,14 @@
     <Compile Include="Migrations\201610121224313_changedDB.Designer.cs">
       <DependentUpon>201610121224313_changedDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610171425188_nullablePrice.cs" />
+    <Compile Include="Migrations\201610171425188_nullablePrice.Designer.cs">
+      <DependentUpon>201610171425188_nullablePrice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610171528143_nullablePriceHistory.cs" />
+    <Compile Include="Migrations\201610171528143_nullablePriceHistory.Designer.cs">
+      <DependentUpon>201610171528143_nullablePriceHistory.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\IRepository.cs" />
@@ -87,6 +95,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201610121224313_changedDB.resx">
       <DependentUpon>201610121224313_changedDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171425188_nullablePrice.resx">
+      <DependentUpon>201610171425188_nullablePrice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610171528143_nullablePriceHistory.resx">
+      <DependentUpon>201610171528143_nullablePriceHistory.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

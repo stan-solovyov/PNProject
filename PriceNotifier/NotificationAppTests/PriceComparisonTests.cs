@@ -41,6 +41,11 @@ namespace NotificationAppTests
                 new UserProduct { Checked = true, ProductId = 33, UserId = 11,User = user }
             };
 
+            List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
+            {
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = priceFromDb, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe"}
+            };
+
             List<Product> products = new List<Product>()
             {
                 new Product
@@ -48,9 +53,7 @@ namespace NotificationAppTests
                 ProductId = 33,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
-                Price = priceFromDb,
-                Url = "aasdsad",
-                ImageUrl = "asdasd",
+                ProvidersProductInfos = providersProductInfos,
                 UserProducts = userProducts
                 }
             };
@@ -66,9 +69,8 @@ namespace NotificationAppTests
                 mockProductService.Setup(x => x.Update(It.IsAny<Product>())).Returns(Task.FromResult(false)).Verifiable();
                 mockMessageService.Setup(c => c.SendPriceUpdate(It.IsAny<UpdatedPricesMessage>())).Verifiable();
             }
-            mockExternalProductService.Setup(x => x.GetExternalPrductPage(It.IsAny<string>())).ReturnsAsync(It.IsAny<string>()).Verifiable();
-            mockExternalProductService.Setup(x => x.ParsePrice(It.IsAny<string>())).Returns(parsedPrice).Verifiable();
-            mockMailService.Setup(x => x.ProductAvailable(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<double>())).Verifiable();
+            mockExternalProductService.Setup(x => x.ParsePrice(It.IsAny<string>())).ReturnsAsync(parsedPrice).Verifiable();
+            mockMailService.Setup(x => x.ProductAvailable(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<double>())).Returns(Task.FromResult(false)).Verifiable();
 
 
             var priceComparisonJob = new PriceComparisonJob

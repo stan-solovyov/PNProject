@@ -2,6 +2,6 @@
 {
     public interface IPriceParser
     {
-        double Parse(string page);
+        double? Parse(string page);
     }
 }

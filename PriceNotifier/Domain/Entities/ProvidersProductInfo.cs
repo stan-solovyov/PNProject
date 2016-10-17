@@ -8,10 +8,8 @@ namespace Domain.Entities
         public int ProviderId { get; set; }
         [Required]
         public string ProviderName { get; set; }
-        [Required]
-        public double MinPrice { get; set; }
-        [Required]
-        public double MaxPrice { get; set; }
+        public double? MinPrice { get; set; }
+        public double? MaxPrice { get; set; }
         public string Url { get; set; }
         public string ImageUrl { get; set; }
         public int ProductId { get; set; }

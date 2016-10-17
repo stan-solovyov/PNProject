@@ -6,7 +6,7 @@
         angular.forEach($scope.dbproducts,
             function (product) {
                 if (product.Id === $scope.updatedPrice.ProductId) {
-                    product.Price = $scope.updatedPrice.Price;
+                    product.MinPrice = $scope.updatedPrice.Price;
                     $scope.boxClass = true;
                     $scope.$apply();
                 }

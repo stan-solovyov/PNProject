@@ -38,6 +38,7 @@ namespace NotificationApp.JobTask
         {
             var products = await _productService.GetTrackedItems();
             var updatedPriceList = new List<UpdatedPrice>();
+            var retryCount = 3;
             log.Info("Loging began at " + DateTime.Now);
 
             if (products != null)
@@ -47,63 +48,74 @@ namespace NotificationApp.JobTask
                     var providersProductInfos = product.ProvidersProductInfos;
                     foreach (var providersProductInfo in providersProductInfos)
                     {
-                        try
+                        for (int currentRetry = 0; currentRetry < retryCount; currentRetry++)
                         {
-                            var priceFromDB = providersProductInfo.MinPrice;
-                            var productLink = providersProductInfo.Url;
-                            var priceFromSite = await _externalProductService.ParsePrice(productLink);
-
-                            if (priceFromDB == priceFromSite)
+                            try
                             {
-                                continue;
-                            }
+                                var priceFromDB = providersProductInfo.MinPrice;
+                                var productLink = providersProductInfo.Url;
+                                var priceFromSite = await _externalProductService.ParsePrice(productLink);
+                                var emails = product.UserProducts.Select(m => m.User.Email).ToList();
+                                var userIds = product.UserProducts.Select(a => a.UserId).ToList();
 
-                            var emails = product.UserProducts.Select(m => m.User.Email).ToList();
-                            var userIds = product.UserProducts.Select(a => a.UserId).ToList();
-                            if (priceFromDB == 0 && priceFromSite != 0)
-                            {
-                                    await _mailService.ProductAvailable(emails, productLink, product.Name, priceFromSite);
-                            }
-
-                            if (priceFromDB > priceFromSite && priceFromSite != 0)
-                            {
-                                    await _mailService.PriceFromDbHigher(emails, productLink, product.Name, priceFromDB,priceFromSite);
-                            }
-
-                            if (priceFromDB != 0 && priceFromDB < priceFromSite)
-                            {
-                                    await _mailService.PriceFromSiteHigher(emails, productLink, product.Name, priceFromDB,priceFromSite);
-                            }
-
-                            if (priceFromDB != 0 && priceFromSite == 0)
-                            {
-                                    await _mailService.ProductOutOfStock(emails, productLink, product.Name);
-                            }
-
-                            foreach (var userId in userIds)
-                            {
-                                var up = new UpdatedPrice
+                                if (priceFromDB.HasValue && priceFromSite.HasValue)
                                 {
-                                    Price = priceFromSite,
-                                    ProductId = product.ProductId,
-                                    UserId = userId
-                                };
-                                updatedPriceList.Add(up);
-                            }
+                                    if (priceFromDB.Value == priceFromSite.Value)
+                                    {
+                                        break;
+                                    }
 
-                            await _priceHistoryService.Create(new PriceHistory
+                                    if (priceFromDB.Value > priceFromSite.Value)
+                                    {
+                                        await _mailService.PriceFromDbHigher(emails, productLink, product.Name,
+                                                priceFromDB.Value, priceFromSite.Value);
+                                    }
+
+                                    if (priceFromDB.Value < priceFromSite.Value)
+                                    {
+                                        await
+                                            _mailService.PriceFromSiteHigher(emails, productLink, product.Name,
+                                                priceFromDB.Value, priceFromSite.Value);
+                                    }
+                                }
+
+                                if (priceFromDB == null && priceFromSite != null)
+                                {
+                                    await _mailService.ProductAvailable(emails, productLink, product.Name,
+                                            priceFromSite.Value);
+                                }
+
+                                if (priceFromDB != null && priceFromSite == null)
+                                {
+                                    await _mailService.ProductOutOfStock(emails, productLink, product.Name);
+                                }
+
+                                foreach (var userId in userIds)
+                                {
+                                    var up = new UpdatedPrice
+                                    {
+                                        Price = priceFromSite.Value,
+                                        ProductId = product.ProductId,
+                                        UserId = userId
+                                    };
+                                    updatedPriceList.Add(up);
+                                }
+
+                                await _priceHistoryService.Create(new PriceHistory
+                                {
+                                    ProviderId = providersProductInfo.ProviderId,
+                                    Date = DateTime.Now,
+                                    NewPrice = priceFromSite,
+                                    OldPrice = priceFromDB
+                                });
+                                providersProductInfo.MinPrice = priceFromSite;
+                                await _productService.Update(product);
+                            }
+                            catch (Exception ex)
                             {
-                                ProviderId = providersProductInfo.ProviderId,
-                                Date = DateTime.Now,
-                                NewPrice = priceFromSite,
-                                OldPrice = priceFromDB
-                            });
-                            providersProductInfo.MinPrice = priceFromSite;
-                            await _productService.Update(product);
-                        }
-                        catch (Exception ex)
-                        {
-                            log.Error("Error message:" + ex.Message);
+                                log.Error("Error message:" + ex.Message);
+                            }
+                            await Task.Delay(3000);
                         }
                     }
                 }
