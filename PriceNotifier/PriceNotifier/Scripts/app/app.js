@@ -1,25 +1,53 @@
 ﻿/// <reference path="../angular.min.js" />
-var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ngRoute', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap','chart.js']);
+var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap', 'chart.js']);
 
-app.config(['$httpProvider', '$routeProvider', '$locationProvider', function ($httpProvider, $routeProvider, $locationProvider) {
+app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
     $httpProvider.interceptors.push('tokenInterceptorService');
 
-    $routeProvider.when("/", {
-        controller: "MainCtrl",
-        templateUrl: "/scripts/app/Views/main.html"
-    });
+    $stateProvider
+        .state('main',
+        {
+            url: '/',
+            templateUrl: 'scripts/app/Views/main.html',
+            controller: 'MainCtrl'
+        })
 
-    $routeProvider.when("/myitems", {
-        controller: "ProductCtrl",
-        templateUrl: "/scripts/app/Views/items.html"
-    });
+        .state('myitems',
+        {
+            url: '/myitems',
+            templateUrl: '/scripts/app/Views/items.html',
+            controller: 'ProductCtrl'
+        })
 
-    $routeProvider.when("/users", {
-        controller: "UserCtrl",
-        templateUrl: "/scripts/app/Views/users.html"
-    });
+        .state('articlesDetails',
+        {
+            url: '/articlesDetails/:ArticleId',
+            templateUrl: '/scripts/app/Views/article.html',
+            controller: 'ArticleDetailsCtrl',
+            resolve: {
+                currentArticle: ['$stateParams', 'articleService', function ($stateParams, articleService) {
+                    return articleService.getSpecificArticle($stateParams.ArticleId, null, function (response) {
+                        return response.data;
+                    });
+                }]
+            }
+        })
 
-    $routeProvider.otherwise({ redirectTo: "/" });
+        .state('users',
+        {
+            url: '/users',
+            templateUrl: '/scripts/app/Views/users.html',
+            controller: 'UserCtrl'
+        })
+
+        .state('articles',
+        {
+            url: '/articles',
+            templateUrl: '/scripts/app/Views/articles.html',
+            controller: 'ArticleCtrl'
+        });
+
+    $urlRouterProvider.otherwise('/');
 
     $locationProvider.html5Mode({
         enabled: true,

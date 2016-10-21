@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
 using System.Web.Http;
+using Newtonsoft.Json;
 
 namespace PriceNotifier
 {
@@ -9,11 +10,13 @@ namespace PriceNotifier
         {
             // Web API configuration and services
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+
             // Web API routes
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "StringApi",
+                name: "PriceHistoryApi",
                 routeTemplate: "api/{controller}/{id}/{name}",
                 defaults: new { id = RouteParameter.Optional , name = RouteParameter.Optional }
             );

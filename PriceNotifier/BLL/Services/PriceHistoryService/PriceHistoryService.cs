@@ -36,8 +36,7 @@ namespace BLL.Services.PriceHistoryService
 
         public IQueryable<PriceHistory> GetByProductIdAndProvider(int productId, string provider)
         {
-            var query = _priceHistoryRepository.Query().Where(c => c.ProvidersProductInfo.ProductId == productId && c.ProvidersProductInfo.ProviderName == provider);
-            return query;
+            return _priceHistoryRepository.Query().Where(c => c.ProvidersProductInfo.ProductId == productId && c.ProvidersProductInfo.ProviderName == provider);
         }
     }
 }

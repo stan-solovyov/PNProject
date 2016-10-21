@@ -12,8 +12,8 @@ namespace BLL.Services.PriceParserService
         public async Task<ProvidersProductInfo> GetProvidersProductInfo(string productName)
         {
             string html, uri = "", address = "http://1k.by/products/search?searchFor=products&s_keywords=";
-            double minPrice = 0;
-            double maxPrice = 0;
+            double? minPrice = null;
+            double? maxPrice = null;
             string imageUrl = null;
             using (var client = new HttpClient())
             {

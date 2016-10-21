@@ -9,7 +9,7 @@ namespace PriceNotifier.DTO
     {
         public MyMappingProfile()
         {
-            CreateMap<Product, ProductDto>().ForMember("Id", opt => opt.MapFrom(c => c.ProductId));
+            CreateMap<Product, ProductDto>().ForMember("Id", opt => opt.MapFrom(c => c.ProductId)).ForMember("Article",opt=>opt.MapFrom(c=>c.Articles.OrderByDescending(d=>d.DateAdded).FirstOrDefault(a => a.IsPublished)));
             CreateMap<ProductDto, Product>();
             CreateMap<Product, Product>();
             CreateMap<User, UserDto>();
@@ -17,6 +17,8 @@ namespace PriceNotifier.DTO
             CreateMap<UserFromDbWithCount, UserDtoWithCount>();
             CreateMap<PriceHistory, PriceHistoryDto>();
             CreateMap<PriceHistoryDto, PriceHistory>();
+            CreateMap<Article, ArticleDto>();
+            CreateMap<ArticleDto, Article>();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Domain.Entities
 
         public virtual List<UserProduct> UserProducts { get; set; }
         public virtual List<ProvidersProductInfo> ProvidersProductInfos { get; set; }
+        public virtual List<Article> Articles { get; set; }
 
         public Product()
         {

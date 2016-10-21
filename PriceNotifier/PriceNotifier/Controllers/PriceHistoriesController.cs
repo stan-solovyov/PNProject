@@ -19,7 +19,7 @@ namespace PriceNotifier.Controllers
             _priceHistoryService = priceHistoryService;
         }
 
-        // GET: api/PriceHistories/5
+        // GET: api/PriceHistories/5/Migom
         public PageResult<PriceHistoryDto> GetPriceHistory(int id,string name, ODataQueryOptions<PriceHistory> options)
         {
             var allPriceHistories = _priceHistoryService.GetByProductIdAndProvider(id,name);

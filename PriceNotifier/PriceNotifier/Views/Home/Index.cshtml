@@ -9,26 +9,24 @@
     <toaster-container toaster-options="{'time-out': '6000', 'close-button':true, 'animation-class': 'toast-top-right'}"></toaster-container>
     <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container">
-            <div class="col-lg-6">
-                <ul class="nav navbar-nav">
-                    <li><a class="navbar-brand navbar-left" href="/">Price Notifier</a></li>
-                    <li><a href="/myitems">Tracking products</a></li>
-                    <li><a href="/users">User management</a></li>
-                </ul>
-            </div>
+            <ul class="nav navbar-nav">
+                <li><a class="navbar-brand navbar-left" ui-sref="main">Price Notifier</a></li>
+                <li><a ui-sref="myitems">Tracking products</a></li>
+                <li><a ui-sref="users">User management</a></li>
+                <li><a ui-sref="articles">Article management</a></li>
+            </ul>
             <div class="col-lg-6">
                 <button type="button" class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button>
             </div>
         </div>
     </nav>
-    <div data-ng-view="">
-    </div>
+    <div ui-view></div>
     <script>
         (function () {
             localStorage.setItem('token', "@ViewBag.token");
         })();
     </script>
     @Scripts.Render("~/bundles/app")
-    <script src="signalr/hubs"></script>
+    <script src="~/signalr/hubs"></script>
 </body>
 </html>

@@ -1,4 +1,7 @@
-﻿namespace PriceNotifier.DTO
+﻿using System.Collections.Generic;
+using Domain.Entities;
+
+namespace PriceNotifier.DTO
 {
     public class ProductDto
     {
@@ -10,5 +13,6 @@
         public string Url { get; set; }
         public string ImageUrl { get; set; }
         public bool Checked { get; set; }
+        public Article Article { get; set; }
     }
 }

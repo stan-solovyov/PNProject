@@ -64,6 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Services\ArticleService\ArticleService.cs" />
+    <Compile Include="Services\ArticleService\IArticleService.cs" />
     <Compile Include="Services\IProviderProductInfoParser.cs" />
     <Compile Include="Services\IService.cs" />
     <Compile Include="Services\PriceHistoryService\IPriceHistoryService.cs" />

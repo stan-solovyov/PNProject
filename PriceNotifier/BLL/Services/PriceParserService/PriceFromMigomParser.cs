@@ -14,8 +14,8 @@ namespace BLL.Services.PriceParserService
             string html = null,
                 uri = "",
                 address = "http://www.migom.by/search/?search_user=&search_type=products&search_str=";
-            double minPrice = 0;
-            double maxPrice = 0;
+            double? minPrice = null;
+            double? maxPrice = null;
             string imageUrl = null;
             using (var client = new HttpClient())
             {

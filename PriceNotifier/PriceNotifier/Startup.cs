@@ -3,6 +3,7 @@ using System.Web.Http;
 using Autofac;
 using Autofac.Integration.WebApi;
 using BLL.Services;
+using BLL.Services.ArticleService;
 using BLL.Services.PriceHistoryService;
 using BLL.Services.PriceParserService;
 using BLL.Services.ProductService;
@@ -38,6 +39,8 @@ namespace PriceNotifier
             builder.RegisterType<UserService>().As<IUserService>().InstancePerRequest();
             builder.RegisterType<PriceHistoryRepository>().As<IRepository<PriceHistory>>().InstancePerRequest();
             builder.RegisterType<PriceHistoryService>().As<IPriceHistoryService>().InstancePerRequest();
+            builder.RegisterType<ArticleRepository>().As<IRepository<Article>>().InstancePerRequest();
+            builder.RegisterType<ArticleService>().As<IArticleService>().InstancePerRequest();
             builder.RegisterType<UpdatedPricesConsumer>().As<ConsumerOf<UpdatedPricesMessage>>();
             builder.RegisterType<UserProductRepository>().As<IUserProductRepository>().InstancePerRequest();
             builder.RegisterType<PriceFrom1KParser>().As<IProviderProductInfoParser>().InstancePerRequest();

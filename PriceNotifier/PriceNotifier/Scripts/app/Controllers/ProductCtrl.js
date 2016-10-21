@@ -1,4 +1,4 @@
-﻿app.controller('ProductCtrl', ['$scope', 'productService', 'priceChangeService', '$uibModal', function ($scope, productService, priceChangeService, $uibModal) {
+﻿app.controller('ProductCtrl', ['$scope', '$location', 'productService', 'priceChangeService', '$uibModal', function ($scope, $location, productService, priceChangeService, $uibModal) {
 
     $scope.price = $.connection.priceHub;
     $scope.price.client.updatePrice = function (p) {
@@ -40,7 +40,7 @@
             size: size,
             resolve: {
                 priceChanges: function () {
-                    return priceChangeService.getPriceChangesPage(productId,$scope.provider, $scope.main.page, $scope.main.take);
+                    return priceChangeService.getPriceChangesPage(productId, $scope.provider, $scope.main.page, $scope.main.take);
                 }
             }
         });

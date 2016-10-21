@@ -15,6 +15,7 @@ namespace Domain.EF
         public DbSet<PriceHistory> PriceHistories { get; set; }
         public DbSet<UserProduct> UserProducts { get; set; }
         public DbSet<ProvidersProductInfo> ProvidersProductInfos { get; set; }
+        public DbSet<Article> Articles { get; set; }
 
     }
 }

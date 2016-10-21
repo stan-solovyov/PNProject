@@ -25,7 +25,7 @@ namespace PriceNotifier
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                       "~/Scripts/angular.min.js",
-                      "~/Scripts/angular-route.min.js",
+                      "~/Scripts/angular-ui-router.min.js",
                       "~/Scripts/jquery-3.1.0.min.js",
                       "~/Scripts/jquery.signalR-2.2.1.min.js",
                       "~/Scripts/bootstrap.min.js",
@@ -46,8 +46,11 @@ namespace PriceNotifier
                       "~/Scripts/app/Services/userService.js",
                       "~/Scripts/app/Services/pagerService.js",
                       "~/Scripts/app/Services/priceChangeService.js",
+                      "~/Scripts/app/Services/articleService.js",
                       "~/Scripts/app/Controllers/MainCtrl.js",
                       "~/Scripts/app/Controllers/UserCtrl.js",
+                      "~/Scripts/app/Controllers/ArticleCtrl.js",
+                      "~/Scripts/app/Controllers/ArticleDetailsCtrl.js",
                       "~/Scripts/app/Controllers/ProductCtrl.js"));
 
             bundles.Add(new StyleBundle("~/Content/app").Include(
