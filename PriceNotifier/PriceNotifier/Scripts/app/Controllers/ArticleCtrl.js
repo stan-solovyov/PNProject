@@ -1,4 +1,4 @@
-﻿app.controller('ArticleCtrl', ['$scope', 'articleService', 'productService', 'uiGridValidateService', '$timeout', '$uibModal', function ($scope, articleService, productService, uiGridValidateService, $timeout, $uibModal) {
+﻿app.controller('ArticleCtrl', ['$scope', 'articleService', 'productService', '$timeout', '$uibModal', function ($scope, articleService, productService, $timeout, $uibModal) {
         var columnName = "", filterColumn = "", filter = '';
 
         var paginationOptions = {
@@ -27,26 +27,7 @@
         };
 
 
-        var validationFactory = function (newValue) {
-            if ((/^[а-яА-Яa-zA-Z]+$/.test(newValue)) && newValue.length < 25 && newValue !== "") {
-                return true;
-            } else {
-                return false;
-            }
-        };
-
-        uiGridValidateService.setValidator('notEmpty',
-        function () {
-            return function (oldValue, newValue) {
-                return validationFactory(newValue);
-            };
-        },
-        function () {
-            return 'Username should contain only alphabetical characters be less than 25 characters long.';
-        }
-  );
-
-        $scope.gridOptions = {
+       $scope.gridOptions = {
             paginationPageSizes: [25, 50, 75],
             paginationPageSize: 25,
             enableFiltering: true,
@@ -62,7 +43,7 @@
                     enableFiltering: false,
                     enableCellEdit: false
                 },
-                { name: 'Title', displayName: 'Title', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: false, validators: { notEmpty: "" }, cellTemplate: 'ui-grid/cellTitleValidator' },
+                { name: 'Title', displayName: 'Title', headerCellClass: $scope.highlightFilteredHeader, enableCellEdit: false},
                 // pre-populated search field
                 {
                     displayName: 'Summary',
