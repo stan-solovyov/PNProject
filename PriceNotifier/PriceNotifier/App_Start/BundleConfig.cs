@@ -33,6 +33,9 @@ namespace PriceNotifier
                       "~/Scripts/angular-ui/ui-bootstrap-tpls.min.js",
                       "~/Scripts/angular-animate.min.js",
                       "~/Scripts/toaster.min.js",
+                      "~/Scripts/textAngular-rangy.min.js",
+                      "~/Scripts/textAngular-sanitize.min.js",
+                      "~/Scripts/textAngular.min.js",
                       "~/Scripts/moment.min.js",
                       "~/Scripts/Chart.min.js",
                       "~/Scripts/angular-chart.min.js",
@@ -58,7 +61,9 @@ namespace PriceNotifier
                      "~/Content/Site.css",
                      "~/Content/loading-bar.min.css",
                      "~/Content/ui-grid.min.css",
-                     "~/Content/toaster.min.css"
+                     "~/Content/toaster.min.css",
+                     "~/Content/font-awesome.min.css",
+                     "~/Content/textAngular.css"
                      ));
         }
     }

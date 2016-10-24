@@ -53,13 +53,13 @@
                 enableCellEdit: false
             },
             // no filter input
-            {
-                displayName: 'Body',
-                name: 'Body',
-                enableFiltering: false,
-                enableSorting: false,
-                enableCellEdit: false
-            },
+            //{
+            //    displayName: 'Body',
+            //    name: 'Body',
+            //    enableFiltering: false,
+            //    enableSorting: false,
+            //    enableCellEdit: false
+            //},
             {
                 displayName: 'Date of creation',
                 name: 'DateAdded',
@@ -128,7 +128,6 @@
     $scope.today();
 
     $scope.inlineOptions = {
-        customClass: getDayClass,
         showWeeks: true
     };
 
@@ -153,24 +152,6 @@
         opened: false
     };
 
-    function getDayClass(data) {
-        var date = data.date,
-          mode = data.mode;
-        if (mode === 'day') {
-            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
-
-            for (var i = 0; i < $scope.events.length; i++) {
-                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
-
-                if (dayToCheck === currentDay) {
-                    return $scope.events[i].status;
-                }
-            }
-        }
-
-        return '';
-    };
-
     var onArticleDelete = function () {
         articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
     };
@@ -186,7 +167,7 @@
     $scope.create = function (article) {
         article.DateAdded = $scope.dt;
         article.ProductId = article.ProductId.Id;
-        articleService.createArticle(article).then(onArticleDelete, onError);
+        //articleService.createArticle(article).then(onArticleDelete, onError);
     };
 
     $scope.addNewArticle = function () {
@@ -227,6 +208,7 @@
         });
 
         function ModalInstanceCtrl($uibModalInstance, article) {
+            article.DateAdded = new Date(article.DateAdded);
             $scope.article = article;
             $scope.ok = function () {
                 $uibModalInstance.close();

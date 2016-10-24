@@ -1,5 +1,5 @@
 ﻿/// <reference path="../angular.min.js" />
-var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap', 'chart.js']);
+var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap', 'chart.js', 'textAngular']);
 
 app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
     $httpProvider.interceptors.push('tokenInterceptorService');
@@ -7,7 +7,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
     $stateProvider
         .state('main',
         {
-            url: '/',
+            url: '/main',
             templateUrl: 'scripts/app/Views/main.html',
             controller: 'MainCtrl'
         })
@@ -47,7 +47,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             controller: 'ArticleCtrl'
         });
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/main');
 
     $locationProvider.html5Mode({
         enabled: true,

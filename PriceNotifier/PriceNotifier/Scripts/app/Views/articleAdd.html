@@ -1,5 +1,4 @@
 ﻿<div class="modal-header">
-
 </div>
 <div class="modal-body" id="modal-body">
     <div class="form-group">
@@ -15,13 +14,14 @@
             <textarea class="form-control" maxlength="150" name="summary" ng-model="article.Summary" rows="2" required=""></textarea>
             <br />
             <h4>Body</h4>
-            <textarea class="form-control" maxlength="5000" name="body" ng-model="article.Body" rows="20" required=""></textarea>
+            <br />
+            <div text-angular ng-model="article.Body" required></div>
             <br />
             <label>Featured Image URL</label>
             <input type="text" class="form-control" ng-model="article.ImageUrl" placeholder="http://cdn2.gsmarena.com/vv/pics/apple/apple-iphone-7-5.jpg" />
             <br />
             <label>Ready to publish:</label>
-            <input ng-model="article.IsPublished" type="checkbox"/>
+            <input ng-model="article.IsPublished" type="checkbox" />
             <br />
             <label>Select date:</label>
             <div class="row">
