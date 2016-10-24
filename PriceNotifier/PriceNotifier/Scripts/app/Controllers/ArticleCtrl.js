@@ -61,11 +61,12 @@
                 enableCellEdit: false
             },
             {
-                displayName: 'DateAdded',
+                displayName: 'Date of creation',
                 name: 'DateAdded',
                 enableFiltering: false,
                 enableSorting: true,
-                enableCellEdit: false
+                enableCellEdit: false,
+                cellFilter: 'date'
             },
             {
                 displayName: 'Ready to publish',
@@ -77,7 +78,7 @@
             {
                 name: ' ',
                 cellTemplate:
-                    '<button type="button" class="btn btn-danger" ng-click="grid.appScope.remove(row.entity.ArticleId)"> Remove</button> <button type="button" class="btn btn-default" ng-click="grid.appScope.edit(row.entity)">Edit</button>',
+                    '<button type="button" class="btn btn-default" ng-click="grid.appScope.edit(row.entity)">Edit</button> <button type="button" class="btn btn-danger" ng-click="grid.appScope.remove(row.entity.ArticleId)"> Remove</button>',
                 enableFiltering: false,
                 enableSorting: false,
                 enableCellEdit: false
@@ -120,6 +121,56 @@
 
     $scope.gridOptions.appScopeProvider = $scope;
 
+    //Datepicker
+    $scope.today = function () {
+        $scope.dt = new Date();
+    };
+    $scope.today();
+
+    $scope.inlineOptions = {
+        customClass: getDayClass,
+        showWeeks: true
+    };
+
+    $scope.dateOptions = {
+        formatYear: 'yy',
+        startingDay: 1
+    };
+
+    $scope.open1 = function () {
+        $scope.popup1.opened = true;
+    };
+
+    $scope.setDate = function (year, month, day) {
+        $scope.dt = new Date(year, month, day);
+    };
+
+    $scope.formats = ['dd-MMMM-yyyy', 'dd.MM.yyyy', 'shortDate'];
+    $scope.format = $scope.formats[0];
+    $scope.altInputFormats = ['M!/d!/yyyy'];
+
+    $scope.popup1 = {
+        opened: false
+    };
+
+    function getDayClass(data) {
+        var date = data.date,
+          mode = data.mode;
+        if (mode === 'day') {
+            var dayToCheck = new Date(date).setHours(0, 0, 0, 0);
+
+            for (var i = 0; i < $scope.events.length; i++) {
+                var currentDay = new Date($scope.events[i].date).setHours(0, 0, 0, 0);
+
+                if (dayToCheck === currentDay) {
+                    return $scope.events[i].status;
+                }
+            }
+        }
+
+        return '';
+    };
+
     var onArticleDelete = function () {
         articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
     };
@@ -133,7 +184,7 @@
     };
 
     $scope.create = function (article) {
-        article.DateAdded = new Date(Date.now());
+        article.DateAdded = $scope.dt;
         article.ProductId = article.ProductId.Id;
         articleService.createArticle(article).then(onArticleDelete, onError);
     };
