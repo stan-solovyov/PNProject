@@ -23,7 +23,7 @@ namespace BLL.Services.UserService
             return user;
         }
 
-        public  Task Update(User user)
+        public Task Update(User user)
         {
             return _userRepository.Update(user);
         }
@@ -53,6 +53,7 @@ namespace BLL.Services.UserService
                     SocialNetworkName = user.SocialNetworkName,
                     CountTrackedItems = user.UserProducts.Count(c => c.Checked)
                 });
+
             return queryFinal;
         }
     }

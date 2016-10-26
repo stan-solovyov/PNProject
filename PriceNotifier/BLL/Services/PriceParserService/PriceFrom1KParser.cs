@@ -15,6 +15,7 @@ namespace BLL.Services.PriceParserService
             double? minPrice = null;
             double? maxPrice = null;
             string imageUrl = null;
+
             using (var client = new HttpClient())
             {
                 html = await client.GetStringAsync(address + productName);

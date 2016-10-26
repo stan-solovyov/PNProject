@@ -1,5 +1,5 @@
 ﻿
-app.controller('MainCtrl', ['$scope', 'tokenService', 'externalProductService', 'productService', 'pagerService', function ($scope, tokenService, externalProductService,productService, pagerService) {
+app.controller('MainCtrl', ['$scope', 'tokenService', 'externalProductService', 'productService', 'pagerService', function ($scope, tokenService, externalProductService, productService, pagerService) {
 
     var onError = function () {
         $scope.error = "Couldn't get response from the server:(";

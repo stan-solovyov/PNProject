@@ -1,5 +1,5 @@
-﻿app.factory("productService", ['$http','toaster',
-    function ($http,toaster) {
+﻿app.factory("productService", ['$http', 'toaster',
+    function ($http, toaster) {
 
         var url = '/api/Products/';
 
@@ -13,7 +13,7 @@
         var addProducts = function (product) {
             product.hiding = true;
 
-            var MinPrice,MaxPrice;
+            var MinPrice, MaxPrice;
             if (product.prices === null) {
                 MinPrice = 0;
                 MaxPrice = 0;
@@ -40,14 +40,14 @@
                         }
                     }
                 )
-                .success(function() {
+                .success(function () {
                     toaster.success({ title: "Congrats!", body: "The item was added to your list." });
                     product.hiding = false;
                 }).error(function () { product.hiding = false; });
 
         };
 
-        var updateItem = function(product) {
+        var updateItem = function (product) {
             if (product.Checked === true) {
                 return $http.put(url,
                 JSON.stringify(product)
@@ -59,7 +59,7 @@
                 JSON.stringify(product)
             ).success(function () {
                 toaster.pop('note', "", "The item will no longer be tracked.");
-                });
+            });
         };
 
         var removeItem = function (product) {
@@ -67,12 +67,12 @@
             var id = product.Id;
 
             return $http({
-                    method: 'DELETE',
-                    url: url + id,
-                    headers: {
-                        'Content-type': 'application/json'
-                    }
-                })
+                method: 'DELETE',
+                url: url + id,
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
                 .success(function () {
                     toaster.pop('success', "Congrats!", "The item was removed from your list.");
                 });
@@ -80,8 +80,8 @@
 
         return {
             getProducts: getProducts,
-            addProducts:addProducts,
-            updateItem:updateItem,
-            removeItem:removeItem
+            addProducts: addProducts,
+            updateItem: updateItem,
+            removeItem: removeItem
         };
     }]);

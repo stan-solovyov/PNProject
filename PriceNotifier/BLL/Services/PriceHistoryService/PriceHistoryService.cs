@@ -13,6 +13,7 @@ namespace BLL.Services.PriceHistoryService
         {
             _priceHistoryRepository = priceHistoryRepository;
         }
+
         public async Task<PriceHistory> Create(PriceHistory entity)
         {
             await _priceHistoryRepository.Create(entity);

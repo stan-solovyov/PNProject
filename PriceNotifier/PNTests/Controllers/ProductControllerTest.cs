@@ -49,12 +49,13 @@ namespace PNTests.Controllers
                 ProvidersProductInfos = providersProductInfos,
                 UserProducts = products
             };
+
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
             mockProductService.Setup(x => x.GetByUserId(userId))
                 .ReturnsAsync(new List<Product> { product });
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object,mockParsers.Object);
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
 
             //Set up OwinContext
             controller.Request = new HttpRequestMessage();
@@ -99,11 +100,12 @@ namespace PNTests.Controllers
             var mockUserService = new Mock<IUserService>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
 
-            mockProductService.Setup(x => x.GetById(It.IsAny<int>()))
-                .ReturnsAsync(product);
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object,mockParsers.Object);
+            mockProductService.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(product);
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
+            
             //Act
             ProductDto result = await controller.Get(297);
+
             //Assert
             Assert.IsNotNull(result);
         }
@@ -117,7 +119,7 @@ namespace PNTests.Controllers
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object,mockParsers.Object);
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
             //Act
             ProductDto result = await controller.Get(productId);
             //Assert
@@ -150,6 +152,7 @@ namespace PNTests.Controllers
                 ProvidersProductInfos = providersProductInfos,
                 UserProducts = products
             };
+
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
@@ -178,11 +181,13 @@ namespace PNTests.Controllers
                }).Verifiable();
 
             mockProductService.Setup(x => x.Delete(product));
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object,mockParsers.Object) { Request = new HttpRequestMessage() };
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object) { Request = new HttpRequestMessage() };
+            
             //Set up OwinContext
             controller.Request.SetOwinContext(new OwinContext());
             var owinContext = controller.Request.GetOwinContext();
             owinContext.Set("userId", userId);
+
             //Act
             IHttpActionResult result = await controller.Delete(productId);
 
@@ -248,7 +253,8 @@ namespace PNTests.Controllers
             mockProductService.Setup(x => x.GetByExtIdFromDb(newProduct.ExternalProductId)).Returns(newProduct);
             mockProductService.Setup(x => x.Create(It.IsAny<Product>())).ReturnsAsync(newProduct);
             mockUserService.Setup(x => x.GetById(userId)).ReturnsAsync(user).Verifiable();
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object,mockParsers.Object) { Request = new HttpRequestMessage() };
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object) { Request = new HttpRequestMessage() };
+            
             //Set up OwinContext
             controller.Request.SetOwinContext(new OwinContext());
             var owinContext = controller.Request.GetOwinContext();
@@ -256,6 +262,7 @@ namespace PNTests.Controllers
 
             //Act
             ProductDto result = await controller.Post(newProductDto);
+
             //Assert
             Assert.IsNotNull(result);
             mockProductService.Verify();
@@ -305,8 +312,7 @@ namespace PNTests.Controllers
             var mockProductService = new Mock<IProductService>();
             var mockUserServuce = new Mock<IUserService>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
-            mockProductService.Setup(x => x.Get(productId, userId))
-                .Returns(product);
+            mockProductService.Setup(x => x.Get(productId, userId)).Returns(product);
 
             mockProductService.Setup(x => x.Update(It.IsAny<Product>())).Returns(Task.FromResult(false)).Verifiable();
             var controller = new ProductsController(mockProductService.Object, mockUserServuce.Object, mockParsers.Object);
@@ -319,6 +325,7 @@ namespace PNTests.Controllers
 
             //Act
             ProductDto result = await controller.Put(productDto);
+
             //Assert
             Assert.IsNotNull(result);
             mockProductService.Verify();

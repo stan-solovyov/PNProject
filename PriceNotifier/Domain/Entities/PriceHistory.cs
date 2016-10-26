@@ -12,7 +12,6 @@ namespace Domain.Entities
         public double? NewPrice { get; set; }
         [Required]
         public int ProviderId { get; set; }
-
         public ProvidersProductInfo ProvidersProductInfo { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace NotificationAppTests
                 Token = "4f60b211517aa86a67bace12231d2530",
                 Email = "stanislav.soloviyev@yandex.ru"
             };
+
             List<UserProduct> userProducts = new List<UserProduct>
             {
                 new UserProduct { Checked = true, ProductId = 33, UserId = 11,User = user }
@@ -72,7 +73,6 @@ namespace NotificationAppTests
             mockExternalProductService.Setup(x => x.ParsePrice(It.IsAny<string>())).ReturnsAsync(parsedPrice).Verifiable();
             mockMailService.Setup(x => x.ProductAvailable(It.IsAny<List<string>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<double>())).Returns(Task.FromResult(false)).Verifiable();
 
-
             var priceComparisonJob = new PriceComparisonJob
                 (
                     mockProductService.Object,
@@ -84,8 +84,8 @@ namespace NotificationAppTests
 
             //Act
             await priceComparisonJob.Compare();
-            //Assert
 
+            //Assert
             mockProductService.Verify();
             mockExternalProductService.Verify();
         }

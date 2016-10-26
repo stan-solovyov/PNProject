@@ -6,7 +6,9 @@
         pageSize: 25,
         sort: ""
     };
+
     paginationOptions.sort = "";
+
     var onError = function () {
         $scope.error = "Couldn't get response from the server:(";
     };
@@ -167,7 +169,7 @@
     $scope.create = function (article) {
         article.DateAdded = $scope.dt;
         article.ProductId = article.ProductId.Id;
-        //articleService.createArticle(article).then(onArticleDelete, onError);
+        articleService.createArticle(article).then(onArticleDelete, onError);
     };
 
     $scope.addNewArticle = function () {

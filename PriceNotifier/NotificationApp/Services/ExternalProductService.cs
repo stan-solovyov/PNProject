@@ -5,7 +5,7 @@ using NotificationApp.Parsers;
 
 namespace NotificationApp.Services
 {
-    public class ExternalProductService: IExternalProductService
+    public class ExternalProductService : IExternalProductService
     {
 
         private readonly IPriceParser _parseService;

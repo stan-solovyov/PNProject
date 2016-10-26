@@ -11,6 +11,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BLL.Services.ArticleService;
 using Domain.Entities;
+using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
@@ -25,6 +26,7 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Articles
+        [TokenAuthorize("Admin")]
         public PageResult<ArticleDto> GetArticles(ODataQueryOptions<Article> options)
         {
             var allArticles = _articleService.Query();
@@ -38,6 +40,7 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Articles/5
+        [TokenAuthorize("Admin", "User")]
         [ResponseType(typeof(ArticleDto))]
         public async Task<ArticleDto> GetArticle(int id)
         {
@@ -51,6 +54,7 @@ namespace PriceNotifier.Controllers
         }
 
         // PUT: api/Articles/5
+        [TokenAuthorize("Admin")]
         [ResponseType(typeof(ArticleDto))]
         public async Task<ArticleDto> PutArticle(ArticleDto articleDto)
         {
@@ -73,6 +77,7 @@ namespace PriceNotifier.Controllers
         }
 
         // POST: api/Articles
+        [TokenAuthorize("Admin")]
         [ResponseType(typeof(ArticleDto))]
         public async Task<ArticleDto> PostArticle(ArticleDto articleDto)
         {
@@ -88,6 +93,7 @@ namespace PriceNotifier.Controllers
         }
 
         // DELETE: api/Articles/5
+        [TokenAuthorize("Admin")]
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> DeleteArticle(int id)
         {

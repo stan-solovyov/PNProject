@@ -48,7 +48,7 @@ namespace NotificationApp.JobTask
                 {
                     var providersProductInfos = product.ProvidersProductInfos;
                     foreach (var providersProductInfo in providersProductInfos)
-                    { 
+                    {
                         for (int currentRetry = 0; currentRetry < retryCount; currentRetry++)
                         {
                             try

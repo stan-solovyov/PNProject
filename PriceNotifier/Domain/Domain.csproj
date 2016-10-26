@@ -66,8 +66,10 @@
     <Compile Include="Entities\PriceHistory.cs" />
     <Compile Include="Entities\Product.cs" />
     <Compile Include="Entities\ProvidersProductInfo.cs" />
+    <Compile Include="Entities\Role.cs" />
     <Compile Include="Entities\User.cs" />
     <Compile Include="Entities\UserProduct.cs" />
+    <Compile Include="Entities\UserRole.cs" />
     <Compile Include="Migrations\201610121224313_changedDB.cs" />
     <Compile Include="Migrations\201610121224313_changedDB.Designer.cs">
       <DependentUpon>201610121224313_changedDB.cs</DependentUpon>
@@ -83,6 +85,18 @@
     <Compile Include="Migrations\201610190939383_Article.cs" />
     <Compile Include="Migrations\201610190939383_Article.Designer.cs">
       <DependentUpon>201610190939383_Article.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610260808066_userRole.cs" />
+    <Compile Include="Migrations\201610260808066_userRole.Designer.cs">
+      <DependentUpon>201610260808066_userRole.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610260810548_userRole1.cs" />
+    <Compile Include="Migrations\201610260810548_userRole1.Designer.cs">
+      <DependentUpon>201610260810548_userRole1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201610260813582_userRoleContext.cs" />
+    <Compile Include="Migrations\201610260813582_userRoleContext.Designer.cs">
+      <DependentUpon>201610260813582_userRoleContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -110,6 +124,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610190939383_Article.resx">
       <DependentUpon>201610190939383_Article.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610260808066_userRole.resx">
+      <DependentUpon>201610260808066_userRole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610260810548_userRole1.resx">
+      <DependentUpon>201610260810548_userRole1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610260813582_userRoleContext.resx">
+      <DependentUpon>201610260813582_userRoleContext.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

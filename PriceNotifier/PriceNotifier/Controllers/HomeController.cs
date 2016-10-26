@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Domain.EF;
 using Domain.Entities;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Web;
 using PriceNotifier.AuthFilter;
@@ -54,6 +55,11 @@ namespace PriceNotifier.Controllers
             {
                 var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
                 var user = db.Users.FirstOrDefault(c => c.Token == token);
+                if (user != null)
+                {
+                    var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
+                    System.Web.HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(user.Username), roles);
+                }
 
                 if (token != null)
                 {
@@ -138,6 +144,7 @@ namespace PriceNotifier.Controllers
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
+                    user.UserRoles.Add(new UserRole { RoleId = 2, UserId = user.UserId });
                 }
                 else
                 {

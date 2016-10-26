@@ -15,7 +15,7 @@ using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers
 {
-    [TokenAuthorize]
+    [TokenAuthorize("Admin", "User")]
     public class ProductsController : ApiController
     {
         private readonly IProductService _productService;
@@ -117,12 +117,16 @@ namespace PriceNotifier.Controllers
                     tasks.Add(providersProductInfo);
                 }
 
-                var providerProductInfoes = await Task.WhenAll(tasks);
-                foreach (var providersProductInfo in providerProductInfoes)
+                if (tasks.Count != 0)
                 {
-                    if (providersProductInfo != null)
+                    var providerProductInfoes = await Task.WhenAll(tasks);
+
+                    foreach (var providersProductInfo in providerProductInfoes)
                     {
-                        product.ProvidersProductInfos.Add(providersProductInfo);
+                        if (providersProductInfo != null)
+                        {
+                            product.ProvidersProductInfos.Add(providersProductInfo);
+                        }
                     }
                 }
 

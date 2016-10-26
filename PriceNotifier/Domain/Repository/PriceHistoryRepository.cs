@@ -14,6 +14,7 @@ namespace Domain.Repository
         {
             _context = context;
         }
+
         public IQueryable<PriceHistory> Query()
         {
             return _context.PriceHistories;

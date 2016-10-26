@@ -12,10 +12,14 @@ namespace Domain.Entities
         public string Username { get; set; }
         public string SocialNetworkUserId { get; set; }
         public string SocialNetworkName { get; set; }
-        public  string Token { get; set; }
-
+        public string Token { get; set; }
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
         public virtual List<UserProduct> UserProducts { get; set; }
+        public virtual List<UserRole> UserRoles { get; set; }
+        public User()
+        {
+            UserRoles = new List<UserRole>();
+        }
     }
 }
