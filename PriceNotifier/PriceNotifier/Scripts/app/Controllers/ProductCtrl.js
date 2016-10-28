@@ -1,4 +1,4 @@
-﻿app.controller('ProductCtrl', ['$scope', '$location', 'productService', 'priceChangeService', '$uibModal', function ($scope, $location, productService, priceChangeService, $uibModal) {
+﻿app.controller('ProductCtrl', ['$scope', '$location', 'productService', 'priceChangeService', '$uibModal', 'pagerService', function ($scope, $location, productService, priceChangeService, $uibModal, pagerService) {
 
     $scope.price = $.connection.priceHub;
     $scope.price.client.updatePrice = function (p) {
@@ -179,9 +179,14 @@
         };
     };
 
+    var pageSize = 10;
+    var currentPage = 1;
+
     $scope.message = "There are no items in track list.";
     var onUserProducts = function (response) {
-        $scope.dbproducts = response.data;
+        $scope.pager = pagerService.getPager(response.data.Count, currentPage);
+        $scope.totalPages = Math.ceil(response.data.Count / pageSize);
+        $scope.dbproducts = response.data.Items;
         if ($scope.dbproducts.length === 0 && response.status !== 204) {
             $scope.Message = "You don't have any items in the list yet.";
             $scope.demonstrate = true;
@@ -191,8 +196,17 @@
         }
     };
 
+    $scope.setPage = setPage;
+    function setPage(page) {
+        if (page < 1 || page > $scope.totalPages) {
+            return;
+        }
+        currentPage = page;
+        productService.getProducts(page, pageSize).then(onUserProducts, onError);
+    }
+
     var onUserDelete = function () {
-        productService.getProducts().then(onUserProducts, onError);
+        productService.getProducts(currentPage, pageSize).then(onUserProducts, onError);
     };
 
     $scope.update = function (product) {
@@ -203,7 +217,7 @@
         productService.removeItem(product).then(onUserDelete, onError);
     };
 
-    productService.getProducts().then(onUserProducts, onError);
+    productService.getProducts(currentPage, pageSize).then(onUserProducts, onError);
 }
 ]);
 

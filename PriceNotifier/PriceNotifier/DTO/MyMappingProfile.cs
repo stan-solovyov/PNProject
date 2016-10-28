@@ -18,7 +18,7 @@ namespace PriceNotifier.DTO
             CreateMap<UserFromDbWithCount, UserDtoWithCount>();
             CreateMap<PriceHistory, PriceHistoryDto>();
             CreateMap<PriceHistoryDto, PriceHistory>();
-            CreateMap<Article, ArticleDto>();
+            CreateMap<Article, ArticleDto>().ForMember("ProductName", opt => opt.MapFrom(c => c.Product.Name));
             CreateMap<ArticleDto, Article>();
         }
     }

@@ -9,6 +9,7 @@ namespace PriceNotifier.AuthFilter
     public class TokenAuthorizeAttribute : AuthorizeAttribute
     {
         private readonly string[] _userRoles;
+        private string requestTokenHeader = "X-Auth";
         public TokenAuthorizeAttribute(params string[] UserRoles)
         {
             _userRoles = UserRoles;
@@ -17,9 +18,9 @@ namespace PriceNotifier.AuthFilter
         {
             var req = actionContext.Request.Headers;
 
-            if (req.Contains("X-Auth"))
+            if (req.Contains(requestTokenHeader))
             {
-                var tokenTransferred = req.GetValues("X-Auth").First();
+                var tokenTransferred = req.GetValues(requestTokenHeader).First();
                 //check for null
                 if (!string.IsNullOrEmpty(tokenTransferred))
                 {
@@ -31,13 +32,15 @@ namespace PriceNotifier.AuthFilter
                     {
                         var owinContext = actionContext.Request.GetOwinContext();
                         owinContext.Set("userId", user.UserId);
-                        var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
-
-                        foreach (var role in roles)
+                        if (_userRoles != null)
                         {
-                            if (_userRoles.Any(s => s.Contains(role)) || _userRoles.Length == 0)
+                            var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
+                            foreach (var role in roles)
                             {
-                                return true;
+                                if (_userRoles.Any(s => s.Contains(role)))
+                                {
+                                    return true;
+                                }
                             }
                         }
                     }

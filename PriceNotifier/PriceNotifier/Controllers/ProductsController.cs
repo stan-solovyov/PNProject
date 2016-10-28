@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.OData;
+using System.Web.OData.Extensions;
+using System.Web.OData.Query;
 using AutoMapper;
 using BLL.Services;
 using BLL.Services.ProductService;
@@ -31,13 +34,15 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public async Task<IEnumerable<ProductDto>> GetProducts()
+        public PageResult<ProductDto> GetProducts(ODataQueryOptions<Product> options)
         {
             var owinContext = Request.GetOwinContext();
             var userId = owinContext.Get<int>("userId");
-            var products = await _productService.GetByUserId(userId);
+            var allProducts = _productService.GetByUserId(userId);
+            var results = options.ApplyTo(allProducts);
+
             List<ProductDto> productDtos = new List<ProductDto>();
-            foreach (var product in products)
+            foreach (Product product in results)
             {
                 var p = Mapper.Map<Product, ProductDto>(product);
                 p.Checked = product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
@@ -48,8 +53,12 @@ namespace PriceNotifier.Controllers
                 productDtos.Add(p);
             }
 
-            return productDtos;
+            return new PageResult<ProductDto>(
+               productDtos,
+               Request.ODataProperties().NextLink,
+               Request.ODataProperties().TotalCount);
         }
+
 
         // GET: api/Products/5
         [ResponseType(typeof(ProductDto))]

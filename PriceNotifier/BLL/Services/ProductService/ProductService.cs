@@ -18,9 +18,9 @@ namespace BLL.Services.ProductService
             _userProductRepository = userProductRepository;
         }
 
-        public async Task<IEnumerable<Product>> GetByUserId(int userId)
+        public  IQueryable<Product> GetByUserId(int userId)
         {
-            return await _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).Include(c => c.ProvidersProductInfos).ToListAsync();
+            return  _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).Include(c => c.ProvidersProductInfos);
         }
 
         public async Task<Product> Create(Product product)

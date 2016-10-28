@@ -100,7 +100,7 @@ namespace PriceNotifier.Controllers
             Article article = await _articleService.GetById(id);
             if (article == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                return NotFound();
             }
 
             await _articleService.Delete(article);

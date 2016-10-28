@@ -54,14 +54,6 @@
                 enableFiltering: false,
                 enableCellEdit: false
             },
-            // no filter input
-            //{
-            //    displayName: 'Body',
-            //    name: 'Body',
-            //    enableFiltering: false,
-            //    enableSorting: false,
-            //    enableCellEdit: false
-            //},
             {
                 displayName: 'Date of creation',
                 name: 'DateAdded',
@@ -156,31 +148,58 @@
 
     var onArticleDelete = function () {
         articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+        $scope.validationMessages = null;
     };
+
+    var onErrorValidate = function (response) {
+        $scope.validationMessages = parseErrors(response);
+    };
+
+    function parseErrors(response) {
+        var errors = [];
+        for (var key in response.data.ModelState) {
+            if (response.data.ModelState.hasOwnProperty(key)) {
+                for (var i = 0; i < response.data.ModelState[key].length; i++) {
+                    errors.push(response.data.ModelState[key][i]);
+                }
+            }
+        }
+        return errors;
+    }
 
     $scope.remove = function (id) {
         articleService.removeArticle(id).then(onArticleDelete, onError);
     };
 
     $scope.update = function (article) {
-        articleService.updateArticle(article).then(onArticleDelete, onError);
+        if (typeof (article.ProductId.Id) == "undefined") {
+            articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
+        } else {
+            article.ProductId = article.ProductId.Id;
+            articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
+        }
     };
 
     $scope.create = function (article) {
         article.DateAdded = $scope.dt;
-        article.ProductId = article.ProductId.Id;
-        articleService.createArticle(article).then(onArticleDelete, onError);
+        if (typeof (article.ProductId) == "undefined") {
+            articleService.createArticle(article).then(onArticleDelete, onErrorValidate);
+        } else {
+            article.ProductId = article.ProductId.Id;
+            articleService.createArticle(article).then(onArticleDelete, onErrorValidate);
+        }
     };
 
     $scope.addNewArticle = function () {
         productService.getProducts().then(function (response) {
-            $scope.items = response.data;
+            $scope.items = response.data.Items;
         });
         var article = {};
         var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: '/scripts/app/Views/articleAdd.html',
             controller: ModalInstanceCtrl,
+            backdrop: 'static',
             scope: $scope,
             size: 'lg',
             resolve: {
@@ -192,17 +211,23 @@
             $scope.article = article;
             article.IsPublished = true;
             $scope.ok = function () {
+                $scope.validationMessages = null;
                 $uibModalInstance.close();
             };
         };
     }
 
     $scope.edit = function (article) {
+        productService.getProducts().then(function (response) {
+            $scope.items = response.data.Items;
+        });
+
         var modalInstance = $uibModal.open({
             animation: true,
             templateUrl: '/scripts/app/Views/articleEdit.html',
             controller: ModalInstanceCtrl,
             scope: $scope,
+            backdrop: 'static',
             size: 'lg',
             resolve: {
                 article: article
@@ -213,6 +238,7 @@
             article.DateAdded = new Date(article.DateAdded);
             $scope.article = article;
             $scope.ok = function () {
+                $scope.validationMessages = null;
                 $uibModalInstance.close();
             };
         };

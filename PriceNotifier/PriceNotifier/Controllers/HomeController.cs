@@ -144,7 +144,8 @@ namespace PriceNotifier.Controllers
                 {
                     db.Users.Add(user);
                     db.SaveChanges();
-                    user.UserRoles.Add(new UserRole { RoleId = 2, UserId = user.UserId });
+                    var roleId = db.Roles.FirstOrDefault(c=>c.Name == "User").RoleId;
+                    user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = user.UserId });
                 }
                 else
                 {

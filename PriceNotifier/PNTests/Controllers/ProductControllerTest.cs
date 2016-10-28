@@ -1,8 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Results;
+using System.Web.OData;
+using System.Web.OData.Builder;
+using System.Web.OData.Extensions;
+using System.Web.OData.Query;
 using BLL.Services;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
@@ -25,7 +30,7 @@ namespace PNTests.Controllers
         }
 
         [TestMethod]
-        public async Task GetProductsTest()
+        public void GetProductsTest()
         {
             //Arrange
             var userId = 11;
@@ -50,21 +55,33 @@ namespace PNTests.Controllers
                 UserProducts = products
             };
 
+            List<Product> allProducts = new List<Product>();
+            allProducts.Add(product);
+            IQueryable<Product> queryableAllProducts = allProducts.AsQueryable();
+
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
             mockProductService.Setup(x => x.GetByUserId(userId))
-                .ReturnsAsync(new List<Product> { product });
+                .Returns(queryableAllProducts);
+            var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:59476/api/Products/");
             var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
-
+            
             //Set up OwinContext
             controller.Request = new HttpRequestMessage();
             controller.Request.SetOwinContext(new OwinContext());
             var owinContext = controller.Request.GetOwinContext();
             owinContext.Set("userId", userId);
 
+            //Set up OData query options
+            var path = request.ODataProperties().Path;
+            ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+            builder.EntitySet<Product>("Products");
+            ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Product),path);
+            ODataQueryOptions<Product> options = new ODataQueryOptions<Product>(context, request);
+            
             //Act
-            IEnumerable<ProductDto> result = await controller.GetProducts();
+            var result = controller.GetProducts(options);
 
             //Assert
             Assert.IsNotNull(result);
