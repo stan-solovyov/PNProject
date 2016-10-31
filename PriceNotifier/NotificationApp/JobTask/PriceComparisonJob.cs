@@ -80,6 +80,11 @@ namespace NotificationApp.JobTask
                                     }
                                 }
 
+                                if (priceFromDB == null && priceFromSite == null)
+                                {
+                                    break;
+                                }
+
                                 if (priceFromDB == null && priceFromSite != null)
                                 {
                                     await _mailService.ProductAvailable(emails, productLink, product.Name,

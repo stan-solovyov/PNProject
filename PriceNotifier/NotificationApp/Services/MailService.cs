@@ -11,7 +11,6 @@ namespace NotificationApp.Services
 
         public async Task ProductAvailable(List<string> emails, string productUrl, string productName, double priceFromSite)
         {
-            var emailTasks = new List<Task>();
             foreach (var email in emails)
             {
                 MailMessage mail = new MailMessage();
@@ -20,14 +19,12 @@ namespace NotificationApp.Services
                 mail.Subject = "Product is in stock";
                 mail.Body = $"The item <a href = '{productUrl}'> {productName} </a>  is available for purchase for {priceFromSite} BYN.";
                 mail.To.Add(email);
-                emailTasks.Add(_smtpServer.SendMailAsync(mail));
+                await _smtpServer.SendMailAsync(mail);
             }
-            await Task.WhenAll(emailTasks);
         }
 
         public async Task PriceFromDbHigher(List<string> emails, string productUrl, string productName, double priceFromDb, double priceFromSite)
         {
-            var emailTasks = new List<Task>();
             foreach (var email in emails)
             {
                 MailMessage mail = new MailMessage();
@@ -36,14 +33,12 @@ namespace NotificationApp.Services
                 mail.Subject = "Price drop";
                 mail.Body = $"The price for <a href = '{productUrl}'> {productName} </a>  has decreased on {priceFromDb - priceFromSite:N} BYN.";
                 mail.To.Add(email);
-                emailTasks.Add(_smtpServer.SendMailAsync(mail));
+                await _smtpServer.SendMailAsync(mail);
             }
-            await Task.WhenAll(emailTasks);
         }
 
         public async Task PriceFromSiteHigher(List<string> emails, string productUrl, string productName, double priceFromDb, double priceFromSite)
         {
-            var emailTasks = new List<Task>();
             foreach (var email in emails)
             {
                 MailMessage mail = new MailMessage();
@@ -52,14 +47,12 @@ namespace NotificationApp.Services
                 mail.Subject = "Price increase";
                 mail.Body = $"The price for <a href = '{productUrl}'> {productName} </a>  has increased on {priceFromSite - priceFromDb:N} BYN.";
                 mail.To.Add(email);
-                emailTasks.Add(_smtpServer.SendMailAsync(mail));
+                await _smtpServer.SendMailAsync(mail);
             }
-            await Task.WhenAll(emailTasks);
         }
 
         public async Task ProductOutOfStock(List<string> emails, string productUrl, string productName)
         {
-            var emailTasks = new List<Task>();
             foreach (var email in emails)
             {
                 MailMessage mail = new MailMessage();
@@ -68,9 +61,8 @@ namespace NotificationApp.Services
                 mail.Subject = "Product is out of sale";
                 mail.Body = $"Unfortunately the <a href = '{productUrl}'> {productName} </a>  is out of sale.";
                 mail.To.Add(email);
-                emailTasks.Add(_smtpServer.SendMailAsync(mail));
+                await _smtpServer.SendMailAsync(mail);
             }
-            await Task.WhenAll(emailTasks);
         }
     }
 }

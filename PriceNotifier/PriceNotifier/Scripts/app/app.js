@@ -8,7 +8,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
         .state('main',
         {
             url: '/main',
-            templateUrl: 'scripts/app/Views/main.html',
+            templateUrl: 'http://localhost:59476/scripts/app/Views/main.html',
             controller: 'MainCtrl'
         })
 
@@ -54,6 +54,7 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
         requireBase: false
     });
 }]);
+
 
 app.directive('animateOnChange', function ($animate, $timeout) {
     return function (scope, elem, attr) {

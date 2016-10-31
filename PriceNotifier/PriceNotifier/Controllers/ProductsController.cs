@@ -49,7 +49,7 @@ namespace PriceNotifier.Controllers
                 p.ImageUrl = product.ProvidersProductInfos.First().ImageUrl;
                 p.MaxPrice = product.ProvidersProductInfos.Max(c => c.MaxPrice);
                 p.MinPrice = product.ProvidersProductInfos.Min(c => c.MinPrice);
-                p.Url = product.ProvidersProductInfos.First().Url;
+                p.Url = product.ProvidersProductInfos.First(c => c.MinPrice == p.MinPrice).Url;
                 productDtos.Add(p);
             }
 

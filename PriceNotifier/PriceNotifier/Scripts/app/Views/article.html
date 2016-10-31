@@ -1,7 +1,7 @@
 ﻿<div class="container">
     <div class="col-lg-offset-0">
         <div>
-            <label><h4>{{currentArticle.Title}}</h4></label>
+            <h3>{{currentArticle.Title}}</h3>
         </div>
         <br />
         <div ng-show="currentArticle.ImageUrl">
@@ -10,6 +10,7 @@
         <br />
         <div ta-bind ng-model="trustedHtml"></div>
         <br />
-        <label>Added on: </label> {{currentArticle.DateAdded|date: 'dd/MM/yyyy' }}
+        <label>Added on: </label> {{currentArticle.DateAdded|date: 'dd/MM/yyyy' }} <br/>
+        <button type="button" class="btn btn-primary" ng-show="User" ng-click="edit(currentArticle)">Edit this article</button>
     </div>
 </div>
