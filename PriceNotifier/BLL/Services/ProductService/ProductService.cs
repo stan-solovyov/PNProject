@@ -23,6 +23,11 @@ namespace BLL.Services.ProductService
             return  _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).Include(c => c.ProvidersProductInfos);
         }
 
+        public IQueryable<Product> GetAllProducts()
+        {
+            return _productRepository.Query().Include(c => c.ProvidersProductInfos);
+        }
+
         public async Task<Product> Create(Product product)
         {
             await _productRepository.Create(product);

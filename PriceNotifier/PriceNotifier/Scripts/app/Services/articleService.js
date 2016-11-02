@@ -15,7 +15,7 @@
                 request = request + "&$filter=" + "contains(" + filterColumn + "," + '%27' + filter + '%27' + ")";
             }
 
-            request = request + "&flag=" + flag;
+            request = request + "&showAllArticles=" + flag;
 
             return $http.get(request + "&$count=true")
                 .then(function (response) {

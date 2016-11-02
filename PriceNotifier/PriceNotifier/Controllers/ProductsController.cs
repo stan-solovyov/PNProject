@@ -34,15 +34,16 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public PageResult<ProductDto> GetProducts(ODataQueryOptions<ProductDto> options)
+        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options)
         {
             var userId = GetCurrentUserId(Request);
-            var allProducts = _productService.GetByUserId(userId);
+            var allProducts = showAllProducts ? _productService.GetAllProducts() : _productService.GetByUserId(userId);
+
             List<ProductDto> productDtos = new List<ProductDto>();
             foreach (Product product in allProducts)
             {
                 var p = Mapper.Map<Product, ProductDto>(product);
-                p.Checked = product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
+                p.Checked = showAllProducts ? true : product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
                 p.Url = product.ProvidersProductInfos.First(c => c.MinPrice == p.MinPrice).Url;
                 productDtos.Add(p);
             }

@@ -4,7 +4,7 @@
 <div class="modal-body" id="modal-body">
     <div class="form-group">
         <form name="articleEditForm">
-            <select class="form-control" data-ng-model="article.ProductId" data-ng-options="item.Name for item in items">
+            <select class="form-control" data-ng-model="userArticle.ProductId" data-ng-options="item.Name for item in items">
                 <option value="">{{userArticle.ProductName}}</option>
             </select><br/>
             <ul class="error-list" ng-show="validationMessages">

@@ -34,6 +34,7 @@ namespace PNTests.Controllers
         {
             //Arrange
             var userId = 11;
+
             List<UserProduct> products = new List<UserProduct>
             {
                 new UserProduct { Checked = true, ProductId = 33, UserId = 11},
@@ -81,7 +82,7 @@ namespace PNTests.Controllers
             ODataQueryOptions<ProductDto> options = new ODataQueryOptions<ProductDto>(context, request);
             
             //Act
-            var result = controller.GetProducts(options);
+            var result = controller.GetProducts(true,options);
 
             //Assert
             Assert.IsNotNull(result);

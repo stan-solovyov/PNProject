@@ -192,7 +192,7 @@
     };
 
     $scope.addNewArticle = function () {
-        productService.getProducts().then(function (response) {
+        productService.getProducts(true).then(function (response) {
             $scope.items = response.data.Items;
         });
         var article = {};
@@ -219,7 +219,7 @@
     }
 
     $scope.edit = function (article) {
-        productService.getProducts().then(function (response) {
+        productService.getProducts(true).then(function (response) {
             $scope.items = response.data.Items;
             for (var i=0; i<$scope.items.length; i++) {
                 if ($scope.items[i].Name === article.ProductName) {

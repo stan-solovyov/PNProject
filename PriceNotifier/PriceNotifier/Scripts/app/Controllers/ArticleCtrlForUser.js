@@ -33,9 +33,9 @@
             }
             currentPage = page;
             if ($scope.allArticles) {
-                articleService.getArticles(true, null, null, null, null, page, pageSize).then(onGetArticles, onError);
+                articleService.getArticles(true, "DateAdded", "desc", null, null, page, pageSize).then(onGetArticles, onError);
             } else {
-                articleService.getArticles(false, null, null, null, null, page, pageSize).then(onGetArticles, onError);
+                articleService.getArticles(false, "DateAdded", "desc", null, null, page, pageSize).then(onGetArticles, onError);
             }
             
         }
@@ -43,16 +43,16 @@
         $scope.update = function () {
             setPage(1);
             if ($scope.allArticles === false) {
-                articleService.getArticles(false,null, null, null, null, currentPage, pageSize).then(onGetArticles, onError);
+                articleService.getArticles(false, "DateAdded", "desc", null, null, currentPage, pageSize).then(onGetArticles, onError);
             }
 
             if ($scope.allArticles === true) {
-                articleService.getArticles(true, null, null, null, null, currentPage, pageSize).then(onGetArticles, onError);
+                articleService.getArticles(true, "DateAdded", "desc", null, null, currentPage, pageSize).then(onGetArticles, onError);
             }
 
         };
 
-        articleService.getArticles(true,null,null,null,null,currentPage, pageSize).then(onGetArticles, onError);
+        articleService.getArticles(true,"DateAdded","desc",null,null,currentPage, pageSize).then(onGetArticles, onError);
 
     }
 ]);

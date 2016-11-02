@@ -202,11 +202,11 @@
             return;
         }
         currentPage = page;
-        productService.getProducts(page, pageSize).then(onUserProducts, onError);
+        productService.getProducts(false, page, pageSize).then(onUserProducts, onError);
     }
 
     var onUserDelete = function () {
-        productService.getProducts(currentPage, pageSize).then(onUserProducts, onError);
+        productService.getProducts(false, currentPage, pageSize).then(onUserProducts, onError);
     };
 
     $scope.update = function (product) {
@@ -217,7 +217,7 @@
         productService.removeItem(product).then(onUserDelete, onError);
     };
 
-    productService.getProducts(currentPage, pageSize).then(onUserProducts, onError);
+    productService.getProducts(false, currentPage, pageSize).then(onUserProducts, onError);
 }
 ]);
 
