@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Http;
 using System.Web.OData;
 using System.Web.OData.Extensions;
@@ -20,14 +21,14 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/PriceHistories/5/Migom
-        public PageResult<PriceHistoryDto> GetPriceHistory(int id, string name, ODataQueryOptions<PriceHistory> options)
+        public PageResult<PriceHistoryDto> GetPriceHistory(int id, string name, ODataQueryOptions<PriceHistoryDto> options)
         {
             var allPriceHistories = _priceHistoryService.GetByProductIdAndProvider(id, name);
-            IQueryable priceHistories = options.ApplyTo(allPriceHistories);
-            var results = priceHistories.ProjectTo<PriceHistoryDto>();
+            var priceHistories = allPriceHistories.ProjectTo<PriceHistoryDto>();
+            var results = options.ApplyTo(priceHistories);
 
             return new PageResult<PriceHistoryDto>(
-                results,
+                results as IEnumerable<PriceHistoryDto>,
                 Request.ODataProperties().NextLink,
                 Request.ODataProperties().TotalCount);
         }

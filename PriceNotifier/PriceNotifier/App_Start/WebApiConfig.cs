@@ -18,7 +18,7 @@ namespace PriceNotifier
             config.Routes.MapHttpRoute(
                 name: "PriceHistoryApi",
                 routeTemplate: "api/{controller}/{id}/{name}",
-                defaults: new { id = RouteParameter.Optional , name = RouteParameter.Optional }
+                defaults: new { id = RouteParameter.Optional, name = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(

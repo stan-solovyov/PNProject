@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -9,17 +10,17 @@ using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using BLL.Models;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
+using PriceNotifier.Infrostructure;
 
 namespace PriceNotifier.Controllers
 {
     [TokenAuthorize("Admin")]
-    public class UsersController : ApiController
+    public class UsersController : BaseApiController
     {
         private readonly IUserService _userService;
         private readonly IProductService _productService;
@@ -31,14 +32,14 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Users
-        public PageResult<UserDtoWithCount> GetUsers(ODataQueryOptions<UserFromDbWithCount> options)
+        public PageResult<UserDtoWithCount> GetUsers(ODataQueryOptions<UserDtoWithCount> options)
         {
             var allUsers = _userService.Get();
-            IQueryable users = options.ApplyTo(allUsers);
-            var results = users.ProjectTo<UserDtoWithCount>();
+            var users = allUsers.ProjectTo<UserDtoWithCount>();
+            var results = options.ApplyTo(users);
 
             return new PageResult<UserDtoWithCount>(
-                results,
+                results as IEnumerable<UserDtoWithCount>,
                 Request.ODataProperties().NextLink,
                 Request.ODataProperties().TotalCount);
         }

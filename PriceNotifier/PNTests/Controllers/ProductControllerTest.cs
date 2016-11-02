@@ -76,9 +76,9 @@ namespace PNTests.Controllers
             //Set up OData query options
             var path = request.ODataProperties().Path;
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-            builder.EntitySet<Product>("Products");
-            ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(Product),path);
-            ODataQueryOptions<Product> options = new ODataQueryOptions<Product>(context, request);
+            builder.EntitySet<ProductDto>("Products");
+            ODataQueryContext context = new ODataQueryContext(builder.GetEdmModel(), typeof(ProductDto),path);
+            ODataQueryOptions<ProductDto> options = new ODataQueryOptions<ProductDto>(context, request);
             
             //Act
             var result = controller.GetProducts(options);

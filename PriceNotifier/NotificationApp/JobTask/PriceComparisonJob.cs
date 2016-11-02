@@ -100,7 +100,7 @@ namespace NotificationApp.JobTask
                                 {
                                     var up = new UpdatedPrice
                                     {
-                                        Price = priceFromSite.Value,
+                                        Price = priceFromSite,
                                         ProductId = product.ProductId,
                                         UserId = userId
                                     };

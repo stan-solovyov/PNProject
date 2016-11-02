@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,10 +14,11 @@ using BLL.Services.ArticleService;
 using Domain.Entities;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
+using PriceNotifier.Infrostructure;
 
 namespace PriceNotifier.Controllers
 {
-    public class ArticlesController : ApiController
+    public class ArticlesController : BaseApiController
     {
         private readonly IArticleService _articleService;
 
@@ -26,15 +28,18 @@ namespace PriceNotifier.Controllers
         }
 
         // GET: api/Articles
-        [TokenAuthorize("Admin")]
-        public PageResult<ArticleDto> GetArticles(ODataQueryOptions<Article> options)
+        [TokenAuthorize("Admin", "User")]
+        public PageResult<ArticleDto> GetArticles(bool showAllArticles, ODataQueryOptions<ArticleDto> options)
         {
-            var allArticles = _articleService.Query();
-            IQueryable articles = options.ApplyTo(allArticles);
-            var results = articles.ProjectTo<ArticleDto>();
+            var userId = GetCurrentUserId(Request);
+
+            var allArticles = showAllArticles ? _articleService.Query() : _articleService.Query().Where(c => c.Product.UserProducts.Any(a => a.UserId == userId));
+
+            var articles = allArticles.ProjectTo<ArticleDto>();
+            var results = options.ApplyTo(articles);
 
             return new PageResult<ArticleDto>(
-                results,
+                results as IEnumerable<ArticleDto>,
                 Request.ODataProperties().NextLink,
                 Request.ODataProperties().TotalCount);
         }

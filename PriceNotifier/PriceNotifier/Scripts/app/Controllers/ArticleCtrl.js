@@ -90,7 +90,7 @@
                         paginationOptions.sort = sortColumns[0].sort.direction;
                         columnName = sortColumns[0].name;
                     }
-                    articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+                    articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
                 });
             $scope.gridApi.core.on.filterChanged($scope, function () {
                 var grid = this.grid;
@@ -102,13 +102,13 @@
                         filter = value.filters[0].term;
                     }
                 });
-                articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+                articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
             });
             gridApi.pagination.on.paginationChanged($scope,
                 function (newPage, pageSize) {
                     paginationOptions.pageNumber = newPage;
                     paginationOptions.pageSize = pageSize;
-                    articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetArticles, onError);
+                    articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetArticles, onError);
                 });
         }
     };
@@ -147,7 +147,7 @@
     };
 
     var onArticleDelete = function () {
-        articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+        articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
         $scope.validationMessages = null;
     };
 
@@ -172,6 +172,7 @@
     };
 
     $scope.update = function (article) {
+        $scope.currentArticle = article;
         if (typeof (article.ProductId.Id) == "undefined") {
             articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
         } else {
@@ -220,6 +221,11 @@
     $scope.edit = function (article) {
         productService.getProducts().then(function (response) {
             $scope.items = response.data.Items;
+            for (var i=0; i<$scope.items.length; i++) {
+                if ($scope.items[i].Name === article.ProductName) {
+                    $scope.items.splice(i, 1);
+                }
+            }
         });
 
         var modalInstance = $uibModal.open({
@@ -236,7 +242,7 @@
 
         function ModalInstanceCtrl($uibModalInstance, article) {
             article.DateAdded = new Date(article.DateAdded);
-            $scope.article = article;
+            $scope.userArticle = angular.copy(article);
             $scope.ok = function () {
                 $scope.validationMessages = null;
                 $uibModalInstance.close();
@@ -244,6 +250,6 @@
         };
     };
 
-    articleService.getArticles(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+    articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
 }
 ]);

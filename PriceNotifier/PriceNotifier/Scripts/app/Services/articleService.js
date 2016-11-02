@@ -3,7 +3,7 @@
 
         var url = '/api/Articles/';
 
-        var getArticles = function (name, order, filter, filterColumn, currentPage, recordsPerPage) {
+        var getArticles = function (flag, name, order, filter, filterColumn, currentPage, recordsPerPage) {
 
             var request = url + "?$skip=" + (currentPage - 1) * recordsPerPage + "&$top=" + recordsPerPage;
 
@@ -14,6 +14,8 @@
             if (filter && filterColumn) {
                 request = request + "&$filter=" + "contains(" + filterColumn + "," + '%27' + filter + '%27' + ")";
             }
+
+            request = request + "&flag=" + flag;
 
             return $http.get(request + "&$count=true")
                 .then(function (response) {

@@ -54,6 +54,7 @@ namespace PriceNotifier
                       "~/Scripts/app/Controllers/UserCtrl.js",
                       "~/Scripts/app/Controllers/ArticleCtrl.js",
                       "~/Scripts/app/Controllers/ArticleDetailsCtrl.js",
+                      "~/Scripts/app/Controllers/ArticleCtrlForUser.js",
                       "~/Scripts/app/Controllers/ProductCtrl.js"));
 
             bundles.Add(new StyleBundle("~/Content/app").Include(

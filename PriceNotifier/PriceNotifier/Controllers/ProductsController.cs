@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -15,11 +14,12 @@ using BLL.Services.UserService;
 using Domain.Entities;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
+using PriceNotifier.Infrostructure;
 
 namespace PriceNotifier.Controllers
 {
     [TokenAuthorize("Admin", "User")]
-    public class ProductsController : ApiController
+    public class ProductsController : BaseApiController
     {
         private readonly IProductService _productService;
         private readonly IUserService _userService;
@@ -34,27 +34,23 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public PageResult<ProductDto> GetProducts(ODataQueryOptions<Product> options)
+        public PageResult<ProductDto> GetProducts(ODataQueryOptions<ProductDto> options)
         {
-            var owinContext = Request.GetOwinContext();
-            var userId = owinContext.Get<int>("userId");
+            var userId = GetCurrentUserId(Request);
             var allProducts = _productService.GetByUserId(userId);
-            var results = options.ApplyTo(allProducts);
-
             List<ProductDto> productDtos = new List<ProductDto>();
-            foreach (Product product in results)
+            foreach (Product product in allProducts)
             {
                 var p = Mapper.Map<Product, ProductDto>(product);
                 p.Checked = product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
-                p.ImageUrl = product.ProvidersProductInfos.First().ImageUrl;
-                p.MaxPrice = product.ProvidersProductInfos.Max(c => c.MaxPrice);
-                p.MinPrice = product.ProvidersProductInfos.Min(c => c.MinPrice);
                 p.Url = product.ProvidersProductInfos.First(c => c.MinPrice == p.MinPrice).Url;
                 productDtos.Add(p);
             }
 
+            var results = options.ApplyTo(productDtos.AsQueryable());
+
             return new PageResult<ProductDto>(
-               productDtos,
+               results as IEnumerable<ProductDto>,
                Request.ODataProperties().NextLink,
                Request.ODataProperties().TotalCount);
         }
@@ -82,8 +78,7 @@ namespace PriceNotifier.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var owinContext = Request.GetOwinContext();
-            var userId = owinContext.Get<int>("userId");
+            var userId = GetCurrentUserId(Request);
 
             var productFound = _productService.Get(productDto.Id, userId);
             if (productFound != null)
@@ -108,8 +103,7 @@ namespace PriceNotifier.Controllers
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
-            var owinContext = Request.GetOwinContext();
-            var userId = owinContext.Get<int>("userId");
+            var userId = GetCurrentUserId(Request);
 
             var user = await _userService.GetById(userId);
             var p = _productService.GetByExtIdFromDb(productDto.ExternalProductId);
@@ -161,8 +155,7 @@ namespace PriceNotifier.Controllers
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> Delete(int id)
         {
-            var owinContext = Request.GetOwinContext();
-            var userId = owinContext.Get<int>("userId");
+            var userId = GetCurrentUserId(Request);
             User user = await _userService.GetById(userId);
             Product product = await _productService.GetById(id);
 

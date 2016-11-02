@@ -1,5 +1,5 @@
 ﻿/// <reference path="../angular.min.js" />
-var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap', 'chart.js', 'textAngular']);
+var app = angular.module('MyApp', ['angular-loading-bar', 'toaster', 'ngAnimate', 'ui.router', 'ui.grid', 'ui.grid.pagination', 'ui.grid.edit', 'ui.grid.cellNav', 'ui.grid.validate', 'ui.bootstrap', 'chart.js', 'textAngular', 'ngSanitize']);
 
 app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationProvider', function ($stateProvider, $urlRouterProvider, $httpProvider, $locationProvider) {
     $httpProvider.interceptors.push('tokenInterceptorService');
@@ -45,6 +45,13 @@ app.config(['$stateProvider', '$urlRouterProvider', '$httpProvider', '$locationP
             url: '/articles',
             templateUrl: '/scripts/app/Views/articles.html',
             controller: 'ArticleCtrl'
+        })
+
+        .state('news',
+        {
+            url: '/news',
+            templateUrl: '/scripts/app/Views/allArticles.html',
+            controller: 'ArticleCtrlForUser'
         });
 
     $urlRouterProvider.otherwise('/main');

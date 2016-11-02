@@ -10,11 +10,12 @@ using System.Security.Principal;
 using System.Text;
 using System.Web;
 using PriceNotifier.AuthFilter;
+using PriceNotifier.Infrostructure;
 using PriceNotifier.ViewModels;
 
 namespace PriceNotifier.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseMVCController
     {
         private readonly AuthorizationRoot _authorizationRoot;
         private UserContext db = new UserContext();
@@ -78,8 +79,7 @@ namespace PriceNotifier.Controllers
         [HttpGet]
         public ActionResult Email()
         {
-            var owinContext = Request.GetOwinContext();
-            var userId = owinContext.Get<int>("userId");
+            var userId = GetCurrentUserId(Request);
             var user = db.Users.FirstOrDefault(c => c.UserId == userId);
             return View(user);
         }
@@ -89,8 +89,7 @@ namespace PriceNotifier.Controllers
         public ActionResult Email(string email)
         {
             var foo = new EmailAddressAttribute();
-            var owinContext = Request.GetOwinContext();
-            var userId = owinContext.Get<int>("userId");
+            var userId = GetCurrentUserId(Request);
             var user = db.Users.FirstOrDefault(c => c.UserId == userId);
             if (foo.IsValid(email))
             {

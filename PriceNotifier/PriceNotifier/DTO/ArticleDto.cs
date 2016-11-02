@@ -14,6 +14,8 @@ namespace PriceNotifier.DTO
         public string Body { get; set; }
         public string ImageUrl { get; set; }
 
+        public string ProductUrl { get; set; }
+
         public string ProductName { get; set; }
         public bool IsPublished { get; set; }
         [Required(ErrorMessage = "Please Enter Publication Date")]

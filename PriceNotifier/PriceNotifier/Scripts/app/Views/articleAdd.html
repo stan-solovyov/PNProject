@@ -19,7 +19,7 @@
             <br />
             <h4>Body</h4>
             <br />
-            <div text-angular ng-model="article.Body" required></div>
+            <div text-angular ng-model="article.Body" minlength="500" required></div>
             <br />
             <label>Featured Image URL</label>
             <input type="text" class="form-control" ng-model="article.ImageUrl" placeholder="http://cdn2.gsmarena.com/vv/pics/apple/apple-iphone-7-5.jpg" />
@@ -43,5 +43,5 @@
 </div>
 <div class="modal-footer">
     <input type="submit" value="Create" ng-disabled="!articleForm.$valid" class="btn btn-default" ng-click="create(article)" />
-    <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+    <button class="btn btn-danger" type="button" ng-click="ok()">Cancel</button>
 </div>

@@ -2,6 +2,7 @@
     $scope.currentArticle = currentArticle;
     $scope.trustedHtml = $sce.trustAsHtml(currentArticle.Body);
 
+
     //Datepicker
     $scope.today = function () {
         $scope.dt = new Date();
@@ -54,6 +55,8 @@
     }
 
     $scope.update = function (article) {
+        $scope.currentArticle = article;
+        $scope.trustedHtml = $sce.trustAsHtml($scope.currentArticle.Body);
         if (typeof (article.ProductId.Id) == "undefined") {
             articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
         } else {
@@ -65,6 +68,11 @@
     $scope.edit = function (article) {
         productService.getProducts().then(function (response) {
             $scope.items = response.data.Items;
+            for (var i = 0; i < $scope.items.length; i++) {
+                if ($scope.items[i].Name === article.ProductName) {
+                    $scope.items.splice(i, 1);
+                }
+            }
         });
 
         var modalInstance = $uibModal.open({
@@ -81,7 +89,7 @@
 
         function ModalInstanceCtrl($uibModalInstance, article) {
             article.DateAdded = new Date(article.DateAdded);
-            $scope.article = article;
+            $scope.userArticle = angular.copy(article);
             $scope.ok = function () {
                 $scope.validationMessages = null;
                 $uibModalInstance.close();

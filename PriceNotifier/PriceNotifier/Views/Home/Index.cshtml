@@ -11,16 +11,17 @@
         <div class="container">
             <ul class="nav navbar-nav">
                 <li><a class="navbar-brand navbar-left" ui-sref="main">Price Notifier</a></li>
-                <li><a>Welcome, @User.Identity.Name!</a></li>
-                <li><a ui-sref="myitems">Tracking products</a></li>
+                <li><a ui-sref="myitems">Tracked products</a></li>
                 @if (User.IsInRole("Admin"))
                 {
                     <li ng-init="$parent.User=true"><a ui-sref="users">User management</a></li>
                     <li><a ui-sref="articles">Article management</a></li>
                 }
+                <li><a ui-sref="news">News</a></li>
             </ul>
             <div class="col-lg-offset-6">
-                <button type="button" class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button>
+                <button class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button>
+                <p class="navbar-text pull-right" style="color:azure ">Welcome, @User.Identity.Name!</p> 
             </div>
         </div>
     </nav>

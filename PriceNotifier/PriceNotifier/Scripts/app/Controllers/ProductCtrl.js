@@ -100,7 +100,7 @@
                             type: 'time',
                             time: {
                                 displayFormats: {
-                                    month: 'MMM D, hA'
+                                    month: 'MMM D, YYYY'
                                 }
                             },
                             position: 'bottom'
