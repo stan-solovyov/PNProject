@@ -43,7 +43,7 @@ namespace PriceNotifier.Controllers
             foreach (Product product in allProducts)
             {
                 var p = Mapper.Map<Product, ProductDto>(product);
-                p.Checked = showAllProducts ? true : product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
+                p.Checked = showAllProducts || product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
                 p.Url = product.ProvidersProductInfos.First(c => c.MinPrice == p.MinPrice).Url;
                 productDtos.Add(p);
             }

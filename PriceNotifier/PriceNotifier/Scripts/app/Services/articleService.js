@@ -10,9 +10,9 @@
             if (name && order) {
                 request = request + "&$orderby=" + name + " " + order;
             }
-
+           
             if (filter && filterColumn) {
-                request = request + "&$filter=" + "contains(" + filterColumn + "," + '%27' + filter + '%27' + ")";
+                request = request + "&$filter=" + filterColumn + '%20' + 'eq' + '%20' + filter;
             }
 
             request = request + "&showAllArticles=" + flag;

@@ -33,7 +33,7 @@
             }
             currentPage = page;
             if ($scope.allArticles) {
-                articleService.getArticles(true, "DateAdded", "desc", null, null, page, pageSize).then(onGetArticles, onError);
+                articleService.getArticles(true, "DateAdded", "desc", true, "IsPublished", page, pageSize).then(onGetArticles, onError);
             } else {
                 articleService.getArticles(false, "DateAdded", "desc", null, null, page, pageSize).then(onGetArticles, onError);
             }
@@ -47,12 +47,12 @@
             }
 
             if ($scope.allArticles === true) {
-                articleService.getArticles(true, "DateAdded", "desc", null, null, currentPage, pageSize).then(onGetArticles, onError);
+                articleService.getArticles(true, "DateAdded", "desc", true, "IsPublished", currentPage, pageSize).then(onGetArticles, onError);
             }
 
         };
 
-        articleService.getArticles(true,"DateAdded","desc",null,null,currentPage, pageSize).then(onGetArticles, onError);
+        articleService.getArticles(true, "DateAdded", "desc", true, "IsPublished", currentPage, pageSize).then(onGetArticles, onError);
 
     }
 ]);
