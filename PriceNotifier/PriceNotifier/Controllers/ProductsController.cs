@@ -12,9 +12,11 @@ using BLL.Services;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
+using Nest;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
 using PriceNotifier.Infrostructure;
+using User = Domain.Entities.User;
 
 namespace PriceNotifier.Controllers
 {
@@ -34,21 +36,50 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options)
+        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options, string query = null)
         {
+
             var userId = GetCurrentUserId(Request);
             var allProducts = showAllProducts ? _productService.GetAllProducts() : _productService.GetByUserId(userId);
 
-            List<ProductDto> productDtos = new List<ProductDto>();
-            foreach (Product product in allProducts)
+            if (!string.IsNullOrEmpty(query))
             {
-                var p = Mapper.Map<Product, ProductDto>(product);
-                p.Checked = showAllProducts || product.UserProducts.Where(c => c.UserId == userId).Select(b => b.Checked).Single();
-                p.Url = product.ProvidersProductInfos.First(c => c.MinPrice == p.MinPrice).Url;
-                productDtos.Add(p);
+                var client = ESClient.ElasticClient;
+                allProducts = client.Search<Product>(s => s
+                                .From(0)
+                                .Size(1000)
+                                .Query(q => q.Wildcard(wc => wc.Field(f => f.Name).Value("*" + query + "*")) || q.MatchPhrasePrefix(c => c
+                                           .Field(p => p.Name)
+                                           .Analyzer("standard")
+                                           .Boost(1.1)
+                                           .CutoffFrequency(0.001)
+                                           .Query("*" + query + "*")
+                                           .Fuzziness(Fuzziness.Auto)
+                                           .Lenient()
+                                           .FuzzyTranspositions()
+                                           .MaxExpansions(2)
+                                           .MinimumShouldMatch(2)
+                                           .PrefixLength(2)
+                                           .Operator(Operator.Or)
+                                           .FuzzyRewrite(RewriteMultiTerm.ConstantScoreBoolean)
+                                           .Slop(2)
+                                           .Name("named_query")))).Documents.AsQueryable();
             }
 
-            var results = options.ApplyTo(productDtos.AsQueryable());
+            var productsDto = allProducts.Select(a => new ProductDto
+            {
+                Id = a.ProductId,
+                Article = a.Articles.OrderByDescending(d => d.DateAdded).FirstOrDefault(d => d.IsPublished),
+                ImageUrl = a.ProvidersProductInfos.FirstOrDefault().ImageUrl,
+                MaxPrice = a.ProvidersProductInfos.Max(d => d.MaxPrice),
+                MinPrice = a.ProvidersProductInfos.Min(d => d.MinPrice),
+                Name = a.Name,
+                ExternalProductId = a.ExternalProductId,
+                Checked = showAllProducts || a.UserProducts.FirstOrDefault(c => c.UserId == userId).Checked,
+                Url = a.ProvidersProductInfos.FirstOrDefault(c => c.MinPrice == a.ProvidersProductInfos.Min(d => d.MinPrice)).Url
+            });
+
+            var results = options.ApplyTo(productsDto);
 
             return new PageResult<ProductDto>(
                results as IEnumerable<ProductDto>,
@@ -105,7 +136,6 @@ namespace PriceNotifier.Controllers
             }
 
             var userId = GetCurrentUserId(Request);
-
             var user = await _userService.GetById(userId);
             var p = _productService.GetByExtIdFromDb(productDto.ExternalProductId);
 
@@ -138,6 +168,9 @@ namespace PriceNotifier.Controllers
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
                 productDto = Mapper.Map(product, productDto);
+                var client = ESClient.ElasticClient;
+                await client.IndexAsync(product, idx => idx.Index("myindex").Id(product.ProductId));
+
                 return productDto;
             }
 
@@ -146,6 +179,8 @@ namespace PriceNotifier.Controllers
             {
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
+                var client = ESClient.ElasticClient;
+                await client.IndexAsync(p, idx => idx.Index("myindex").Id(p.ProductId));
                 return productDto;
             }
 
@@ -164,7 +199,8 @@ namespace PriceNotifier.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-
+            var client = ESClient.ElasticClient;
+            await client.DeleteAsync<Product>(product.ProductId);
             await _productService.DeleteFromUserProduct(user.UserId, product.ProductId);
             if (product.UserProducts.All(c => c.ProductId != id))
             {

@@ -9,9 +9,11 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
+using Nest;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.Infrostructure;
 using PriceNotifier.ViewModels;
+using User = Domain.Entities.User;
 
 namespace PriceNotifier.Controllers
 {
@@ -60,6 +62,14 @@ namespace PriceNotifier.Controllers
                 {
                     var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
                     System.Web.HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(user.Username), roles);
+                    //var client = ESClient.ElasticClient;
+                    //client.DeleteIndex(Indices.All);
+                    //client.CreateIndex("myindex");
+                    //var allProducts = db.Products.Where(a => a.UserProducts.Any(c => c.UserId == user.UserId));
+                    //foreach (var product in allProducts)
+                    //{
+                    //    client.Index(product, idx => idx.Index("myindex").Id(product.ProductId).Refresh());
+                    //}
                 }
 
                 if (token != null)

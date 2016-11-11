@@ -5,12 +5,12 @@
     <div class="container" ng-show="dbproducts">
         <form class="form-inline">
             <div class="form-group">
-                <label>Search</label>
-                <input ng-model="searchText" class="form-control" placeholder="Search">
+                <input ng-model="query" class="form-control" placeholder="Item name">
+                <button type="submit" class="btn" ng-click="search()">Search</button>
             </div>
         </form><br />
     </div>
-    <div class="container" ng-repeat="product in dbproducts|filter:searchText" ng-show="dbproducts">
+    <div class="container" ng-repeat="product in dbproducts" ng-show="dbproducts">
         <div class="container">
             <div class="col-lg-4">
                 <h4 class="ng-cloak">{{product.Name}}</h4>

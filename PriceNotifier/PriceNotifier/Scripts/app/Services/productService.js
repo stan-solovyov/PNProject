@@ -3,14 +3,18 @@
 
         var url = '/api/Products/';
 
-        var getProducts = function (showAllProducts, currentPage, recordsPerPage) {
+        var getProducts = function (showAllProducts, currentPage, recordsPerPage, query) {
 
             var request = url + "?showAllProducts=" + showAllProducts;
             if (currentPage && recordsPerPage) {
                 request = request + "&$skip=" + (currentPage - 1) * recordsPerPage + "&$top=" + recordsPerPage + "&$count=true";
             }
 
-
+            if (query) {
+                request = request + "&query=" + query;
+            } else {
+                request = request + "&query=";
+            }
 
             return $http.get(request)
                 .then(function (response) {

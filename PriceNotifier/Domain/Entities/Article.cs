@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace Domain.Entities
 {
@@ -18,6 +19,7 @@ namespace Domain.Entities
         [Required(ErrorMessage = "Please Enter Publication Date")]
         public DateTime DateAdded { get; set; }
         public int ProductId { get; set; }
+        [JsonIgnore]
         public Product Product { get; set; }
     }
 }

@@ -37,7 +37,6 @@
             } else {
                 articleService.getArticles(false, "DateAdded", "desc", null, null, page, pageSize).then(onGetArticles, onError);
             }
-            
         }
 
         $scope.update = function () {

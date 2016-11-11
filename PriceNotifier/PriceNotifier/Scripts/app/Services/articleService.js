@@ -12,7 +12,13 @@
             }
            
             if (filter && filterColumn) {
-                request = request + "&$filter=" + filterColumn + '%20' + 'eq' + '%20' + filter;
+                if (filterColumn === "IsPublished") {
+                    request = request + "&$filter=" + filterColumn + '%20' + 'eq' + '%20' + filter;
+                }
+
+                if (filterColumn === "Title") {
+                    request = request + "&$filter=" + "contains(" + filterColumn + "," + '%27' + filter + '%27' + ")";
+                }
             }
 
             request = request + "&showAllArticles=" + flag;
