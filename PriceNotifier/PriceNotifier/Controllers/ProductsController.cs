@@ -12,7 +12,6 @@ using BLL.Services;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
-using Nest;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
 using PriceNotifier.Infrostructure;
@@ -36,7 +35,7 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options, string query = null)
+        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options,string query = null)
         {
 
             var userId = GetCurrentUserId(Request);
@@ -44,26 +43,12 @@ namespace PriceNotifier.Controllers
 
             if (!string.IsNullOrEmpty(query))
             {
-                var client = ESClient.ElasticClient;
-                allProducts = client.Search<Product>(s => s
-                                .From(0)
-                                .Size(1000)
-                                .Query(q => q.Wildcard(wc => wc.Field(f => f.Name).Value("*" + query + "*")) || q.MatchPhrasePrefix(c => c
-                                           .Field(p => p.Name)
-                                           .Analyzer("standard")
-                                           .Boost(1.1)
-                                           .CutoffFrequency(0.001)
-                                           .Query("*" + query + "*")
-                                           .Fuzziness(Fuzziness.Auto)
-                                           .Lenient()
-                                           .FuzzyTranspositions()
-                                           .MaxExpansions(2)
-                                           .MinimumShouldMatch(2)
-                                           .PrefixLength(2)
-                                           .Operator(Operator.Or)
-                                           .FuzzyRewrite(RewriteMultiTerm.ConstantScoreBoolean)
-                                           .Slop(2)
-                                           .Name("named_query")))).Documents.AsQueryable();
+                allProducts = ESClient.SearchProducts(query);
+            }
+
+            if (!showAllProducts)
+            {
+                allProducts = allProducts.Where(c => c.UserProducts.Any(d=>d.UserId == userId));
             }
 
             var productsDto = allProducts.Select(a => new ProductDto
@@ -82,9 +67,9 @@ namespace PriceNotifier.Controllers
             var results = options.ApplyTo(productsDto);
 
             return new PageResult<ProductDto>(
-               results as IEnumerable<ProductDto>,
-               Request.ODataProperties().NextLink,
-               Request.ODataProperties().TotalCount);
+                results as IEnumerable<ProductDto>,
+                Request.ODataProperties().NextLink,
+                Request.ODataProperties().TotalCount);
         }
 
 

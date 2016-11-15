@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using OAuth2;
 using OAuth2.Client;
 using System.Linq;
@@ -62,13 +63,14 @@ namespace PriceNotifier.Controllers
                 {
                     var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
                     System.Web.HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(user.Username), roles);
+
+
                     //var client = ESClient.ElasticClient;
                     //client.DeleteIndex(Indices.All);
                     //client.CreateIndex("myindex");
-                    //var allProducts = db.Products.Where(a => a.UserProducts.Any(c => c.UserId == user.UserId));
-                    //foreach (var product in allProducts)
+                    //foreach (var product in db.Products)
                     //{
-                    //    client.Index(product, idx => idx.Index("myindex").Id(product.ProductId).Refresh());
+                    //    client.Index(product, idx => idx.Index("myindex").Id(product.ProductId));
                     //}
                 }
 

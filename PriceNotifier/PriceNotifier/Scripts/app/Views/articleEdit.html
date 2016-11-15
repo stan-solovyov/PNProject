@@ -4,9 +4,11 @@
 <div class="modal-body" id="modal-body">
     <div class="form-group">
         <form name="articleEditForm">
-            <select class="form-control" data-ng-model="userArticle.ProductId" data-ng-options="item.Name for item in items">
-                <option value="">{{userArticle.ProductName}}</option>
-            </select><br/>
+            <input type="text" ng-model="userArticle.ProductName" placeholder="--Type product's name--" uib-typeahead="item as item.Name for item in items($viewValue)" typeahead-loading="loadingProducts" typeahead-no-results="noResults" class="form-control" required>
+            <i ng-show="loadingProducts" class="glyphicon glyphicon-refresh"></i>
+            <div ng-show="noResults">
+                <i class="glyphicon glyphicon-remove"></i> No Results Found
+            </div>
             <ul class="error-list" ng-show="validationMessages">
                 <li ng-repeat="message in validationMessages">{{message}}</li>
             </ul>
@@ -25,7 +27,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <p class="input-group">
-                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="userArticle.DateAdded"  is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
+                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="userArticle.DateAdded" is-open="popup1.opened" datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"/>
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
                         </span>

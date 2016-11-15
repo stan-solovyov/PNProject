@@ -1,4 +1,4 @@
-﻿app.controller('ArticleCtrl', ['$scope', 'articleService', 'productService', '$timeout', '$uibModal', function ($scope, articleService, productService, $timeout, $uibModal) {
+﻿app.controller('ArticleCtrl', ['$scope', 'articleService', 'productService', '$timeout', '$uibModal', 'limitToFilter', function ($scope, articleService, productService, $timeout, $uibModal,limitToFilter) {
     var columnName = "", filterColumn = "", filter = '';
 
     var paginationOptions = {
@@ -173,28 +173,34 @@
 
     $scope.update = function (article) {
         $scope.currentArticle = article;
-        if (typeof (article.ProductId.Id) == "undefined") {
+        if (typeof (article.ProductName.Name) == "undefined") {
             articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
         } else {
-            article.ProductId = article.ProductId.Id;
+            article.ProductId = article.ProductName.Id;
+            article.ProductName = article.ProductName.Name;
             articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
         }
     };
 
     $scope.create = function (article) {
         article.DateAdded = $scope.dt;
-        if (typeof (article.ProductId) == "undefined") {
+        if (typeof (article.Name) == "undefined") {
             articleService.createArticle(article).then(onArticleDelete, onErrorValidate);
         } else {
-            article.ProductId = article.ProductId.Id;
+            article.ProductId = article.Name.Id;
+            article.Name = article.Name.Name;
             articleService.createArticle(article).then(onArticleDelete, onErrorValidate);
         }
     };
 
-    $scope.addNewArticle = function () {
-        productService.getProducts(true).then(function (response) {
-            $scope.items = response.data.Items;
+    $scope.items = function (value) {
+        value = value.toLowerCase();
+        return productService.getProducts(true, 1, 50, value).then(function (response) {
+            return limitToFilter(response.data.Items, 15);
         });
+    }
+
+    $scope.addNewArticle = function () {
         var article = {};
         var modalInstance = $uibModal.open({
             animation: true,
@@ -219,14 +225,14 @@
     }
 
     $scope.edit = function (article) {
-        productService.getProducts(true).then(function (response) {
-            $scope.items = response.data.Items;
-            for (var i=0; i<$scope.items.length; i++) {
-                if ($scope.items[i].Name === article.ProductName) {
-                    $scope.items.splice(i, 1);
-                }
-            }
-        });
+        //productService.getProducts(true).then(function (response) {
+        //    $scope.items = response.data.Items;
+        //    for (var i=0; i<$scope.items.length; i++) {
+        //        if ($scope.items[i].Name === article.ProductName) {
+        //            $scope.items.splice(i, 1);
+        //        }
+        //    }
+        //});
 
         var modalInstance = $uibModal.open({
             animation: true,
