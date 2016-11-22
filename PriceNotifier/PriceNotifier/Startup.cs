@@ -15,9 +15,11 @@ using Messages;
 using Microsoft.Owin;
 using Owin;
 using PriceNotifier.DTO;
+using PriceNotifier.Infrostructure;
 using PriceNotifier.RSBMessageConsumer;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Impl;
+using System.Configuration;
 
 [assembly: OwinStartup(typeof(PriceNotifier.Startup))]
 
@@ -41,6 +43,7 @@ namespace PriceNotifier
             builder.RegisterType<PriceHistoryService>().As<IPriceHistoryService>().InstancePerRequest();
             builder.RegisterType<ArticleRepository>().As<IRepository<Article>>().InstancePerRequest();
             builder.RegisterType<ArticleService>().As<IArticleService>().InstancePerRequest();
+            builder.RegisterType<ElasticProductService>().As<IElasticService<Product>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"])).InstancePerRequest();
             builder.RegisterType<UpdatedPricesConsumer>().As<ConsumerOf<UpdatedPricesMessage>>();
             builder.RegisterType<UserProductRepository>().As<IUserProductRepository>().InstancePerRequest();
             builder.RegisterType<PriceFrom1KParser>().As<IProviderProductInfoParser>().InstancePerRequest();

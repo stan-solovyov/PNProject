@@ -25,12 +25,14 @@ namespace PriceNotifier.Controllers
         private readonly IProductService _productService;
         private readonly IUserService _userService;
         private readonly IEnumerable<IProviderProductInfoParser> _ppiParsers;
+        private readonly IElasticService<Product> _elasticProductService;
 
-        public ProductsController(IProductService productService, IUserService userService, IEnumerable<IProviderProductInfoParser> ppiParsers)
+        public ProductsController(IProductService productService, IUserService userService, IEnumerable<IProviderProductInfoParser> ppiParsers, IElasticService<Product> elasticProductService)
         {
             _productService = productService;
             _userService = userService;
             _ppiParsers = ppiParsers;
+            _elasticProductService = elasticProductService;
         }
 
         // GET: api/Products
@@ -43,12 +45,11 @@ namespace PriceNotifier.Controllers
 
             if (!string.IsNullOrEmpty(query))
             {
-                allProducts = ESClient.SearchProducts(query);
-            }
-
-            if (!showAllProducts)
-            {
-                allProducts = allProducts.Where(c => c.UserProducts.Any(d=>d.UserId == userId));
+                allProducts = _elasticProductService.SearchProducts(query);
+                if (!showAllProducts)
+                {
+                    allProducts = allProducts.Where(c => c.UserProducts.Any(d => d.UserId == userId));
+                }
             }
 
             var productsDto = allProducts.Select(a => new ProductDto
@@ -153,9 +154,7 @@ namespace PriceNotifier.Controllers
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
                 productDto = Mapper.Map(product, productDto);
-                var client = ESClient.ElasticClient;
-                await client.IndexAsync(product, idx => idx.Index("myindex").Id(product.ProductId));
-
+                _elasticProductService.AddToIndex(product, product.ProductId);
                 return productDto;
             }
 
@@ -164,8 +163,7 @@ namespace PriceNotifier.Controllers
             {
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
-                var client = ESClient.ElasticClient;
-                await client.IndexAsync(p, idx => idx.Index("myindex").Id(p.ProductId));
+                _elasticProductService.AddToIndex(p,p.ProductId);
                 return productDto;
             }
 
@@ -184,8 +182,8 @@ namespace PriceNotifier.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
-            var client = ESClient.ElasticClient;
-            await client.DeleteAsync<Product>(product.ProductId);
+
+            _elasticProductService.DeleteFromIndex(product.ProductId);
             await _productService.DeleteFromUserProduct(user.UserId, product.ProductId);
             if (product.UserProducts.All(c => c.ProductId != id))
             {

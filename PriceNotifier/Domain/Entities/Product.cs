@@ -18,6 +18,7 @@ namespace Domain.Entities
         public Product()
         {
             ProvidersProductInfos = new List<ProvidersProductInfo>();
+            Articles = new List<Article>();
         }
     }
 }

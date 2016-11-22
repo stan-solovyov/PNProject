@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using OAuth2;
 using OAuth2.Client;
 using System.Linq;
@@ -21,6 +20,8 @@ namespace PriceNotifier.Controllers
     public class HomeController : BaseMVCController
     {
         private readonly AuthorizationRoot _authorizationRoot;
+        private readonly IElasticService<Product> _elasticProductService;
+        private readonly IElasticService<User> _elasticUserService;
         private UserContext db = new UserContext();
 
         public string GetHashString(string s)
@@ -48,9 +49,12 @@ namespace PriceNotifier.Controllers
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
         /// <param name="authorizationRoot">The authorization manager.</param>
-        public HomeController(AuthorizationRoot authorizationRoot)
+        /// <param name="elasticProductService">Elastic search service</param>
+        public HomeController(AuthorizationRoot authorizationRoot, IElasticService<Product> elasticProductService, IElasticService<User> elasticUserService)
         {
             _authorizationRoot = authorizationRoot;
+            _elasticProductService = elasticProductService;
+            _elasticUserService = elasticUserService;
         }
 
         public ActionResult Index()
@@ -64,13 +68,15 @@ namespace PriceNotifier.Controllers
                     var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
                     System.Web.HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(user.Username), roles);
 
-
-                    //var client = ESClient.ElasticClient;
-                    //client.DeleteIndex(Indices.All);
-                    //client.CreateIndex("myindex");
+                    //initializing userindex
+                    //foreach (var u in db.Users)
+                    //{
+                    //    _elasticUserService.AddToIndex(u);
+                    //}
+                    //initializing productindex
                     //foreach (var product in db.Products)
                     //{
-                    //    client.Index(product, idx => idx.Index("myindex").Id(product.ProductId));
+                    //    _elasticProductService.AddToIndex(product);
                     //}
                 }
 

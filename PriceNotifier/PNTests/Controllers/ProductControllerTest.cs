@@ -17,6 +17,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using PriceNotifier.Controllers;
 using PriceNotifier.DTO;
+using PriceNotifier.Infrostructure;
+using User = Domain.Entities.User;
 
 namespace PNTests.Controllers
 {
@@ -62,11 +64,12 @@ namespace PNTests.Controllers
 
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
+            var mockElasticService = new Mock<IElasticService<Product>>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
             mockProductService.Setup(x => x.GetByUserId(userId))
                 .Returns(queryableAllProducts);
             var request = new HttpRequestMessage(HttpMethod.Get, "http://localhost:59476/api/Products/");
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object, mockElasticService.Object);
             
             //Set up OwinContext
             controller.Request = new HttpRequestMessage();
@@ -116,10 +119,11 @@ namespace PNTests.Controllers
 
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
+            var mockElasticService = new Mock<IElasticService<Product>>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
 
             mockProductService.Setup(x => x.GetById(It.IsAny<int>())).ReturnsAsync(product);
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object, mockElasticService.Object);
             
             //Act
             ProductDto result = await controller.Get(297);
@@ -136,8 +140,9 @@ namespace PNTests.Controllers
             var productId = 0;
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
+            var mockElasticService = new Mock<IElasticService<Product>>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object);
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object, mockElasticService.Object);
             //Act
             ProductDto result = await controller.Get(productId);
             //Assert
@@ -173,6 +178,7 @@ namespace PNTests.Controllers
 
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
+            var mockElasticService = new Mock<IElasticService<Product>>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
             mockProductService.Setup(x => x.GetById(productId))
                 .ReturnsAsync(new Product
@@ -185,7 +191,7 @@ namespace PNTests.Controllers
                 }).Verifiable();
 
             mockProductService.Setup(x => x.DeleteFromUserProduct(userId, productId)).Returns(Task.FromResult(false)).Verifiable();
-
+            mockElasticService.Setup(x=>x.DeleteFromIndex(It.IsAny<int>())).Verifiable();
             mockUserService.Setup(x => x.GetById(userId))
                .ReturnsAsync(new User
                {
@@ -199,7 +205,7 @@ namespace PNTests.Controllers
                }).Verifiable();
 
             mockProductService.Setup(x => x.Delete(product));
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object) { Request = new HttpRequestMessage() };
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object, mockElasticService.Object) { Request = new HttpRequestMessage() };
             
             //Set up OwinContext
             controller.Request.SetOwinContext(new OwinContext());
@@ -266,12 +272,14 @@ namespace PNTests.Controllers
 
             var mockProductService = new Mock<IProductService>();
             var mockUserService = new Mock<IUserService>();
+            var mockElasticService = new Mock<IElasticService<Product>>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
             mockProductService.Setup(x => x.GetByExtId(newProductDto.ExternalProductId, userId)).Returns((Product)null);
             mockProductService.Setup(x => x.GetByExtIdFromDb(newProduct.ExternalProductId)).Returns(newProduct);
             mockProductService.Setup(x => x.Create(It.IsAny<Product>())).ReturnsAsync(newProduct);
             mockUserService.Setup(x => x.GetById(userId)).ReturnsAsync(user).Verifiable();
-            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object) { Request = new HttpRequestMessage() };
+            mockElasticService.Setup(x => x.AddToIndex(It.IsAny<Product>(), It.IsAny<int>())).Verifiable();
+            var controller = new ProductsController(mockProductService.Object, mockUserService.Object, mockParsers.Object, mockElasticService.Object) { Request = new HttpRequestMessage() };
             
             //Set up OwinContext
             controller.Request.SetOwinContext(new OwinContext());
@@ -284,6 +292,7 @@ namespace PNTests.Controllers
             //Assert
             Assert.IsNotNull(result);
             mockProductService.Verify();
+            mockElasticService.Verify();
         }
 
         [TestMethod]
@@ -329,11 +338,12 @@ namespace PNTests.Controllers
 
             var mockProductService = new Mock<IProductService>();
             var mockUserServuce = new Mock<IUserService>();
+            var mockElasticService = new Mock<IElasticService<Product>>();
             var mockParsers = new Mock<IEnumerable<IProviderProductInfoParser>>();
             mockProductService.Setup(x => x.Get(productId, userId)).Returns(product);
 
             mockProductService.Setup(x => x.Update(It.IsAny<Product>())).Returns(Task.FromResult(false)).Verifiable();
-            var controller = new ProductsController(mockProductService.Object, mockUserServuce.Object, mockParsers.Object);
+            var controller = new ProductsController(mockProductService.Object, mockUserServuce.Object, mockParsers.Object, mockElasticService.Object);
 
             //Set up OwinContext
             controller.Request = new HttpRequestMessage();
