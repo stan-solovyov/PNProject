@@ -13,7 +13,7 @@
                 <li><a class="navbar-brand navbar-left" ui-sref="main">Price Notifier</a></li>
                 <li><a ui-sref="myitems">Tracked products</a></li>
                 @if (User.IsInRole("Admin"))
-                {
+            {
                     <li ng-init="$parent.User=true"><a ui-sref="users">User management</a></li>
                     <li><a ui-sref="articles">Article management</a></li>
                 }
@@ -21,7 +21,7 @@
             </ul>
             <div class="col-lg-offset-6">
                 <button class="btn btn-default navbar-btn navbar-right" ng-click="Logout()">Log out</button>
-                <p class="navbar-text pull-right" style="color:azure ">Welcome, @User.Identity.Name!</p> 
+                <p class="navbar-text pull-right" style="color: azure">Welcome, @User.Identity.Name!</p>
             </div>
         </div>
     </nav>

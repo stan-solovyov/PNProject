@@ -34,7 +34,7 @@ namespace PriceNotifier
             HttpConfiguration config = new HttpConfiguration();
             WebApiConfig.Register(config);
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            builder.Register(context => new UserContext()).As<UserContext>().InstancePerRequest();
+            builder.Register(context => new UserContext()).InstancePerRequest();
             builder.RegisterType<ProductRepository>().As<IRepository<Product>>().InstancePerRequest();
             builder.RegisterType<ProductService>().As<IProductService>().InstancePerRequest();
             builder.RegisterType<UserRepository>().As<IRepository<User>>().InstancePerRequest();

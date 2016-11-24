@@ -1,5 +1,4 @@
-﻿using System.Configuration;
-using System.Web.Http;
+﻿using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -8,9 +7,8 @@ using Autofac.Integration.Mvc;
 using OAuth2.Client;
 using RestSharp;
 using System.Reflection;
-using Domain.Entities;
+using Domain.EF;
 using OAuth2;
-using PriceNotifier.Infrostructure;
 
 
 namespace PriceNotifier
@@ -43,8 +41,7 @@ namespace PriceNotifier
 
             builder.RegisterType<AuthorizationRoot>()
                 .WithParameter(new NamedParameter("sectionName", "oauth2"));
-            builder.RegisterType<ElasticProductService>().As<IElasticService<Product>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"]));
-            builder.RegisterType<ElasticUserService>().As<IElasticService<User>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"]));
+            builder.Register(c=> new UserContext());
 
             DependencyResolver.SetResolver(new AutofacDependencyResolver(builder.Build()));
         }

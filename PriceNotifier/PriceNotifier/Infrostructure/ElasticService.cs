@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Domain.Entities;
 using Nest;
 
 namespace PriceNotifier.Infrostructure
 {
-    public class ElasticService<T> : IElasticService<T> where T : class 
+    public class ElasticService<T> : IElasticService<T> where T : class
     {
         private readonly ElasticClient _client;
         private readonly string _indexName;

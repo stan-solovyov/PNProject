@@ -9,7 +9,6 @@ using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 using System.Web;
-using Nest;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.Infrostructure;
 using PriceNotifier.ViewModels;
@@ -20,9 +19,8 @@ namespace PriceNotifier.Controllers
     public class HomeController : BaseMVCController
     {
         private readonly AuthorizationRoot _authorizationRoot;
-        private readonly IElasticService<Product> _elasticProductService;
-        private readonly IElasticService<User> _elasticUserService;
-        private UserContext db = new UserContext();
+        //private UserContext db = new UserContext();
+        private readonly UserContext _db;
 
         public string GetHashString(string s)
         {
@@ -49,12 +47,11 @@ namespace PriceNotifier.Controllers
         /// Initializes a new instance of the <see cref="HomeController"/> class.
         /// </summary>
         /// <param name="authorizationRoot">The authorization manager.</param>
-        /// <param name="elasticProductService">Elastic search service</param>
-        public HomeController(AuthorizationRoot authorizationRoot, IElasticService<Product> elasticProductService, IElasticService<User> elasticUserService)
+        /// <param name="db"></param>
+        public HomeController(AuthorizationRoot authorizationRoot, UserContext db)
         {
             _authorizationRoot = authorizationRoot;
-            _elasticProductService = elasticProductService;
-            _elasticUserService = elasticUserService;
+            _db = db;
         }
 
         public ActionResult Index()
@@ -62,22 +59,11 @@ namespace PriceNotifier.Controllers
             if (Request.Cookies.AllKeys.Contains("Token"))
             {
                 var token = ControllerContext.HttpContext.Request.Cookies["Token"].Value;
-                var user = db.Users.FirstOrDefault(c => c.Token == token);
+                var user = _db.Users.FirstOrDefault(c => c.Token == token);
                 if (user != null)
                 {
                     var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();
                     System.Web.HttpContext.Current.User = new GenericPrincipal(new GenericIdentity(user.Username), roles);
-
-                    //initializing userindex
-                    //foreach (var u in db.Users)
-                    //{
-                    //    _elasticUserService.AddToIndex(u);
-                    //}
-                    //initializing productindex
-                    //foreach (var product in db.Products)
-                    //{
-                    //    _elasticProductService.AddToIndex(product);
-                    //}
                 }
 
                 if (token != null)
@@ -98,7 +84,7 @@ namespace PriceNotifier.Controllers
         public ActionResult Email()
         {
             var userId = GetCurrentUserId(Request);
-            var user = db.Users.FirstOrDefault(c => c.UserId == userId);
+            var user = _db.Users.FirstOrDefault(c => c.UserId == userId);
             return View(user);
         }
 
@@ -108,7 +94,7 @@ namespace PriceNotifier.Controllers
         {
             var foo = new EmailAddressAttribute();
             var userId = GetCurrentUserId(Request);
-            var user = db.Users.FirstOrDefault(c => c.UserId == userId);
+            var user = _db.Users.FirstOrDefault(c => c.UserId == userId);
             if (foo.IsValid(email))
             {
                 if (user != null)
@@ -116,7 +102,7 @@ namespace PriceNotifier.Controllers
                     user.Email = email;
                 }
 
-                db.SaveChanges();
+                _db.SaveChanges();
                 return RedirectToAction("Index", "Home");
             }
 
@@ -153,15 +139,15 @@ namespace PriceNotifier.Controllers
                 Email = null
             };
 
-            if (db.Users != null)
+            if (_db.Users != null)
             {
-                var userid = db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
+                var userid = _db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
 
                 if (userid == null)
                 {
-                    db.Users.Add(user);
-                    db.SaveChanges();
-                    var roleId = db.Roles.FirstOrDefault(c=>c.Name == "User").RoleId;
+                    _db.Users.Add(user);
+                    _db.SaveChanges();
+                    var roleId = _db.Roles.FirstOrDefault(c=>c.Name == "User").RoleId;
                     user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = user.UserId });
                 }
                 else
@@ -169,15 +155,15 @@ namespace PriceNotifier.Controllers
                     userid.SocialNetworkUserId = user.SocialNetworkUserId;
                     userid.SocialNetworkName = user.SocialNetworkName;
                     userid.Username = user.Username;
-                    db.SaveChanges();
+                    _db.SaveChanges();
                 }
             }
 
-            var userFound = db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
+            var userFound = _db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
             if (userFound != null)
             {
                 userFound.Token = GetHashString(user.UserId + user.SocialNetworkName + user.SocialNetworkUserId);
-                db.SaveChanges();
+                _db.SaveChanges();
                 HttpCookie cookie = new HttpCookie("Token");
                 cookie.Value = userFound.Token;
                 ControllerContext.HttpContext.Response.Cookies.Add(cookie);

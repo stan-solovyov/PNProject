@@ -5,7 +5,7 @@ namespace Domain.EF
 {
     public class UserContext : DbContext
     {
-        public UserContext()
+        public UserContext():base("name=UserContextConnectionString")
         {
             Database.Log = s => System.Diagnostics.Trace.WriteLine(s);
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<UserContext>());
@@ -18,6 +18,5 @@ namespace Domain.EF
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<ProvidersProductInfo> ProvidersProductInfos { get; set; }
         public DbSet<Article> Articles { get; set; }
-
     }
 }

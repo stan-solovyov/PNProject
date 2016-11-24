@@ -40,7 +40,7 @@ namespace NotificationApp.JobTask
             var products = await _productService.GetTrackedItems();
             var updatedPriceList = new List<UpdatedPrice>();
             var retryCount = 3;
-            log.Info("Loging began at " + DateTime.Now);
+            log.Info("Logging began at " + DateTime.Now);
 
             if (products != null)
             {
@@ -117,7 +117,7 @@ namespace NotificationApp.JobTask
                                 providersProductInfo.MinPrice = priceFromSite;
                                 await _productService.Update(product);
                             }
-                            catch (Exception ex)
+                           catch (Exception ex)
                             {
                                 log.Error("Error message:" + ex.Message);
                             }

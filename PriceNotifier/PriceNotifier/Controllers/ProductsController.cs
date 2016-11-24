@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -39,7 +40,6 @@ namespace PriceNotifier.Controllers
 
         public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options,string query = null)
         {
-
             var userId = GetCurrentUserId(Request);
             var allProducts = showAllProducts ? _productService.GetAllProducts() : _productService.GetByUserId(userId);
 
