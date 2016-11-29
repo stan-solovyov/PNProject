@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
 using Domain.EF;
 using Domain.Entities;
 using MoreLinq;
@@ -22,23 +23,17 @@ namespace ElasticIndexBuilder
         public void BuildIndexes()
         {
             //initializing productindex
-            var users = _db.Users.AsNoTracking().OrderBy(t => t.UserId).Batch(500);
+            var users = _db.Users.AsNoTracking().Include(a=>a.UserProducts).OrderBy(t => t.UserId).Batch(5000);
             foreach (var batch in users)
             {
-                foreach (var u in batch)
-                {
-                    _elasticUserService.AddToIndex(u, u.UserId);
-                }
+                _elasticUserService.AddToIndexMany(batch);
             }
 
             //initializing productindex
-            var products = _db.Products.AsNoTracking().OrderBy(t => t.ProductId).Batch(500);
+            var products = _db.Products.AsNoTracking().Include(d=>d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.ProductId).Batch(5000);
             foreach (var batch in products)
             {
-                foreach (var product in batch)
-                {
-                    _elasticProductService.AddToIndex(product, product.ProductId);
-                }
+                _elasticProductService.AddToIndexMany(batch);
             }
         }
 

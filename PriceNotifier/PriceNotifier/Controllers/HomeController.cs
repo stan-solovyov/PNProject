@@ -19,7 +19,6 @@ namespace PriceNotifier.Controllers
     public class HomeController : BaseMVCController
     {
         private readonly AuthorizationRoot _authorizationRoot;
-        //private UserContext db = new UserContext();
         private readonly UserContext _db;
 
         public string GetHashString(string s)

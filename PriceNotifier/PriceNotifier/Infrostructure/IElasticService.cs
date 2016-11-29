@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PriceNotifier.Infrostructure
@@ -9,5 +10,6 @@ namespace PriceNotifier.Infrostructure
         Task DeleteIndex();
         void DeleteFromIndex(int id);
         void AddToIndex(T doc, int id);
+        void AddToIndexMany(IEnumerable<T> docs);
     }
 }

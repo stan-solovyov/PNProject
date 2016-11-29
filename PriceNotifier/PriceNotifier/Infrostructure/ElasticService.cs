@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -48,6 +49,11 @@ namespace PriceNotifier.Infrostructure
         public void AddToIndex(T doc, int id)
         {
             _client.Index(doc, idx => idx.Id(id));
+        }
+
+        public void AddToIndexMany(IEnumerable<T> docs)
+        {
+            _client.IndexMany(docs);
         }
     }
 }
