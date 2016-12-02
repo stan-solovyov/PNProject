@@ -8,10 +8,11 @@ using System.Web.OData;
 using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using AutoMapper;
-using BLL.Services;
+using BLL.Services.ProductMessageService;
 using BLL.Services.ProductService;
 using BLL.Services.UserService;
 using Domain.Entities;
+using Messages;
 using PriceNotifier.AuthFilter;
 using PriceNotifier.DTO;
 using PriceNotifier.Infrostructure;
@@ -24,14 +25,14 @@ namespace PriceNotifier.Controllers
     {
         private readonly IProductService _productService;
         private readonly IUserService _userService;
-        private readonly IEnumerable<IProviderProductInfoParser> _ppiParsers;
+        private readonly IProductMessageService _productMessageService;
         private readonly IElasticService<Product> _elasticProductService;
 
-        public ProductsController(IProductService productService, IUserService userService, IEnumerable<IProviderProductInfoParser> ppiParsers, IElasticService<Product> elasticProductService)
+        public ProductsController(IProductService productService, IUserService userService, IElasticService<Product> elasticProductService, IProductMessageService productMessageService)
         {
             _productService = productService;
             _userService = userService;
-            _ppiParsers = ppiParsers;
+            _productMessageService = productMessageService;
             _elasticProductService = elasticProductService;
         }
 
@@ -101,6 +102,7 @@ namespace PriceNotifier.Controllers
             if (productFound != null)
             {
                 productFound = Mapper.Map(productDto, productFound);
+                _elasticProductService.DeleteFromIndex(productFound.ProductId);
                 productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked = productDto.Checked;
                 await _productService.Update(productFound);
                 productDto = Mapper.Map(productFound, productDto);
@@ -128,28 +130,8 @@ namespace PriceNotifier.Controllers
             {
                 var product = Mapper.Map<ProductDto, Product>(productDto);
                 product.ProvidersProductInfos.Add(new ProvidersProductInfo { ImageUrl = productDto.ImageUrl, MinPrice = productDto.MinPrice, MaxPrice = productDto.MaxPrice, ProviderName = "Onliner", Url = productDto.Url });
-                var tasks = new List<Task<ProvidersProductInfo>>();
-
-                foreach (var parser in _ppiParsers)
-                {
-                    var providersProductInfo = parser.GetProvidersProductInfo(productDto.Name);
-                    tasks.Add(providersProductInfo);
-                }
-
-                if (tasks.Count != 0)
-                {
-                    var providerProductInfoes = await Task.WhenAll(tasks);
-
-                    foreach (var providersProductInfo in providerProductInfoes)
-                    {
-                        if (providersProductInfo != null)
-                        {
-                            product.ProvidersProductInfos.Add(providersProductInfo);
-                        }
-                    }
-                }
-
                 product = await _productService.Create(product);
+                _productMessageService.SendProduct(new ProductMessage {ProductId = product.ProductId});
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
                 productDto = Mapper.Map(product, productDto);

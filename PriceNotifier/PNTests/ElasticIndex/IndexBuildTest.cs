@@ -78,7 +78,7 @@ namespace PNTests.ElasticIndex
                 {
                     watch.Restart();
                     client.Index(p, x => x.Id(p.ProductId));
-                    Thread.Sleep(3000);
+                    //Thread.Sleep(3000);
                     watch.Stop();
                     var elapsedMs = watch.ElapsedMilliseconds;
                     Trace.WriteLine("");

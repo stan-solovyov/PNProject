@@ -20,6 +20,7 @@ using PriceNotifier.RSBMessageConsumer;
 using Rhino.ServiceBus;
 using Rhino.ServiceBus.Impl;
 using System.Configuration;
+using BLL.Services.ProductMessageService;
 
 [assembly: OwinStartup(typeof(PriceNotifier.Startup))]
 
@@ -45,9 +46,8 @@ namespace PriceNotifier
             builder.RegisterType<ArticleService>().As<IArticleService>().InstancePerRequest();
             builder.RegisterType<ElasticProductService>().As<IElasticService<Product>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"])).InstancePerRequest();
             builder.RegisterType<UpdatedPricesConsumer>().As<ConsumerOf<UpdatedPricesMessage>>();
+            builder.RegisterType<ProductMessageService>().As<IProductMessageService>().InstancePerRequest();
             builder.RegisterType<UserProductRepository>().As<IUserProductRepository>().InstancePerRequest();
-            builder.RegisterType<PriceFrom1KParser>().As<IProviderProductInfoParser>().InstancePerRequest();
-            builder.RegisterType<PriceFromMigomParser>().As<IProviderProductInfoParser>().InstancePerRequest();
             var container = builder.Build();
 
             //injecting RSB with Autofac

@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6EA1D6B9-5AEE-459E-86A6-3E542C5A34B6}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{D21DAB94-887F-4479-953D-281F97D2FD78}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BLL</RootNamespace>
-    <AssemblyName>BLL</AssemblyName>
+    <RootNamespace>ProductInfoApp</RootNamespace>
+    <AssemblyName>ProductInfoApp</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,12 +33,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=5.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.5.1.1\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="Autofac, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.2.1\lib\net45\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging, Version=2.1.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.2.1.1\lib\net40\Common.Logging.dll</HintPath>
+    <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -46,12 +49,12 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.4.9.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.CssSelectors.1.0.2\lib\net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="Esent.Interop, Version=1.6.0.0, Culture=neutral, PublicKeyToken=8dd49bbdae3f61af, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rhino.ServiceBus.References.3.1.1.0\lib\Esent.Interop.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="HtmlAgilityPack.CssSelectors, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.CssSelectors.1.0.2\lib\net45\HtmlAgilityPack.CssSelectors.dll</HintPath>
+    <Reference Include="Rhino.Queues, Version=2.2.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rhino.Queues.2.2.0.0\lib\4.0\Rhino.Queues.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Rhino.ServiceBus, Version=3.1.1.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
@@ -64,47 +67,50 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web.OData">
-      <HintPath>..\packages\Microsoft.AspNet.OData.5.9.1\lib\net45\System.Web.OData.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Wintellect.Threading, Version=5.0.3948.23182, Culture=neutral, PublicKeyToken=167f00fdf109b063, processorArchitecture=MSIL">
+      <HintPath>..\packages\PowerThreading.20101026.0\lib\net20\Wintellect.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Services\ArticleService\ArticleService.cs" />
-    <Compile Include="Services\ArticleService\IArticleService.cs" />
-    <Compile Include="Services\IProviderProductInfoParser.cs" />
-    <Compile Include="Services\IService.cs" />
-    <Compile Include="Services\PriceHistoryService\IPriceHistoryService.cs" />
-    <Compile Include="Services\PriceHistoryService\PriceHistoryService.cs" />
-    <Compile Include="Services\PriceParserService\PriceFrom1KParser.cs" />
-    <Compile Include="Services\PriceParserService\PriceFromMigomParser.cs" />
-    <Compile Include="Services\ProductMessageService\IProductMessageService.cs" />
-    <Compile Include="Services\ProductMessageService\PriceNotifierBootstrapper.cs" />
-    <Compile Include="Services\ProductMessageService\ProductMessageService.cs" />
-    <Compile Include="Services\ProductService\IProductService.cs" />
-    <Compile Include="Services\ProductService\ProductService.cs" />
+    <Compile Include="ContainerConfig.cs" />
+    <Compile Include="IProductInfoService.cs" />
+    <Compile Include="ProductInfoService.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\UserService\IUserService.cs" />
-    <Compile Include="Services\UserService\UserService.cs" />
-    <Compile Include="Models\UserFromDBWithCount.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{6ea1d6b9-5aee-459e-86a6-3e542c5a34b6}</Project>
+      <Name>BLL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
-      <Project>{F1727D8E-E517-41EE-9D64-4114EF2458DE}</Project>
+      <Project>{f1727d8e-e517-41ee-9d64-4114ef2458de}</Project>
       <Name>Domain</Name>
     </ProjectReference>
     <ProjectReference Include="..\Messages\Messages.csproj">
       <Project>{A5DF9774-1CE9-4EBF-B5BB-32B371F8EDC4}</Project>
       <Name>Messages</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NotificationApp\NotificationApp.csproj">
+      <Project>{3CA5B3B8-049E-4E57-B332-1E69C18AC6CE}</Project>
+      <Name>NotificationApp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PriceNotifier\PriceNotifier.csproj">
+      <Project>{4a635014-caf4-4329-b6dc-2b3e11f2f583}</Project>
+      <Name>PriceNotifier</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
