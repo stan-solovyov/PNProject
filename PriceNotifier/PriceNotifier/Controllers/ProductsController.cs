@@ -101,12 +101,13 @@ namespace PriceNotifier.Controllers
             var productFound = _productService.Get(productDto.Id, userId);
             if (productFound != null)
             {
-                productFound = Mapper.Map(productDto, productFound);
                 _elasticProductService.DeleteFromIndex(productFound.ProductId);
+                productFound = Mapper.Map(productDto, productFound);
                 productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked = productDto.Checked;
                 await _productService.Update(productFound);
                 productDto = Mapper.Map(productFound, productDto);
                 productDto.Checked = productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked;
+                _elasticProductService.AddToIndex(productFound, productFound.ProductId);
                 return productDto;
             }
 
@@ -135,7 +136,6 @@ namespace PriceNotifier.Controllers
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
                 productDto = Mapper.Map(product, productDto);
-                _elasticProductService.AddToIndex(product, product.ProductId);
                 return productDto;
             }
 
@@ -144,7 +144,6 @@ namespace PriceNotifier.Controllers
             {
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.ProductId, UserId = user.UserId });
                 await _userService.Update(user);
-                _elasticProductService.AddToIndex(p,p.ProductId);
                 return productDto;
             }
 

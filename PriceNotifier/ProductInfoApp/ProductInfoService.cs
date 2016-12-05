@@ -5,6 +5,7 @@ using BLL.Services.ProductService;
 using Domain.Entities;
 using Rhino.ServiceBus;
 using Messages;
+using PriceNotifier.Infrostructure;
 
 namespace ProductInfoApp
 {
@@ -12,11 +13,13 @@ namespace ProductInfoApp
     {
         private readonly IEnumerable<IProviderProductInfoParser> _ppiParsers;
         private readonly IProductService _productService;
+        private readonly IElasticService<Product> _elasticProductService;
 
-        public ProductInfoService(IEnumerable<IProviderProductInfoParser> ppiParsers, IProductService productService)
+        public ProductInfoService(IEnumerable<IProviderProductInfoParser> ppiParsers, IProductService productService, IElasticService<Product> elasticProductService)
         {
             _ppiParsers = ppiParsers;
             _productService = productService;
+            _elasticProductService = elasticProductService;
         }
         public void AddProductInfo(int productId)
         {
@@ -41,6 +44,7 @@ namespace ProductInfoApp
                 }
                 _productService.Update(productfound).Wait();
             }
+            _elasticProductService.AddToIndex(productfound, productfound.ProductId);
         }
 
         public void Consume(ProductMessage message)

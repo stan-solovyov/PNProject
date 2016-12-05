@@ -41,7 +41,7 @@ namespace BLL.Services.PriceParserService
 
                     doc.LoadHtml(html);
                     var allNodes = doc.QuerySelectorAll(".price");
-                    nodes = allNodes.QuerySelectorAll("span [itemprop=lowPrice]").First();
+                    nodes = allNodes.QuerySelectorAll("span [itemprop=lowPrice]").FirstOrDefault();
                     if (!string.IsNullOrEmpty(nodes?.InnerText))
                     {
                         var price = nodes.InnerText;
@@ -49,7 +49,7 @@ namespace BLL.Services.PriceParserService
                         minPrice = double.Parse(price);
                     }
 
-                    nodes = allNodes.QuerySelectorAll("span [itemprop=highPrice]").First();
+                    nodes = allNodes.QuerySelectorAll("span [itemprop=highPrice]").FirstOrDefault();
                     if (!string.IsNullOrEmpty(nodes?.InnerText))
                     {
                         var price = nodes.InnerText;
@@ -57,7 +57,7 @@ namespace BLL.Services.PriceParserService
                         maxPrice = double.Parse(price);
                     }
 
-                    nodes = doc.QuerySelectorAll(".b-item-card__top-img-i [itemprop=image]").First();
+                    nodes = doc.QuerySelectorAll(".b-item-card__top-img-i [itemprop=image]").FirstOrDefault();
                     if (!string.IsNullOrEmpty(nodes?.GetAttributeValue("src", "")))
                     {
                         imageUrl = nodes.GetAttributeValue("src", "");
