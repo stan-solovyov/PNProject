@@ -18,5 +18,6 @@ namespace Domain.EF
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<ProvidersProductInfo> ProvidersProductInfos { get; set; }
         public DbSet<Article> Articles { get; set; }
+
     }
 }

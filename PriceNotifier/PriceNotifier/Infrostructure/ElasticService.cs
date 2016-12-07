@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Domain.Entities;
 using Nest;
 
 namespace PriceNotifier.Infrostructure
 {
-    public class ElasticService<T> : IElasticService<T> where T : class
+    public class ElasticService<T> : IElasticProductService<Product>, IElasticService<T> where T : class
     {
         private readonly ElasticClient _client;
         private readonly string _indexName;
@@ -23,7 +24,7 @@ namespace PriceNotifier.Infrostructure
             _lambda = lambda;
             var local = new Uri(elastiSearchServerUrl);
             var settings = new ConnectionSettings(local);
-            _client = new ElasticClient(settings.DefaultIndex(_indexName));
+            _client = new ElasticClient(settings.DisableDirectStreaming().DefaultIndex(_indexName));
         }
         public IQueryable<T> SearchProducts(string query)
         {
@@ -51,9 +52,32 @@ namespace PriceNotifier.Infrostructure
             _client.Index(doc, idx => idx.Id(id));
         }
 
+        public IUpdateResponse<T> UpdateDoc(int id, T doc)
+        {
+            var a = _client.Get<Product>(id); // returns an IGetResponse mapped 1-to-1 with the Elasticsearch JSON response
+            var source = a.Source; // the original document
+            var response = _client.Update(new DocumentPath<T>(id), u => u.Doc(doc));
+            return response;
+        }
+
         public void AddToIndexMany(IEnumerable<T> docs)
         {
             _client.IndexMany(docs);
+        }
+
+        public void AddToIndexManyProducts(IEnumerable<Product> docs)
+        {
+            var descriptor = new BulkDescriptor();
+
+            foreach (var i in docs)
+            {
+                descriptor.Index<Product>(op => op
+                .Id(i.ProductId)
+                .Document(i)
+                );
+            }
+
+            _client.Bulk(descriptor);
         }
     }
 }

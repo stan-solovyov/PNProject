@@ -13,7 +13,7 @@ namespace ElasticIndexBuilder
             var builder = new ContainerBuilder();
 
             builder.RegisterType<ElasticIndex>().As<IElasticIndex>();
-            builder.RegisterType<ElasticProductService>().As<IElasticService<Product>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"]));
+            builder.RegisterType<ElasticProductService>().As<IElasticProductService<Product>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"]));
             builder.RegisterType<ElasticUserService>().As<IElasticService<User>>().WithParameter(new NamedParameter("elastiSearchServerUrl", ConfigurationManager.AppSettings["elastiSearchServerUrl"]));
             builder.Register(c => new UserContext());
             return builder.Build();

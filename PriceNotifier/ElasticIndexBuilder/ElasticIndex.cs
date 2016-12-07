@@ -9,11 +9,11 @@ namespace ElasticIndexBuilder
 {
     public class ElasticIndex : IElasticIndex
     {
-        private readonly IElasticService<Product> _elasticProductService;
+        private readonly IElasticProductService<Product> _elasticProductService;
         private readonly IElasticService<User> _elasticUserService;
         private readonly UserContext _db;
 
-        public ElasticIndex(IElasticService<Product> elasticProductService, IElasticService<User> elasticUserService, UserContext db)
+        public ElasticIndex(IElasticProductService<Product> elasticProductService, IElasticService<User> elasticUserService, UserContext db)
         {
             _elasticProductService = elasticProductService;
             _elasticUserService = elasticUserService;
@@ -33,7 +33,7 @@ namespace ElasticIndexBuilder
             var products = _db.Products.AsNoTracking().Include(d=>d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.ProductId).Batch(5000);
             foreach (var batch in products)
             {
-                _elasticProductService.AddToIndexMany(batch);
+                _elasticProductService.AddToIndexManyProducts(batch);
             }
         }
 

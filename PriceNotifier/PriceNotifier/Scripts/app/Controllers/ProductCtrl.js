@@ -206,11 +206,11 @@
     }
 
     var onUserDelete = function () {
-        productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
+            productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
     };
 
     $scope.update = function (product) {
-        productService.updateItem(product).then(onUserDelete, onError);
+        productService.updateItem(product).then(function(){}, onError);
     };
 
     $scope.remove = function (product) {

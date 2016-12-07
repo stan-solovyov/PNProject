@@ -18,8 +18,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>
-    </IISExpressSSLPort>
+    <IISExpressSSLPort>44361</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -308,6 +307,7 @@
     <Compile Include="Infrostructure\ElasticProductService.cs" />
     <Compile Include="Infrostructure\ElasticService.cs" />
     <Compile Include="Infrostructure\ElasticUserService.cs" />
+    <Compile Include="Infrostructure\IElasticProductService.cs" />
     <Compile Include="Infrostructure\IElasticService.cs" />
     <Compile Include="ViewModels\IndexViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

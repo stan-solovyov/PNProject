@@ -101,13 +101,12 @@ namespace PriceNotifier.Controllers
             var productFound = _productService.Get(productDto.Id, userId);
             if (productFound != null)
             {
-                _elasticProductService.DeleteFromIndex(productFound.ProductId);
                 productFound = Mapper.Map(productDto, productFound);
                 productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked = productDto.Checked;
                 await _productService.Update(productFound);
+                _elasticProductService.UpdateDoc(productFound.ProductId, productFound);
                 productDto = Mapper.Map(productFound, productDto);
                 productDto.Checked = productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked;
-                _elasticProductService.AddToIndex(productFound, productFound.ProductId);
                 return productDto;
             }
 

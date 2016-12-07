@@ -8,5 +8,7 @@ namespace PriceNotifier.Infrostructure
         {
 
         }
+
+
     }
 }
