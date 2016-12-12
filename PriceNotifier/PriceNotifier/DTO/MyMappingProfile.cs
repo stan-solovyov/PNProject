@@ -9,7 +9,7 @@ namespace PriceNotifier.DTO
     {
         public MyMappingProfile()
         {
-            CreateMap<Product, ProductDto>().ForMember(a => a.Id, opt => opt.MapFrom(c => c.ProductId))
+            CreateMap<Product, ProductDto>().ForMember(a => a.Id, opt => opt.MapFrom(c => c.Id))
                                             .ForMember(a => a.Article, opt => opt.MapFrom(c => c.Articles.OrderByDescending(d => d.DateAdded).FirstOrDefault(a => a.IsPublished)))
                                             .ForMember(a => a.ImageUrl, opt => opt.MapFrom(c => c.ProvidersProductInfos.FirstOrDefault().ImageUrl))
                                             .ForMember(a => a.MaxPrice, opt => opt.MapFrom(c => c.ProvidersProductInfos.Max(a => a.MaxPrice)))

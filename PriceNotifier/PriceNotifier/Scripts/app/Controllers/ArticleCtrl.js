@@ -40,7 +40,7 @@
         columnDefs: [
             // default
             {
-                name: 'ArticleId',
+                name: 'Id',
                 displayName: 'Id',
                 enableFiltering: false,
                 enableCellEdit: false
@@ -225,14 +225,6 @@
     }
 
     $scope.edit = function (article) {
-        //productService.getProducts(true).then(function (response) {
-        //    $scope.items = response.data.Items;
-        //    for (var i=0; i<$scope.items.length; i++) {
-        //        if ($scope.items[i].Name === article.ProductName) {
-        //            $scope.items.splice(i, 1);
-        //        }
-        //    }
-        //});
 
         var modalInstance = $uibModal.open({
             animation: true,

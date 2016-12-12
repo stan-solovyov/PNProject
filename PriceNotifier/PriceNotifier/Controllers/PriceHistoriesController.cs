@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
 using System.Web.OData;
 using System.Web.OData.Extensions;
 using System.Web.OData.Query;
 using AutoMapper.QueryableExtensions;
 using BLL.Services.PriceHistoryService;
-using Domain.Entities;
 using PriceNotifier.DTO;
 
 namespace PriceNotifier.Controllers

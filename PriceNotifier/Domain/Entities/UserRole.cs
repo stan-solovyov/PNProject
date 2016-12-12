@@ -11,8 +11,10 @@ namespace Domain.Entities
         [Key, Column(Order = 1)]
         public int RoleId { get; set; }
         [JsonIgnore]
+        [ForeignKey("UserId")]
         public virtual User User { get; set; }
         [JsonIgnore]
+        [ForeignKey("RoleId")]
         public virtual Role Role { get; set; }
     }
 }

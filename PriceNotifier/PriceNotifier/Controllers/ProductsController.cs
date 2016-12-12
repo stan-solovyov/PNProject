@@ -54,7 +54,7 @@ namespace PriceNotifier.Controllers
 
             var productsDto = allProducts.Select(a => new ProductDto
             {
-                Id = a.ProductId,
+                Id = a.Id,
                 Article = a.Articles.OrderByDescending(d => d.DateAdded).FirstOrDefault(d => d.IsPublished),
                 ImageUrl = a.ProvidersProductInfos.FirstOrDefault().ImageUrl,
                 MaxPrice = a.ProvidersProductInfos.Max(d => d.MaxPrice),
@@ -104,7 +104,7 @@ namespace PriceNotifier.Controllers
                 productFound = Mapper.Map(productDto, productFound);
                 productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked = productDto.Checked;
                 await _productService.Update(productFound);
-                _elasticProductService.UpdateDoc(productFound.ProductId, productFound);
+                _elasticProductService.UpdateDoc(productFound.Id, productFound);
                 productDto = Mapper.Map(productFound, productDto);
                 productDto.Checked = productFound.UserProducts.Single(c => c.ProductId == productDto.Id && c.UserId == userId).Checked;
                 return productDto;
@@ -131,8 +131,8 @@ namespace PriceNotifier.Controllers
                 var product = Mapper.Map<ProductDto, Product>(productDto);
                 product.ProvidersProductInfos.Add(new ProvidersProductInfo { ImageUrl = productDto.ImageUrl, MinPrice = productDto.MinPrice, MaxPrice = productDto.MaxPrice, ProviderName = "Onliner", Url = productDto.Url });
                 product = await _productService.Create(product);
-                _productMessageService.SendProduct(new ProductMessage {ProductId = product.ProductId});
-                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.ProductId, UserId = user.UserId });
+                _productMessageService.SendProduct(new ProductMessage {ProductId = product.Id});
+                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.Id, UserId = user.Id });
                 await _userService.Update(user);
                 productDto = Mapper.Map(product, productDto);
                 return productDto;
@@ -141,8 +141,9 @@ namespace PriceNotifier.Controllers
             var productFound = _productService.GetByExtId(productDto.ExternalProductId, userId);
             if (productFound == null)
             {
-                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.ProductId, UserId = user.UserId });
+                user.UserProducts.Add(new UserProduct { Checked = true, ProductId = p.Id, UserId = user.Id });
                 await _userService.Update(user);
+                _elasticProductService.UpdateDoc(p.Id, p);
                 return productDto;
             }
 
@@ -162,10 +163,11 @@ namespace PriceNotifier.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            _elasticProductService.DeleteFromIndex(product.ProductId);
-            await _productService.DeleteFromUserProduct(user.UserId, product.ProductId);
+            await _productService.DeleteFromUserProduct(user.Id, product.Id);
+            _elasticProductService.UpdateDoc(product.Id, product);
             if (product.UserProducts.All(c => c.ProductId != id))
             {
+                _elasticProductService.DeleteFromIndex(product.Id);
                 await _productService.Delete(product);
             }
 

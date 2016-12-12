@@ -24,7 +24,7 @@ namespace PriceNotifier.AuthFilter
                 if (user != null)
                 {
                     var owinContext = httpContext.Request.GetOwinContext();
-                    owinContext.Set("userId", user.UserId);
+                    owinContext.Set("userId", user.Id);
                 }
 
                 return userFound;

@@ -5,7 +5,7 @@ namespace PriceNotifier.DTO
 {
     public class ArticleDto
     {
-        public int ArticleId { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "Please Enter Title")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Please Enter Summary")]

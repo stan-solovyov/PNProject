@@ -9,11 +9,11 @@ namespace ElasticIndexBuilder
 {
     public class ElasticIndex : IElasticIndex
     {
-        private readonly IElasticProductService<Product> _elasticProductService;
+        private readonly IElasticService<Product> _elasticProductService;
         private readonly IElasticService<User> _elasticUserService;
         private readonly UserContext _db;
 
-        public ElasticIndex(IElasticProductService<Product> elasticProductService, IElasticService<User> elasticUserService, UserContext db)
+        public ElasticIndex(IElasticService<Product> elasticProductService, IElasticService<User> elasticUserService, UserContext db)
         {
             _elasticProductService = elasticProductService;
             _elasticUserService = elasticUserService;
@@ -23,17 +23,17 @@ namespace ElasticIndexBuilder
         public void BuildIndexes()
         {
             //initializing productindex
-            var users = _db.Users.AsNoTracking().Include(a=>a.UserProducts).OrderBy(t => t.UserId).Batch(5000);
+            var users = _db.Users.AsNoTracking().Include(a=>a.UserProducts).OrderBy(t => t.Id).Batch(5000);
             foreach (var batch in users)
             {
                 _elasticUserService.AddToIndexMany(batch);
             }
 
             //initializing productindex
-            var products = _db.Products.AsNoTracking().Include(d=>d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.ProductId).Batch(5000);
+            var products = _db.Products.AsNoTracking().Include(d=>d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.Id).Batch(5000);
             foreach (var batch in products)
             {
-                _elasticProductService.AddToIndexManyProducts(batch);
+                _elasticProductService.AddToIndexMany(batch);
             }
         }
 

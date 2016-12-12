@@ -1,13 +1,14 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace Domain.Entities
 {
-    public class Article
+    public class Article : IEntityWithTypedId<int>
     {
         [Key]
-        public int ArticleId { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "Please Enter Title")]
         public string Title { get; set; }
         [Required(ErrorMessage = "Please Enter Summary")]
@@ -20,6 +21,7 @@ namespace Domain.Entities
         public DateTime DateAdded { get; set; }
         public int ProductId { get; set; }
         [JsonIgnore]
+        [ForeignKey("ProductId")]
         public Product Product { get; set; }
     }
 }

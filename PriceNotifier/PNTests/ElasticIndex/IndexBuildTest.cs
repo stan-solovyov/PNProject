@@ -8,7 +8,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MoreLinq;
 using Nest;
 using System.Diagnostics;
-using System.Threading;
 
 namespace PNTests.ElasticIndex
 {
@@ -41,7 +40,7 @@ namespace PNTests.ElasticIndex
             var watch = Stopwatch.StartNew();
 
             //Act
-            var products = _db.Products.AsNoTracking().Include(d => d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.ProductId).Batch(5000);
+            var products = _db.Products.AsNoTracking().Include(d => d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.Id).Batch(5000);
             var enumerable = products as IList<IEnumerable<Product>> ?? products.ToList();
             foreach (var batch in enumerable)
             {
@@ -67,7 +66,7 @@ namespace PNTests.ElasticIndex
             var watch = Stopwatch.StartNew();
 
             //Act
-            var products = _db.Products.AsNoTracking().Include(d => d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.ProductId).Batch(5000);
+            var products = _db.Products.AsNoTracking().Include(d => d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.Id).Batch(5000);
             var enumerable = products as IList<IEnumerable<Product>> ?? products.ToList();
             
             Trace.WriteLine("Trace Information-Indexing Starting ");
@@ -77,7 +76,7 @@ namespace PNTests.ElasticIndex
                 foreach (var p in batch)
                 {
                     watch.Restart();
-                    client.Index(p, x => x.Id(p.ProductId));
+                    client.Index(p, x => x.Id(p.Id));
                     //Thread.Sleep(3000);
                     watch.Stop();
                     var elapsedMs = watch.ElapsedMilliseconds;
@@ -98,7 +97,7 @@ namespace PNTests.ElasticIndex
             var watch = Stopwatch.StartNew();
 
             //Act
-            var products = _db.Products.AsNoTracking().Include(d => d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.ProductId).Batch(5000);
+            var products = _db.Products.AsNoTracking().Include(d => d.Articles).Include(d => d.ProvidersProductInfos).Include(d => d.UserProducts).OrderBy(t => t.Id).Batch(5000);
             var enumerable = products as IList<IEnumerable<Product>> ?? products.ToList();
 
             Trace.WriteLine("Trace Information-Indexing Starting ");
@@ -108,7 +107,7 @@ namespace PNTests.ElasticIndex
                 foreach (var p in batch)
                 {
                     watch.Restart();
-                    client.Index(p, x => x.Id(p.ProductId).Refresh());
+                    client.Index(p, x => x.Id(p.Id).Refresh());
                     watch.Stop();
                     var elapsedMs = watch.ElapsedMilliseconds;
                     Trace.WriteLine("");

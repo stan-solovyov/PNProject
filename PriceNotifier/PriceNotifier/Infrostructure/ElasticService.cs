@@ -8,7 +8,7 @@ using Nest;
 
 namespace PriceNotifier.Infrostructure
 {
-    public class ElasticService<T> : IElasticProductService<Product>, IElasticService<T> where T : class
+    public class ElasticService<T> : IElasticService<T> where T : class,IEntityWithTypedId<int>
     {
         private readonly ElasticClient _client;
         private readonly string _indexName;
@@ -55,24 +55,18 @@ namespace PriceNotifier.Infrostructure
         public IUpdateResponse<T> UpdateDoc(int id, T doc)
         {
             var a = _client.Get<Product>(id); // returns an IGetResponse mapped 1-to-1 with the Elasticsearch JSON response
-            var source = a.Source; // the original document
             var response = _client.Update(new DocumentPath<T>(id), u => u.Doc(doc));
             return response;
         }
 
         public void AddToIndexMany(IEnumerable<T> docs)
         {
-            _client.IndexMany(docs);
-        }
-
-        public void AddToIndexManyProducts(IEnumerable<Product> docs)
-        {
             var descriptor = new BulkDescriptor();
 
             foreach (var i in docs)
             {
-                descriptor.Index<Product>(op => op
-                .Id(i.ProductId)
+                descriptor.Index<T>(op => op
+                .Id(i.Id)
                 .Document(i)
                 );
             }

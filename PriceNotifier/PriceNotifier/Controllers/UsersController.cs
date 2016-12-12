@@ -85,7 +85,7 @@ namespace PriceNotifier.Controllers
         public async Task<IHttpActionResult> DeleteUser(int id)
         {
             User user = await _userService.GetById(id);
-            var up = user.UserProducts.Where(a => a.UserId == user.UserId).Select(c => c.ProductId).ToList();
+            var up = user.UserProducts.Where(a => a.UserId == user.Id).Select(c => c.ProductId).ToList();
 
             if (user == null)
             {

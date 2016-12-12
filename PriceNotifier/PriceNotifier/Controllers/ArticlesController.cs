@@ -69,7 +69,7 @@ namespace PriceNotifier.Controllers
                 throw new HttpResponseException(response);
             }
 
-            Article article = await _articleService.GetById(articleDto.ArticleId);
+            Article article = await _articleService.GetById(articleDto.Id);
             if (article != null)
             {
                 var articleUpdated = Mapper.Map(articleDto, article);

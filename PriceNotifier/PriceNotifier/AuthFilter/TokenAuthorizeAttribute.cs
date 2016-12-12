@@ -31,7 +31,7 @@ namespace PriceNotifier.AuthFilter
                     if (user != null)
                     {
                         var owinContext = actionContext.Request.GetOwinContext();
-                        owinContext.Set("userId", user.UserId);
+                        owinContext.Set("userId", user.Id);
                         if (_userRoles != null)
                         {
                             var roles = user.UserRoles.Select(c => c.Role.Name).ToArray();

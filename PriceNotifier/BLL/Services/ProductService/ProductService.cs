@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using Domain.Repository;
 
@@ -58,7 +57,7 @@ namespace BLL.Services.ProductService
 
         public Product Get(int productId, int userId)
         {
-            return _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).FirstOrDefault(c => c.ProductId == productId);
+            return _productRepository.Query().Where(c => c.UserProducts.Any(b => b.UserId == userId)).FirstOrDefault(c => c.Id == productId);
         }
 
         public async Task<IEnumerable<Product>> GetTrackedItems()

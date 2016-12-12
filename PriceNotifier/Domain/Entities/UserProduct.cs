@@ -11,8 +11,10 @@ namespace Domain.Entities
         [Key, Column(Order = 1)]
         public int ProductId { get; set; }
         [JsonIgnore]
+        [ForeignKey("UserId")]
         public virtual User User { get; set; }
         [JsonIgnore]
+        [ForeignKey("ProductId")]
         public virtual Product Product { get; set; }
         public bool Checked { get; set; }
     }

@@ -83,7 +83,7 @@ namespace PriceNotifier.Controllers
         public ActionResult Email()
         {
             var userId = GetCurrentUserId(Request);
-            var user = _db.Users.FirstOrDefault(c => c.UserId == userId);
+            var user = _db.Users.FirstOrDefault(c => c.Id == userId);
             return View(user);
         }
 
@@ -93,7 +93,7 @@ namespace PriceNotifier.Controllers
         {
             var foo = new EmailAddressAttribute();
             var userId = GetCurrentUserId(Request);
-            var user = _db.Users.FirstOrDefault(c => c.UserId == userId);
+            var user = _db.Users.FirstOrDefault(c => c.Id == userId);
             if (foo.IsValid(email))
             {
                 if (user != null)
@@ -146,8 +146,8 @@ namespace PriceNotifier.Controllers
                 {
                     _db.Users.Add(user);
                     _db.SaveChanges();
-                    var roleId = _db.Roles.FirstOrDefault(c=>c.Name == "User").RoleId;
-                    user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = user.UserId });
+                    var roleId = _db.Roles.FirstOrDefault(c=>c.Name == "User").Id;
+                    user.UserRoles.Add(new UserRole { RoleId = roleId, UserId = user.Id });
                 }
                 else
                 {
@@ -161,7 +161,7 @@ namespace PriceNotifier.Controllers
             var userFound = _db.Users.FirstOrDefault(c => c.SocialNetworkUserId == user.SocialNetworkUserId);
             if (userFound != null)
             {
-                userFound.Token = GetHashString(user.UserId + user.SocialNetworkName + user.SocialNetworkUserId);
+                userFound.Token = GetHashString(user.Id + user.SocialNetworkName + user.SocialNetworkUserId);
                 _db.SaveChanges();
                 HttpCookie cookie = new HttpCookie("Token");
                 cookie.Value = userFound.Token;

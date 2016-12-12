@@ -101,7 +101,7 @@ namespace NotificationApp.JobTask
                                     var up = new UpdatedPrice
                                     {
                                         Price = priceFromSite,
-                                        ProductId = product.ProductId,
+                                        ProductId = product.Id,
                                         UserId = userId
                                     };
                                     updatedPriceList.Add(up);
@@ -109,7 +109,7 @@ namespace NotificationApp.JobTask
 
                                 await _priceHistoryService.Create(new PriceHistory
                                 {
-                                    ProviderId = providersProductInfo.ProviderId,
+                                    ProviderId = providersProductInfo.Id,
                                     Date = DateTime.Now,
                                     NewPrice = priceFromSite,
                                     OldPrice = priceFromDB

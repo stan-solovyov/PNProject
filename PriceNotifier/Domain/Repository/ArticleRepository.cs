@@ -22,7 +22,7 @@ namespace Domain.Repository
 
         public async Task<Article> Get(int id)
         {
-            return await _context.Articles.Include(c=>c.Product).SingleAsync(c=>c.ArticleId==id);
+            return await _context.Articles.Include(c=>c.Product).SingleAsync(c=>c.Id==id);
         }
 
         public Task Update(Article entity)

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
-using User = Domain.Entities.User;
+﻿using User = Domain.Entities.User;
 
 namespace PriceNotifier.Infrostructure
 {

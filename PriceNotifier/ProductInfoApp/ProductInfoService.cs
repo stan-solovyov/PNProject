@@ -44,7 +44,7 @@ namespace ProductInfoApp
                 }
                 _productService.Update(productfound).Wait();
             }
-            _elasticProductService.AddToIndex(productfound, productfound.ProductId);
+            _elasticProductService.AddToIndex(productfound, productfound.Id);
         }
 
         public void Consume(ProductMessage message)

@@ -29,7 +29,7 @@ namespace NotificationAppTests
 
             var user = new User
             {
-                UserId = userId,
+                Id = userId,
                 SocialNetworkName = "Twitter",
                 Username = "Stan",
                 SocialNetworkUserId = "297397558",
@@ -44,14 +44,14 @@ namespace NotificationAppTests
 
             List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
             {
-                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = priceFromDb, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe"}
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = priceFromDb, MaxPrice = 16, ProviderName = "Onliner", Id = 1, Url = "qwe"}
             };
 
             List<Product> products = new List<Product>()
             {
                 new Product
                 {
-                ProductId = 33,
+                Id = 33,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
                 ProvidersProductInfos = providersProductInfos,

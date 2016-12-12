@@ -46,12 +46,12 @@ namespace PNTests.Controllers
 
             List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
             {
-                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe",ProductId = 33}
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", Id = 1, Url = "qwe",ProductId = 33}
             };
 
             Product product = new Product
             {
-                ProductId = 33,
+                Id = 33,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
                 ProvidersProductInfos = providersProductInfos,
@@ -105,12 +105,12 @@ namespace PNTests.Controllers
 
             List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
             {
-                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe"}
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", Id = 1, Url = "qwe"}
             };
 
             Product product = new Product
             {
-                ProductId = 297,
+                Id = 297,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
                 ProvidersProductInfos = providersProductInfos,
@@ -164,12 +164,12 @@ namespace PNTests.Controllers
 
             List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
             {
-                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe"}
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", Id = 1, Url = "qwe"}
             };
 
             var product = new Product
             {
-                ProductId = productId,
+                Id = productId,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
                 ProvidersProductInfos = providersProductInfos,
@@ -183,7 +183,7 @@ namespace PNTests.Controllers
             mockProductService.Setup(x => x.GetById(productId))
                 .ReturnsAsync(new Product
                 {
-                    ProductId = productId,
+                    Id = productId,
                     ExternalProductId = "12345",
                     Name = "asdasasf",
                     ProvidersProductInfos = providersProductInfos,
@@ -195,7 +195,7 @@ namespace PNTests.Controllers
             mockUserService.Setup(x => x.GetById(userId))
                .ReturnsAsync(new User
                {
-                   UserId = userId,
+                   Id = userId,
                    SocialNetworkName = "Twitter",
                    Username = "Stan",
                    SocialNetworkUserId = "297397558",
@@ -235,12 +235,12 @@ namespace PNTests.Controllers
 
             List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
             {
-                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe"}
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", Id = 1, Url = "qwe"}
             };
 
             Product newProduct = new Product
             {
-                ProductId = productId,
+                Id = productId,
                 ExternalProductId = "432",
                 Name = "asdasasf",
                 ProvidersProductInfos = providersProductInfos,
@@ -261,7 +261,7 @@ namespace PNTests.Controllers
 
             User user = new User
             {
-                UserId = userId,
+                Id = userId,
                 SocialNetworkName = "Twitter",
                 Username = "Stan",
                 SocialNetworkUserId = "297397558",
@@ -312,12 +312,12 @@ namespace PNTests.Controllers
 
             List<ProvidersProductInfo> providersProductInfos = new List<ProvidersProductInfo>
             {
-                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", ProviderId = 1, Url = "qwe"}
+                new ProvidersProductInfo {ImageUrl = "asd",MinPrice = 12, MaxPrice = 16, ProviderName = "Onliner", Id = 1, Url = "qwe"}
             };
 
             var product = new Product
             {
-                ProductId = productId,
+                Id = productId,
                 ExternalProductId = "12345",
                 Name = "asdasasf",
                 ProvidersProductInfos = providersProductInfos,

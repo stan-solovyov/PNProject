@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
-    public class Product
+    public class Product: IEntityWithTypedId<int>
     {
-        public int ProductId { get; set; }
+        public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         [MaxLength(450)]
