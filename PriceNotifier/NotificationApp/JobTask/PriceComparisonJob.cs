@@ -68,15 +68,15 @@ namespace NotificationApp.JobTask
 
                                     if (priceFromDB.Value > priceFromSite.Value)
                                     {
-                                        await _mailService.PriceFromDbHigher(emails, productLink, product.Name,
-                                                priceFromDB.Value, priceFromSite.Value);
+                                        //await _mailService.PriceFromDbHigher(emails, productLink, product.Name,
+                                        //        priceFromDB.Value, priceFromSite.Value);
                                     }
 
                                     if (priceFromDB.Value < priceFromSite.Value)
                                     {
-                                        await
-                                            _mailService.PriceFromSiteHigher(emails, productLink, product.Name,
-                                                priceFromDB.Value, priceFromSite.Value);
+                                        //await
+                                        //    _mailService.PriceFromSiteHigher(emails, productLink, product.Name,
+                                        //        priceFromDB.Value, priceFromSite.Value);
                                     }
                                 }
 
@@ -87,13 +87,13 @@ namespace NotificationApp.JobTask
 
                                 if (priceFromDB == null && priceFromSite != null)
                                 {
-                                    await _mailService.ProductAvailable(emails, productLink, product.Name,
-                                            priceFromSite.Value);
+                                    //await _mailService.ProductAvailable(emails, productLink, product.Name,
+                                    //        priceFromSite.Value);
                                 }
 
                                 if (priceFromDB != null && priceFromSite == null)
                                 {
-                                    await _mailService.ProductOutOfStock(emails, productLink, product.Name);
+                                    //await _mailService.ProductOutOfStock(emails, productLink, product.Name);
                                 }
 
                                 foreach (var userId in userIds)
@@ -117,7 +117,7 @@ namespace NotificationApp.JobTask
                                 providersProductInfo.MinPrice = priceFromSite;
                                 await _productService.Update(product);
                             }
-                           catch (Exception ex)
+                            catch (Exception ex)
                             {
                                 log.Error("Error message:" + ex.Message);
                             }

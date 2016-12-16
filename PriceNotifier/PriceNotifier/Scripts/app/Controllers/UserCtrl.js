@@ -144,12 +144,15 @@
 
         $scope.gridOptions.appScopeProvider = $scope;
 
-        var onUserDelete = function () {
-            userService.getUsers(columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetUsers, onError);
+        var onUserDelete = function (id) {
+            var data = $scope.gridOptions.data.filter(function (el) {
+                return el.Id !== id;
+            });
+            $scope.gridOptions.data = data;
         };
 
         $scope.remove = function (id) {
-            userService.removeUser(id).then(onUserDelete, onError);
+            userService.removeUser(id).then(onUserDelete(id), onError);
         };
 
         if (!columnName && !filterColumn) {

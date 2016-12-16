@@ -1,4 +1,4 @@
-﻿app.controller('ArticleCtrl', ['$scope', 'articleService', 'productService', '$timeout', '$uibModal', 'limitToFilter', function ($scope, articleService, productService, $timeout, $uibModal,limitToFilter) {
+﻿app.controller('ArticleCtrl', ['$scope', 'articleService', 'productService', '$timeout', '$uibModal', 'limitToFilter', function ($scope, articleService, productService, $timeout, $uibModal, limitToFilter) {
     var columnName = "", filterColumn = "", filter = '';
 
     var paginationOptions = {
@@ -72,7 +72,7 @@
             {
                 name: ' ',
                 cellTemplate:
-                    '<button type="button" class="btn btn-default" ng-click="grid.appScope.edit(row.entity)">Edit</button> <button type="button" class="btn btn-danger" ng-click="grid.appScope.remove(row.entity.ArticleId)"> Remove</button>',
+                    '<button type="button" class="btn btn-default" ng-click="grid.appScope.edit(row.entity)">Edit</button> <button type="button" class="btn btn-danger" ng-click="grid.appScope.remove(row.entity.Id)"> Remove</button>',
                 enableFiltering: false,
                 enableSorting: false,
                 enableCellEdit: false
@@ -90,7 +90,7 @@
                         paginationOptions.sort = sortColumns[0].sort.direction;
                         columnName = sortColumns[0].name;
                     }
-                    articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+                    articleService.getArticles(true, columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
                 });
             $scope.gridApi.core.on.filterChanged($scope, function () {
                 var grid = this.grid;
@@ -102,13 +102,13 @@
                         filter = value.filters[0].term;
                     }
                 });
-                articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+                articleService.getArticles(true, columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
             });
             gridApi.pagination.on.paginationChanged($scope,
                 function (newPage, pageSize) {
                     paginationOptions.pageNumber = newPage;
                     paginationOptions.pageSize = pageSize;
-                    articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetArticles, onError);
+                    articleService.getArticles(true, columnName, paginationOptions.sort, filter, filterColumn, newPage, pageSize).then(onGetArticles, onError);
                 });
         }
     };
@@ -146,8 +146,11 @@
         opened: false
     };
 
-    var onArticleDelete = function () {
-        articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+    var onArticleDelete = function (id) {
+        var data = $scope.gridOptions.data.filter(function (el) {
+            return el.Id !== id;
+        });
+        $scope.gridOptions.data = data;
         $scope.validationMessages = null;
     };
 
@@ -168,28 +171,33 @@
     }
 
     $scope.remove = function (id) {
-        articleService.removeArticle(id).then(onArticleDelete, onError);
+        articleService.removeArticle(id).then(onArticleDelete(id), onError);
+    };
+
+    var onArticleCreate = function () {
+        articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+        $scope.validationMessages = null;
     };
 
     $scope.update = function (article) {
         $scope.currentArticle = article;
         if (typeof (article.ProductName.Name) == "undefined") {
-            articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
+            articleService.updateArticle(article).then(onArticleCreate, onErrorValidate);
         } else {
             article.ProductId = article.ProductName.Id;
             article.ProductName = article.ProductName.Name;
-            articleService.updateArticle(article).then(onArticleDelete, onErrorValidate);
+            articleService.updateArticle(article).then(onArticleCreate, onErrorValidate);
         }
     };
 
     $scope.create = function (article) {
         article.DateAdded = $scope.dt;
         if (typeof (article.Name) == "undefined") {
-            articleService.createArticle(article).then(onArticleDelete, onErrorValidate);
+            articleService.createArticle(article).then(onArticleCreate, onErrorValidate);
         } else {
             article.ProductId = article.Name.Id;
             article.Name = article.Name.Name;
-            articleService.createArticle(article).then(onArticleDelete, onErrorValidate);
+            articleService.createArticle(article).then(onArticleCreate, onErrorValidate);
         }
     };
 
@@ -248,6 +256,6 @@
         };
     };
 
-    articleService.getArticles(true,columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
+    articleService.getArticles(true, columnName, paginationOptions.sort, filter, filterColumn, paginationOptions.pageNumber, paginationOptions.pageSize).then(onGetArticles, onError);
 }
 ]);

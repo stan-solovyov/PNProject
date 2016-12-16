@@ -184,15 +184,20 @@
 
     $scope.message = "There are no items in track list.";
     var onUserProducts = function (response) {
-        $scope.pager = pagerService.getPager(response.data.Count, currentPage);
-        $scope.totalPages = Math.ceil(response.data.Count / pageSize);
-        $scope.dbproducts = response.data.Items;
-        if ($scope.dbproducts.length === 0 && response.status !== 204) {
-            $scope.Message = "You don't have any items in the list yet.";
-            $scope.demonstrate = true;
+        if (currentPage !== 1 && response.data.Items.length === 0) {
+            currentPage = currentPage - 1;
+            productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
         } else {
-            $scope.Message = null;
-            $scope.demonstrate = false;
+            $scope.pager = pagerService.getPager(response.data.Count, currentPage);
+            $scope.totalPages = Math.ceil(response.data.Count / pageSize);
+            $scope.dbproducts = response.data.Items;
+            if ($scope.dbproducts.length === 0 && response.status !== 204) {
+                $scope.Message = "You don't have any items in the list yet.";
+                $scope.demonstrate = true;
+            } else {
+                $scope.Message = null;
+                $scope.demonstrate = false;
+            }
         }
     };
 
@@ -202,19 +207,29 @@
             return;
         }
         currentPage = page;
-        productService.getProducts(false, page, pageSize,$scope.query).then(onUserProducts, onError);
+        productService.getProducts(false, page, pageSize, $scope.query).then(onUserProducts, onError);
     }
 
-    var onUserDelete = function () {
-            productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
+    var data = {};
+    var onUserDelete = function (product) {
+        data = $scope.dbproducts.filter(function (el) {
+            return el.Id !== product.Id;
+        });
+        $scope.dbproducts = data;
     };
 
     $scope.update = function (product) {
-        productService.updateItem(product).then(function(){}, onError);
+        productService.updateItem(product).then(function () { }, onError);
     };
 
     $scope.remove = function (product) {
-        productService.removeItem(product).then(onUserDelete, onError);
+        productService.removeItem(product).success(function () {
+            onUserDelete(product);
+            if (currentPage !== 1 && data.length === 0) {
+                currentPage = currentPage - 1;
+                productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
+            }
+        }).error(onError);
     };
 
     $scope.search = function () {
@@ -224,7 +239,7 @@
         }
     };
 
-    productService.getProducts(false, currentPage, pageSize,null).then(onUserProducts, onError);
+    productService.getProducts(false, currentPage, pageSize, null).then(onUserProducts, onError);
 }
 ]);
 

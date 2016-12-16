@@ -22,6 +22,23 @@
                 });
         }
 
+        var getFilteredProducts = function (showAllProducts, productsId) {
+            var request = url + "?showAllProducts=" + showAllProducts;
+            if (productsId.length !== 0) {
+                request = request + "&$filter=" + 'ExternalProductId' + '%20' + 'eq' + '%20' + '%27' + productsId[0].id.toString() + '%27';
+                if (productsId.length > 1) {
+                    for (var i = 1; i < productsId.length; i++) {
+                        request = request + '%20' + 'or' + '%20' + 'ExternalProductId' + '%20' + 'eq' + '%20' + '%27' + productsId[i].id.toString() + '%27';
+                    }
+                }
+            }
+
+            return $http.get(request)
+                .then(function (response) {
+                    return response;
+                });
+        }
+
         var addProducts = function (product) {
             product.hiding = true;
 
@@ -92,6 +109,7 @@
 
         return {
             getProducts: getProducts,
+            getFilteredProducts: getFilteredProducts,
             addProducts: addProducts,
             updateItem: updateItem,
             removeItem: removeItem
