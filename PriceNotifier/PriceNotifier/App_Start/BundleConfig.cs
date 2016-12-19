@@ -48,6 +48,7 @@ namespace PriceNotifier
                       "~/Scripts/app/Services/externalProductService.js",
                       "~/Scripts/app/Services/userService.js",
                       "~/Scripts/app/Services/pagerService.js",
+                      "~/Scripts/app/Services/exchangeRateService.js",
                       "~/Scripts/app/Services/priceChangeService.js",
                       "~/Scripts/app/Services/articleService.js",
                       "~/Scripts/app/Controllers/MainCtrl.js",

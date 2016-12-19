@@ -1,4 +1,4 @@
-﻿app.controller('ProductCtrl', ['$scope', '$location', 'productService', 'priceChangeService', '$uibModal', 'pagerService', function ($scope, $location, productService, priceChangeService, $uibModal, pagerService) {
+﻿app.controller('ProductCtrl', ['$scope', '$location', 'productService', 'priceChangeService', '$uibModal', 'pagerService', 'exchangeRateService', function ($scope, $location, productService, priceChangeService, $uibModal, pagerService, exchangeRateService) {
 
     $scope.price = $.connection.priceHub;
     $scope.price.client.updatePrice = function (p) {
@@ -184,6 +184,7 @@
 
     $scope.message = "There are no items in track list.";
     var onUserProducts = function (response) {
+        //!
         if (currentPage !== 1 && response.data.Items.length === 0) {
             currentPage = currentPage - 1;
             productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
@@ -238,6 +239,19 @@
             productService.getProducts(false, currentPage, pageSize, $scope.query).then(onUserProducts, onError);
         }
     };
+
+        var rates = {};
+    exchangeRateService.getExchangeRates().then(function(response) {
+        rates = response;
+    },onError());
+
+    var eurCurrency = function () {
+        $scope.rate = rates;
+    }
+
+    var usdCurrency = function () {
+        $scope.rate = rates;
+    }
 
     productService.getProducts(false, currentPage, pageSize, null).then(onUserProducts, onError);
 }

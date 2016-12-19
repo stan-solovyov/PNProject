@@ -7,9 +7,9 @@
         </form>
         <div class="container" ng-repeat="product in products" ng-show="products">
             <div class="container">
-                <div class="col-lg-4">
-                    <h4 class="ng-cloak">{{product.full_name}}</h4>
-                    <img class="ng-cloak" ng-src="{{product.images.icon}}" title="{{product.full_name}}" />
+                <div class="col-lg-6">
+                    <h4 class="ng-cloak">{{product.name_prefix}} {{product.full_name}}</h4>
+                    <img class="ng-cloak" ng-src="{{product.images.icon || product.images.header }}" title="{{product.full_name}}" />
                 </div>
                 <div class="col-lg-offset-6">
                     <br />

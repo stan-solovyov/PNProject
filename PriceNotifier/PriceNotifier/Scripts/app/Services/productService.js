@@ -51,13 +51,20 @@
                 MaxPrice = product.prices.price_max.amount;
             }
 
+            var image = {};
+            if (product.images.icon) {
+                image = product.images.icon;
+            } else {
+                image = product.images.header;
+            }
+
             var productDto = {
                 Name: product.full_name,
                 MinPrice: MinPrice,
                 MaxPrice: MaxPrice,
                 ExternalProductId: product.id,
                 Url: product.html_url,
-                ImageUrl: product.images.icon,
+                ImageUrl: image,
                 Checked: true
             };
 

@@ -8,7 +8,12 @@
                 <input ng-model="query" class="form-control" placeholder="Item name">
                 <button type="submit" class="btn" ng-click="search()">Search</button>
             </div>
-        </form><br />
+            <div class="btn-group pull-right" role="group">
+            <button type="button" class="glyphicon glyphicon-euro btn btn-default ng-cloak" ng-click=""> EUR</button>
+            <button type="button" class="glyphicon glyphicon-usd btn btn-default ng-cloak" ng-click=""> USD</button>
+            <button type="button" class="glyphicon glyphicon btn btn-default ng-cloak" ng-click="">Br BYN</button>
+            </div>
+        </form><br/>
     </div>
     <div class="container" ng-repeat="product in dbproducts" ng-show="dbproducts">
         <div class="container">
@@ -16,17 +21,18 @@
                 <h4 class="ng-cloak">{{product.Name}}</h4>
                 <img class="ng-cloak" ng-src="{{product.ImageUrl}}" title="{{product.Name}}"/>
             </div>
-            <div class="col-lg-offset-6">
+            <div class="col-lg-offset-7">
                 <br/>
                 <h5 class="ng-cloak">Item's link on the corresponding website:</h5><a class="ng-cloak" href="{{product.Url}}">{{product.Name}}</a>
                 <h5 class="ng-cloak" ng-animate="'animate'">Minimal price:<span animate-on-change='product.MinPrice'> {{product.MinPrice|number}} </span> руб.</h5>
-                <button type="button" class="btn btn-danger ng-cloak" ng-click="remove(product)">Remove item</button>
                 <label class="ng-cloak">
                     Keep tracking:
                     <input type="checkbox" ng-model="product.Checked" ng-change="update(product)">
                 </label>
-                <button type="button" class="btn btn-default col-lg-offset-1" ng-click="openNotificatnHistory('lg',product.Id)">Price changes history</button>
-                <br/>
+                <div class="col-lg-offset-0">
+                    <button type="button" class="btn btn-default col-lg-offset" ng-click="openNotificatnHistory('lg',product.Id)">Price changes history</button>
+                    <button type="button" class="btn btn-danger ng-cloak col-lg-offset-0" ng-click="remove(product)">Remove item</button>
+                </div>
                 <br/>
                 <div ng-show="product.Article">
                     <a href="" ui-sref="articlesDetails({ArticleId:product.Article.Id})">
