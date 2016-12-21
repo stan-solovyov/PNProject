@@ -240,17 +240,32 @@
         }
     };
 
-        var rates = {};
-    exchangeRateService.getExchangeRates().then(function(response) {
+    var rates = {};
+    exchangeRateService.getExchangeRates().then(function (response) {
         rates = response;
-    },onError());
+    }, onError());
 
-    var eurCurrency = function () {
-        $scope.rate = rates;
+    $scope.bynShow = true;
+
+    $scope.eurCurrency = function () {
+        $scope.usdShow = false;
+        $scope.bynShow = false;
+        $scope.rate = rates[1].Rate;
+        $scope.euroShow = true;
     }
 
-    var usdCurrency = function () {
-        $scope.rate = rates;
+    $scope.bynCurrency = function () {
+        $scope.usdShow = false;
+        $scope.euroShow = false;
+        $scope.rate = null;
+        $scope.bynShow = true;
+    }
+
+    $scope.usdCurrency = function () {
+        $scope.euroShow = false;
+        $scope.bynShow = false;
+        $scope.rate = rates[0].Rate;
+        $scope.usdShow = true;
     }
 
     productService.getProducts(false, currentPage, pageSize, null).then(onUserProducts, onError);

@@ -8,23 +8,25 @@
                 <input ng-model="query" class="form-control" placeholder="Item name">
                 <button type="submit" class="btn" ng-click="search()">Search</button>
             </div>
-            <div class="btn-group pull-right" role="group">
-            <button type="button" class="glyphicon glyphicon-euro btn btn-default ng-cloak" ng-click=""> EUR</button>
-            <button type="button" class="glyphicon glyphicon-usd btn btn-default ng-cloak" ng-click=""> USD</button>
-            <button type="button" class="glyphicon glyphicon btn btn-default ng-cloak" ng-click="">Br BYN</button>
+            <div class="btn-group-xs pull-right">
+                <button type="button" class="glyphicon glyphicon-euro btn btn-default ng-cloak" ng-click="eurCurrency()"> EUR</button>
+                <button type="button" class="glyphicon glyphicon-usd btn btn-default ng-cloak" ng-click="usdCurrency()"> USD</button>
+                <button type="button" class="glyphicon glyphicon btn btn-default ng-cloak" ng-click="bynCurrency()">Br BYN</button>
             </div>
-        </form><br/>
+        </form><br />
     </div>
     <div class="container" ng-repeat="product in dbproducts" ng-show="dbproducts">
         <div class="container">
             <div class="col-lg-4">
                 <h4 class="ng-cloak">{{product.Name}}</h4>
-                <img class="ng-cloak" ng-src="{{product.ImageUrl}}" title="{{product.Name}}"/>
+                <img class="ng-cloak" ng-src="{{product.ImageUrl}}" style="max-height: 150px;" title="{{product.Name}}" />
             </div>
             <div class="col-lg-offset-7">
-                <br/>
+                <br />
                 <h5 class="ng-cloak">Item's link on the corresponding website:</h5><a class="ng-cloak" href="{{product.Url}}">{{product.Name}}</a>
-                <h5 class="ng-cloak" ng-animate="'animate'">Minimal price:<span animate-on-change='product.MinPrice'> {{product.MinPrice|number}} </span> руб.</h5>
+                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="bynShow">Minimal price:<span animate-on-change='product.MinPrice'> {{((product.MinPrice/(rate||1)))|number:0}} </span> руб.</h5>
+                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="usdShow">Minimal price:<span animate-on-change='product.MinPrice'> {{(product.MinPrice/(rate||1))|number:0}} </span> $.</h5>
+                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="euroShow">Minimal price:<span animate-on-change='product.MinPrice'> {{(product.MinPrice/(rate||1))|number:0}} </span> €.</h5>
                 <label class="ng-cloak">
                     Keep tracking:
                     <input type="checkbox" ng-model="product.Checked" ng-change="update(product)">
@@ -33,7 +35,7 @@
                     <button type="button" class="btn btn-default col-lg-offset" ng-click="openNotificatnHistory('lg',product.Id)">Price changes history</button>
                     <button type="button" class="btn btn-danger ng-cloak col-lg-offset-0" ng-click="remove(product)">Remove item</button>
                 </div>
-                <br/>
+                <br />
                 <div ng-show="product.Article">
                     <a href="" ui-sref="articlesDetails({ArticleId:product.Article.Id})">
                         <h4>{{product.Article.Title}}</h4>
@@ -42,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <hr class="ng-cloak"/>
+        <hr class="ng-cloak" />
     </div>
     <nav aria-label="Page navigation" class="col-lg-offset-4">
         <ul ng-if="pager.pages.length" class="pagination">
