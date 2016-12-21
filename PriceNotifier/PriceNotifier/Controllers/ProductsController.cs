@@ -65,7 +65,11 @@ namespace PriceNotifier.Controllers
                 Url = a.ProvidersProductInfos.FirstOrDefault(c => c.MinPrice == a.ProvidersProductInfos.Min(d => d.MinPrice)).Url
             });
 
-            var results = options.ApplyTo(productsDto);
+            ODataQuerySettings settings = new ODataQuerySettings()
+            {
+                PageSize = 100
+            };
+            var results = options.ApplyTo(productsDto,settings);
 
             return new PageResult<ProductDto>(
                 results as IEnumerable<ProductDto>,

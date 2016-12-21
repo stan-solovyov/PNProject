@@ -58,11 +58,14 @@ namespace PriceNotifier
                         //    .Description("Basic HTTP Authentication");
                         //
                         // NOTE: You must also configure 'EnableApiKeySupport' below in the SwaggerUI section
+                        //c.ApiKey("apiKey")
+                        //    .Description("API Key Authentication")
+                        //    .Name("apiKey")
+                        //    .In("header");
                         c.ApiKey("60c5da58d9d613ec11c59272c301162e")
                             .Description("API Key Authentication")
                             .Name("X-Auth")
                             .In("header");
-
                         //c.OAuth2("oauth2")
                         //    .Description("OAuth2 Implicit Grant")
                         //    .Flow("implicit")
@@ -238,6 +241,8 @@ namespace PriceNotifier
 
                         // If your API supports ApiKey, you can override the default values.
                         // "apiKeyIn" can either be "query" or "header"                                                
+                        //
+                        //c.EnableApiKeySupport("apiKey", "header");
                         c.EnableApiKeySupport("X-Auth", "header");
                     });
         }

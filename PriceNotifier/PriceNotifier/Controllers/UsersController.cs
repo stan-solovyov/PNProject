@@ -36,7 +36,11 @@ namespace PriceNotifier.Controllers
         {
             var allUsers = _userService.Get();
             var users = allUsers.ProjectTo<UserDtoWithCount>();
-            var results = options.ApplyTo(users);
+            ODataQuerySettings settings = new ODataQuerySettings()
+            {
+                PageSize = 100
+            };
+            var results = options.ApplyTo(users,settings);
 
             return new PageResult<UserDtoWithCount>(
                 results as IEnumerable<UserDtoWithCount>,

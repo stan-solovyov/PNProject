@@ -36,7 +36,11 @@ namespace PriceNotifier.Controllers
             var allArticles = showAllArticles ? _articleService.Query() : _articleService.Query().Where(c => c.Product.UserProducts.Any(a => a.UserId == userId));
 
             var articles = allArticles.ProjectTo<ArticleDto>();
-            var results = options.ApplyTo(articles);
+            ODataQuerySettings settings = new ODataQuerySettings()
+            {
+                PageSize = 100
+            };
+            var results = options.ApplyTo(articles, settings);
 
             return new PageResult<ArticleDto>(
                 results as IEnumerable<ArticleDto>,

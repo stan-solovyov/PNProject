@@ -23,7 +23,11 @@ namespace PriceNotifier.Controllers
         {
             var allPriceHistories = _priceHistoryService.GetByProductIdAndProvider(id, name);
             var priceHistories = allPriceHistories.ProjectTo<PriceHistoryDto>();
-            var results = options.ApplyTo(priceHistories);
+            ODataQuerySettings settings = new ODataQuerySettings()
+            {
+                PageSize = 100
+            };
+            var results = options.ApplyTo(priceHistories, settings);
 
             return new PageResult<PriceHistoryDto>(
                 results as IEnumerable<PriceHistoryDto>,
