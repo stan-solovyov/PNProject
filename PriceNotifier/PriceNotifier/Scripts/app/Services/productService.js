@@ -51,7 +51,7 @@
                 MaxPrice = product.prices.price_max.amount;
             }
 
-            var image = {};
+            var image;
             if (product.images.icon) {
                 image = product.images.icon;
             } else {

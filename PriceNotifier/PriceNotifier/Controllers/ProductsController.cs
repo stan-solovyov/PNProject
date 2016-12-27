@@ -38,7 +38,7 @@ namespace PriceNotifier.Controllers
 
         // GET: api/Products
 
-        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options,string query = null)
+        public PageResult<ProductDto> GetProducts(bool showAllProducts, ODataQueryOptions<ProductDto> options, string query = null)
         {
             var userId = GetCurrentUserId(Request);
             var allProducts = showAllProducts ? _productService.GetAllProducts() : _productService.GetByUserId(userId);
@@ -69,7 +69,7 @@ namespace PriceNotifier.Controllers
             {
                 PageSize = 100
             };
-            var results = options.ApplyTo(productsDto,settings);
+            var results = options.ApplyTo(productsDto, settings);
 
             return new PageResult<ProductDto>(
                 results as IEnumerable<ProductDto>,
@@ -135,7 +135,7 @@ namespace PriceNotifier.Controllers
                 var product = Mapper.Map<ProductDto, Product>(productDto);
                 product.ProvidersProductInfos.Add(new ProvidersProductInfo { ImageUrl = productDto.ImageUrl, MinPrice = productDto.MinPrice, MaxPrice = productDto.MaxPrice, ProviderName = "Onliner", Url = productDto.Url });
                 product = await _productService.Create(product);
-                _productMessageService.SendProduct(new ProductMessage {ProductId = product.Id});
+                _productMessageService.SendProduct(new ProductMessage { ProductId = product.Id });
                 user.UserProducts.Add(new UserProduct { Checked = true, ProductId = product.Id, UserId = user.Id });
                 await _userService.Update(user);
                 productDto = Mapper.Map(product, productDto);

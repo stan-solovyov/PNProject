@@ -112,3 +112,14 @@ cen {
     border-radius: 0;
     box-shadow: none;
   }
+
+  #loadingImg {
+    height: 250px;
+    width: 250px;
+
+    position: fixed;
+    top: 50%;
+    left: 55%;
+    margin-top: -100px;
+    margin-left: -250px;
+  }

@@ -5,7 +5,7 @@
     var request = function (config) {
         var authData = tokenService.getToken();
 
-        if (authData && (!config.url.includes('onliner')) && (!config.url.includes('yahoo'))) {
+        if (authData && !config.url.includes('onliner') && !config.url.includes('yahoo')) {
             config.headers["X-Auth"] = authData;
         }
 

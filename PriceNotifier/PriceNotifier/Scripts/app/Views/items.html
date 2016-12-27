@@ -24,9 +24,9 @@
             <div class="col-lg-offset-7">
                 <br />
                 <h5 class="ng-cloak">Item's link on the corresponding website:</h5><a class="ng-cloak" href="{{product.Url}}">{{product.Name}}</a>
-                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="bynShow">Minimal price:<span animate-on-change='product.MinPrice'> {{((product.MinPrice/(rate||1)))|number:0}} </span> руб.</h5>
-                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="usdShow">Minimal price:<span animate-on-change='product.MinPrice'> {{(product.MinPrice/(rate||1))|number:0}} </span> $.</h5>
-                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="euroShow">Minimal price:<span animate-on-change='product.MinPrice'> {{(product.MinPrice/(rate||1))|number:0}} </span> €.</h5>
+                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="bynShow">Minimal price:<span animate-on-change='product.MinPrice'> {{((product.MinPrice/(rate||1)))|number:2}} </span> руб.</h5>
+                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="usdShow">Minimal price:<span animate-on-change='product.MinPrice'> {{(product.MinPrice/(rate||1))|number:2}} </span> $.</h5>
+                <h5 class="ng-cloak" ng-animate="'animate'" ng-show="euroShow">Minimal price:<span animate-on-change='product.MinPrice'> {{(product.MinPrice/(rate||1))|number:2}} </span> €.</h5>
                 <label class="ng-cloak">
                     Keep tracking:
                     <input type="checkbox" ng-model="product.Checked" ng-change="update(product)">
