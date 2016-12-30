@@ -243,7 +243,10 @@
     var rates = {};
     exchangeRateService.getExchangeRates().then(function (response) {
         rates = response;
-    }, onError());
+        $scope.hideRate = false;
+    }, function() {
+        $scope.hideRate = true;
+    });
 
     $scope.bynShow = true;
 
